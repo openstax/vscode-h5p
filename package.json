@@ -1,0 +1,87 @@
+{
+  "name": "vscode-h5p",
+  "displayName": "H5P Viewer",
+  "publisher": "sparksam",
+  "description": "Visualize H5P files in VS Code",
+  "version": "0.0.1",
+  "author": "Samuel A. Klutse",
+  "license": "MIT",
+  "homepage": "https://samuelklutse.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sparksam/vscode-h5p"
+  },
+  "bugs": {
+    "url": "https://github.com/sparksam/vscode-h5p/issues",
+    "email": "klutse.samuel@gmail.com"
+  },
+  "icon": "assets/favicon.png",
+  "galleryBanner": {
+    "color": "#333333",
+    "theme": "dark"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "engines": {
+    "node": ">=16.x",
+    "pnpm": ">=7.x",
+    "vscode": ">=1.46.0"
+  },
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "h5p.viewer",
+        "displayName": "H5P Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.{h5p}"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "h5p.fallback-viewer",
+        "displayName": "H5P (any extension)",
+        "selector": [
+          {
+            "filenamePattern": "*"
+          }
+        ],
+        "priority": "option"
+      }
+    ]
+  },
+  "main": "./out/main.js",
+  "scripts": {
+    "build": "pnpm build:app && pnpm build:extension --minify",
+    "build:app": "vite build",
+    "build:extension": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "watch": "pnpm build:extension --sourcemap --watch",
+    "prettier": "prettier . --cache --check",
+    "vscode:prepublish": "pnpm build",
+    "pub": "pnpx vsce publish --no-dependencies"
+  },
+  "dependencies": {
+    "@lumieducation/h5p-react": "9.1.2",
+    "@lumieducation/h5p-server": "9.1.2",
+    "@react-hookz/web": "15.0.1",
+    "axios": "0.27.2",
+    "normalize.css": "8.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-error-boundary": "3.1.4",
+    "suspend-react": "0.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "@types/react": "17.0.33",
+    "@types/react-dom": "17.0.10",
+    "@types/vscode": "1.46.0",
+    "@vitejs/plugin-react": "1.3.2",
+    "esbuild": "0.14.49",
+    "prettier": "2.7.1",
+    "typescript": "4.7.3",
+    "vite": "2.9.13"
+  }
+}
