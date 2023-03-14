@@ -5,6 +5,11 @@
     "lib": ["es2020"],
     "outDir": "../out",
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "noImplicitAny": false
   }
 }

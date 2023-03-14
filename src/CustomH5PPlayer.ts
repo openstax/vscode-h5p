@@ -8,8 +8,8 @@ import {
   workspace,
 } from 'vscode';
 import { join, basename } from 'path';
-import fs from 'fs';
 import fsExtra from 'fs-extra';
+import fs from 'fs';
 import unzip from 'unzip-stream';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
