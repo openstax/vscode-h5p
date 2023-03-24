@@ -21,3 +21,6 @@ npm install
 ## Requirements
 - VSCode
 - NodeJS
+
+## Author
+- [Samuel Klutse](https://samuelklutse.com) 🇹🇬
