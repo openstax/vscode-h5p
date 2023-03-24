@@ -28,8 +28,8 @@
     "pnpm": ">=7.x",
     "vscode": ">=1.46.0"
   },
-  "contributes": {
-    "customEditors": [
+	"main": "./client/out/extension",
+	"contributes": { "customEditors": [
       {
         "viewType": "h5p.web.viewer",
         "displayName": "H5P Viewer",
@@ -51,9 +51,7 @@
         "priority": "option"
       }
     ]
-  },
-  "main": "./out/main.js",
-
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -b",
