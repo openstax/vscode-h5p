@@ -1,204 +1,111 @@
-import 'dotenv/config';
-
-import { dir, DirectoryResult } from 'tmp-promise';
-import bodyParser from 'body-parser';
-import express from 'express';
-import fileUpload from 'express-fileupload';
-import path from 'path';
-import startPageRenderer from './startPageRenderer';
-import serverRoutes from './serverRoutes';
-
-import * as H5P from '@lumieducation/h5p-server';
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
+import { connect } from 'http2';
 import {
-  h5pAjaxExpressRouter, IRequestWithLanguage
-} from '@lumieducation/h5p-express';
-import H5PHtmlExporter from '@lumieducation/h5p-html-exporter';
+	createConnection,
+	ProposedFeatures,
+	InitializeParams,
+	DidChangeConfigurationNotification,
+	CompletionItem,
+	CompletionItemKind,
+	TextDocumentPositionParams,
+	InitializeResult,
+} from 'vscode-languageserver/node';
 
-import createH5PEditor from './createH5PEditor';
-import { displayIps, clearTempFiles } from './utils';
+import { prepareEnvironment, startH5P } from './createH5PServer';
 
-let tmpDir: DirectoryResult;
+// Create a connection for the server, using Node's IPC as a transport.
+// Also include all preview / proposed LSP features.
+const connection = createConnection(ProposedFeatures.all);
 
-const start = async (): Promise<void> => {
-    const useTempUploads = process.env.TEMP_UPLOADS === 'true';
-    if (useTempUploads) {
-        tmpDir = await dir({ keep: false, unsafeCleanup: true });
-    }
+let hasConfigurationCapability = false;
+let hasWorkspaceFolderCapability = false;
+let hasDiagnosticRelatedInformationCapability = false;
 
+connection.onInitialize((params: InitializeParams) => {
+	connection.console.log('Initializing server');
+	const capabilities = params.capabilities;
 
+	// Does the client support the `workspace/configuration` request?
+	// If not, we fall back using global settings.
+	hasConfigurationCapability = !!(
+		capabilities.workspace && !!capabilities.workspace.configuration
+	);
+	hasWorkspaceFolderCapability = !!(
+		capabilities.workspace && !!capabilities.workspace.workspaceFolders
+	);
+	hasDiagnosticRelatedInformationCapability = !!(
+		capabilities.textDocument &&
+		capabilities.textDocument.publishDiagnostics &&
+		capabilities.textDocument.publishDiagnostics.relatedInformation
+	);
 
-    // Load the configuration file from the local file system
-    const config = await new H5P.H5PConfig(
-        new H5P.fsImplementations.JsonStorage(
-            path.join(__dirname, '../config.json')
-        )
-    ).load();
+	const result: InitializeResult = {
+		capabilities: {},
+	};
+	if (hasWorkspaceFolderCapability) {
+		result.capabilities.workspace = {
+			workspaceFolders: {
+				supported: true,
+			},
+		};
+	}
+	return result;
+});
 
-    // The H5PEditor object is central to all operations of h5p-nodejs-library
-    // if you want to user the editor component.
-    //
-    // To create the H5PEditor object, we call a helper function, which
-    // uses implementations of the storage classes with a local filesystem
-    // or a MongoDB/S3 backend, depending on the configuration values set
-    // in the environment variables.
-    // In your implementation, you will probably instantiate H5PEditor by
-    // calling new H5P.H5PEditor(...) or by using the convenience function
-    // H5P.fs(...).
-    const h5pEditor: H5P.H5PEditor = await createH5PEditor(
-        config,
-        path.join(__dirname, '../h5p/libraries'), // the path on the local disc where
-        // libraries should be stored)
-        path.join(__dirname, '../h5p/content'), // the path on the local disc where content
-        // is stored. Only used / necessary if you use the local filesystem
-        // content storage class.
-        path.join(__dirname, '../h5p/temporary-storage'), // the path on the local disc
-        // where temporary files (uploads) should be stored. Only used /
-        // necessary if you use the local filesystem temporary storage class.,
-        path.join(__dirname, '../h5p/user-data'),
-        undefined
-    );
+connection.onInitialized(() => {
+	const inner = async (): Promise<void> => {
+		const currentWorkspaces = (await connection.workspace.getWorkspaceFolders()) ?? [];
+		if (currentWorkspaces.length > 0) {
+			connection.console.log('Preparing environment for server');
+			await prepareEnvironment().then((e) => {
+				connection.console.log('Environment prepared');
+				startH5P().then((e) => {
+					connection.console.log('Starting server');
+				});
+			});
+		}
+	};
+	inner().catch((e) => {
+		throw e;
+	});
+});
 
-    // The H5PPlayer object is used to display H5P content.
-    const h5pPlayer = new H5P.H5PPlayer(
-        h5pEditor.libraryStorage,
-        h5pEditor.contentStorage,
-        config,
-        undefined,
-        undefined,
-        undefined,
-        undefined
-    );
+// The example settings
+interface ExampleSettings {
+	maxNumberOfProblems: number;
+}
 
-    // We now set up the Express server in the usual fashion.
-    const server = express();
+// Cache the settings of all open documents
+const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
 
-    server.use(bodyParser.json({ limit: '500mb' }));
-    server.use(
-        bodyParser.urlencoded({
-            extended: true
-        })
-    );
+connection.onDidChangeWatchedFiles((_change) => {
+	// Monitored files have change in VSCode
+	connection.console.log('We received an file change event');
+});
 
-    // Configure file uploads
-    server.use(
-        fileUpload({
-            limits: { fileSize: h5pEditor.config.maxTotalSize },
-            useTempFiles: useTempUploads,
-            tempFileDir: useTempUploads ? tmpDir?.path : undefined
-        })
-    );
+// This handler provides the initial list of the completion items.
+connection.onCompletion(
+	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+		// The pass parameter contains the position of the text document in
+		// which code complete got requested. For the example we ignore this
+		// info and always provide the same completion items.
+		return [
+			{
+				label: 'TypeScript',
+				kind: CompletionItemKind.Text,
+				data: 1,
+			},
+			{
+				label: 'JavaScript',
+				kind: CompletionItemKind.Text,
+				data: 2,
+			},
+		];
+	}
+);
 
-    // delete temporary files left over from uploads
-    if (useTempUploads) {
-        server.use((req: express.Request & { files: any }, res, next) => {
-            res.on('finish', async () => clearTempFiles(req));
-            next();
-        });
-    }
-
-    // The Express adapter handles GET and POST requests to various H5P
-    // endpoints. You can add an options object as a last parameter to configure
-    // which endpoints you want to use. In this case we don't pass an options
-    // object, which means we get all of them.
-    server.use(
-        h5pEditor.config.baseUrl,
-        h5pAjaxExpressRouter(
-            h5pEditor,
-            path.resolve(path.join(__dirname, '../h5p/core')), // the path on the local disc where the
-            // files of the JavaScript client of the player are stored
-            path.resolve(path.join(__dirname, '../h5p/editor')), // the path on the local disc where the
-            // files of the JavaScript client of the editor are stored
-            undefined,
-            'auto' // You can change the language of the editor here by setting
-            // the language code you need here. 'auto' means the route will try
-            // to use the language detected by the i18next language detector.
-        )
-    );
-
-    // The expressRoutes are routes that create pages for these actions:
-    // - Creating new content
-    // - Editing content
-    // - Saving content
-    // - Deleting content
-    server.use(
-        h5pEditor.config.baseUrl,
-        serverRoutes(
-            h5pEditor,
-            h5pPlayer,
-            'auto' // You can change the language of the editor by setting
-            // the language code you need here. 'auto' means the route will try
-            // to use the language detected by the i18next language detector.
-        )
-    );
-
-
-
-
-    const htmlExporter = new H5PHtmlExporter(
-        h5pEditor.libraryStorage,
-        h5pEditor.contentStorage,
-        h5pEditor.config,
-        path.join(__dirname, '../h5p/core'),
-        path.join(__dirname, '../h5p/editor')
-    );
-
-    server.get('/h5p/html/:contentId', async (req: IRequestWithLanguage, res) => {
-        const html = await htmlExporter.createSingleBundle(
-            req.params.contentId,
-            (req as any).user,
-            {
-                language: req.language ?? 'en',
-                showLicenseButton: true
-            }
-        );
-        res.setHeader(
-            'Content-disposition',
-            `attachment; filename=${req.params.contentId}.html`
-        );
-        res.status(200).send(html);
-    });
-
-    // The startPageRenderer displays a list of content objects and shows
-    // buttons to display, edit, delete and download existing content.
-    server.get('/', startPageRenderer(h5pEditor));
-
-    server.use('/client', express.static(path.join(__dirname, 'client')));
-
-    // We only include the whole node_modules directory for convenience. Don't
-    // do this in a production app.
-    server.use(
-        '/node_modules',
-        express.static(path.join(__dirname, '../node_modules'))
-    );
-
-    // Remove temporary directory on shutdown
-    if (useTempUploads) {
-        [
-            'beforeExit',
-            'uncaughtException',
-            'unhandledRejection',
-            'SIGQUIT',
-            'SIGABRT',
-            'SIGSEGV',
-            'SIGTERM'
-        ].forEach((evt) =>
-            process.on(evt, async () => {
-                await tmpDir?.cleanup();
-                tmpDir = null;
-            })
-        );
-    }
-
-    const port = process.env.PORT || '8080';
-
-    // For developer convenience we display a list of IPs, the server is running
-    // on. You can then simply click on it in the terminal.
-    displayIps(port);
-
-    server.listen(port);
-};
-
-// We can't use await outside a an async function, so we use the start()
-// function as a workaround.
-
-start();
+// Listen on the connection
+connection.listen();

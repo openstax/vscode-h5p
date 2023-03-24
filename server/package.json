@@ -1,8 +1,8 @@
 {
-  "name": "vscode-h5p-server",
-  "displayName": "H5P Server",
+  "name": "vscode-h5p-client",
+  "displayName": "H5P Viewer",
   "publisher": "sparksam",
-  "description": "H5P Server for VS Code",
+  "description": "Visualize H5P files in VS Code",
   "version": "0.0.1",
   "author": "Samuel A. Klutse",
   "license": "MIT",
@@ -15,24 +15,44 @@
     "url": "https://github.com/sparksam/vscode-h5p/issues",
     "email": "klutse.samuel@gmail.com"
   },
-  "main": "build/server.js",
-  "scripts": {
-    "build": "npx tsc -p ./tsconfig.server.json",
-    "start": "node build/server.js",
-    "clean": "rm -rf build",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@lumieducation/h5p-server": "^9.1.2",
-    "@lumieducation/h5p-html-exporter": "^9.1.2",
-    "@lumieducation/h5p-express": "^9.1.2",
-    "express": "4.18.2",
-    "express-fileupload": "^1.3.1",
-    "dotenv": "^16.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "16.11.7",
-    "@types/express": "4.17.15",
-    "prettier": "2.7.1"
-  }
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^8.1.0",
+		"vscode-languageserver-textdocument": "^1.0.8",
+		"@lumieducation/h5p-express": "^9.1.2",
+		"@lumieducation/h5p-server": "^9.1.2",
+		"@lumieducation/h5p-react": "^9.1.2",
+		"express": "4.18.2",
+		"express-fileupload": "^1.3.1",
+        "csurf": "1.11.0",
+        "cors": "2.8.5",
+        "uuid": "9.0.0","bootstrap": "5.2.3",
+		"react": "18.2.0",
+		"react-bootstrap": "2.7.0",
+		"react-dom": "18.2.0",
+		"@fortawesome/free-solid-svg-icons": "6.2.0",
+		"@fortawesome/react-fontawesome": "0.2.0",
+		"node-fetch": "2.6.7",
+		"decompress": "^4.2.1"
+
+
+	},
+	"devDependencies": {
+		"typescript": "^4.3.5",
+		"@types/express": "^4.17.15",
+		"@types/node": "18.15.3",
+		"prettier": "^2.7.1",
+		"@types/unzip-stream": "0.3.1",
+		"@types/fs-extra": "11.0.1",
+        "@types/csurf": "1.11.2",
+		"@types/react-dom": "18.0.10",
+		"@types/react": "18.0.27",
+		"@types/node-fetch":"^2.6.2",
+		"@types/decompress": "^4.2.4"
+		},
+	"scripts": {
+		"build": "tsc -b"
+	}
 }
