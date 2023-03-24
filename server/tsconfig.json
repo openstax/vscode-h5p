@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"jsx": "react",
+		"target": "es2020",
+		"lib": ["es2020","dom", "dom.iterable", "esnext"],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"strict": true,
+		"removeComments": true,
+		"noImplicitAny": false,
+        "skipLibCheck": true,
+		"esModuleInterop": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"strictNullChecks": true,
+		"outDir": "out",
+		"rootDir": "src"
+	},
+	"include": ["src"],
+	"exclude": [".node_modules", ".vscode-test"]
+}

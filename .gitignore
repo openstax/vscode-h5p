@@ -1,6 +1,9 @@
 /node_modules/
 /out/
 /dist/
+*/build/
+client/out
+server/out
 
 .DS_Store
 Thumbs.db
