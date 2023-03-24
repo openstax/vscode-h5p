@@ -7,10 +7,6 @@ import {
 	createConnection,
 	ProposedFeatures,
 	InitializeParams,
-	DidChangeConfigurationNotification,
-	CompletionItem,
-	CompletionItemKind,
-	TextDocumentPositionParams,
 	InitializeResult,
 } from 'vscode-languageserver/node';
 
@@ -59,11 +55,11 @@ connection.onInitialized(() => {
 	const inner = async (): Promise<void> => {
 		const currentWorkspaces = (await connection.workspace.getWorkspaceFolders()) ?? [];
 		if (currentWorkspaces.length > 0) {
-			connection.console.log('Preparing environment for server');
+			console.log('Preparing environment for server');
 			await prepareEnvironment().then((e) => {
-				connection.console.log('Environment prepared');
+				console.log('Environment prepared');
 				startH5P().then((e) => {
-					connection.console.log('Starting server');
+					console.log('Starting server');
 				});
 			});
 		}
@@ -72,40 +68,6 @@ connection.onInitialized(() => {
 		throw e;
 	});
 });
-
-// The example settings
-interface ExampleSettings {
-	maxNumberOfProblems: number;
-}
-
-// Cache the settings of all open documents
-const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
-
-connection.onDidChangeWatchedFiles((_change) => {
-	// Monitored files have change in VSCode
-	connection.console.log('We received an file change event');
-});
-
-// This handler provides the initial list of the completion items.
-connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-		// The pass parameter contains the position of the text document in
-		// which code complete got requested. For the example we ignore this
-		// info and always provide the same completion items.
-		return [
-			{
-				label: 'TypeScript',
-				kind: CompletionItemKind.Text,
-				data: 1,
-			},
-			{
-				label: 'JavaScript',
-				kind: CompletionItemKind.Text,
-				data: 2,
-			},
-		];
-	}
-);
 
 // Listen on the connection
 connection.listen();
