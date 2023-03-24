@@ -1,11 +1,12 @@
-/node_modules/
-/out/
-/dist/
-*/build/
-client/out
-server/out
+dist
+build
 
 .DS_Store
 Thumbs.db
 *.log
 *.vsix
+
+out
+node_modules
+client/server
+.vscode-test
