@@ -1,5 +1,5 @@
 # VScode H5P extension
-A VSCode extension to play, create, edit and download H5P contenttinside your Visual Studio Code IDE (Integrated Development Environment). This project is a development effort to integrate H5P manipulation into Poet. A library developed by Openstax.
+A VSCode extension to play, create, edit and download H5P content tinside your Visual Studio Code IDE (Integrated Development Environment). This project is a development effort to integrate H5P manipulation into Poet. A library developed by Openstax.
 
 `The project is still in its early stages and is not yet ready for production use.`
 
