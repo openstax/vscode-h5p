@@ -1,6 +1,6 @@
 import * as os from 'os';
-export function getIps():string[]{
-
+export function getIps(external:boolean=false):string[]{
+  if(!external) return ['localhost'];
 	const interfaces = os.networkInterfaces();
 	return interfaces && Object.values(interfaces)
 	  .flatMap((devInts) =>

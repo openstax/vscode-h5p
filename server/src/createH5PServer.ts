@@ -578,7 +578,9 @@ export async function startH5P() {
   // on. You can then simply click on it in the terminal.
   displayIps(port.toString());
 
-  server.listen(port);
+  server.listen(port, getIps()[0], function() {
+    console.log(`... port ${port} with Settings:  ${JSON.stringify(server.settings)} mode`);
+  });
   await downloadLibraries(
     getIps()[0],
     port,
