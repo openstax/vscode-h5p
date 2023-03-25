@@ -7,9 +7,8 @@ import './main.css';
 import H5PViewerComponent from './H5PViewerComponent';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <H5PViewerComponent
-		h5pUrl='http://localhost:8080'/>
-    </React.StrictMode>,
-    document.getElementById('root')
+  <React.StrictMode>
+    <H5PViewerComponent h5pUrl="http://localhost:8080" />
+  </React.StrictMode>,
+  document.getElementById('root')
 );

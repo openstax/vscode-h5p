@@ -2,7 +2,6 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import fetch from 'node-fetch';
-
 import cors from 'cors';
 
 import express from 'express';
@@ -20,8 +19,13 @@ import {
   IRequestWithUser,
   IRequestWithLanguage,
 } from '@lumieducation/h5p-express';
-import decompress from 'decompress';
-import { getIps } from './utils';
+import {
+  download,
+  extractArchive,
+  fsRemove,
+  getIps,
+  userContentId,
+} from './utils';
 
 export async function prepareEnvironment() {
   console.log('Preparing environment');
@@ -112,38 +116,6 @@ export async function prepareEnvironment() {
     fs.writeFileSync(`${tempFolderPath}/config.json`, config);
     fs.writeFileSync(lastUpdatedFile, lastUpdated);
   }
-}
-
-async function fsRemove(folderPath: string) {
-  fs.rmSync(folderPath, { recursive: true, force: true });
-}
-
-async function extractArchive(
-  path: string,
-  destinationFolder: string,
-  deleteArchive: boolean
-): Promise<void> {
-  console.log(`Extracting file ${path}`);
-  return await decompress(path, destinationFolder, { strip: 1 })
-    .then((files) => {
-      console.log('Files extracted');
-      if (deleteArchive) fsRemove(path);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-async function download(url: string, destinationPath: string): Promise<void> {
-  console.debug(`Downloading ${url} to ${destinationPath}`);
-
-  const fileStream = fs.createWriteStream(destinationPath);
-  const res = await fetch(url);
-  await new Promise((resolve, reject) => {
-    res.body!.pipe(fileStream);
-    res.body!.on('error', reject);
-    fileStream.on('finish', resolve);
-  });
 }
 
 /**
@@ -526,6 +498,32 @@ export async function startH5P() {
   //     object in the addCsrfTokenToUser middleware.
   // const csrfProtection = csurf();
 
+  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath);
+  // For developer convenience we display a list of IPs, the server is running
+  // on. You can then simply click on it in the terminal.
+  displayIps(port.toString());
+
+  server.listen(port, getIps()[0], async function () {
+    console.log(
+      `... port ${port} with Settings:  ${JSON.stringify(server.settings)} mode`
+    );
+    await downloadLibraries(
+      getIps()[0],
+      port,
+      '/h5p/ajax?action=content-type-cache',
+      h5pEditor
+    );
+  });
+}
+
+const serverRoutes = (
+  server: express.Express,
+  h5pEditor: H5P.H5PEditor,
+  h5pPlayer: H5P.H5PPlayer,
+  tempFolderPath: string
+) => {
+  //H5P Routes
+
   // The Express adapter handles GET and POST requests to various H5P
   // endpoints. You can add an options object as a last parameter to configure
   // which endpoints you want to use. In this case we don't pass an options
@@ -574,20 +572,24 @@ export async function startH5P() {
     contentTypeCacheExpressRouter(h5pEditor.contentTypeCache)
   );
 
-  // For developer convenience we display a list of IPs, the server is running
-  // on. You can then simply click on it in the terminal.
-  displayIps(port.toString());
-
-  server.listen(port, getIps()[0], function() {
-    console.log(`... port ${port} with Settings:  ${JSON.stringify(server.settings)} mode`);
+  //Custom Routes
+  server.post('/vscode-h5p/extract', async (req, res) => {
+    if (!req.body.fsPath) {
+      res.status(400).send('Malformed request').end();
+      return;
+    }
+    console.log(`Extracting ${req.body.fsPath}`);
+    await extractArchive(
+      req.body.fsPath,
+      `${tempFolderPath}/content/${userContentId()}`,
+      false,
+      undefined,
+      ['content.json', 'h5p.json']
+    );
+    res.send(JSON.stringify({}));
+    res.status(200).end();
   });
-  await downloadLibraries(
-    getIps()[0],
-    port,
-    '/h5p/ajax?action=content-type-cache',
-    h5pEditor
-  );
-}
+};
 
 async function downloadLibraries(
   hostname: string,
@@ -600,13 +602,17 @@ async function downloadLibraries(
     res.json()
   );
   const user = new User();
-  return  Promise.all(res.libraries
-  .filter((lib) => !lib.installed || !lib.isUpToDate)
-    .map((lib) => lib.machineName)
-    .map(async (libraryName) => {
-      console.log(`Installing ${libraryName}`);
-      return h5PEditor.installLibraryFromHub(libraryName, user).then((res) => {
-        console.log(res);
-      });
-    }));
+  return Promise.all(
+    res.libraries
+      .filter((lib) => !lib.installed || !lib.isUpToDate)
+      .map((lib) => lib.machineName)
+      .map(async (libraryName) => {
+        console.log(`Installing ${libraryName}`);
+        return h5PEditor
+          .installLibraryFromHub(libraryName, user)
+          .then((res) => {
+            console.log(res);
+          });
+      })
+  );
 }

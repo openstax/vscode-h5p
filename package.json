@@ -28,8 +28,9 @@
     "pnpm": ">=7.x",
     "vscode": ">=1.46.0"
   },
-	"main": "./client/out/extension",
-	"contributes": { "customEditors": [
+  "main": "./client/out/extension",
+  "contributes": {
+    "customEditors": [
       {
         "viewType": "h5p.web.viewer",
         "displayName": "H5P Viewer",
@@ -51,16 +52,16 @@
         "priority": "option"
       }
     ]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -b",
-		"watch": "tsc -b -w",
-		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
-		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-		"test": "sh ./scripts/e2e.sh",
-		"clean":"rm -rf client/out server/out client/node_modules server/node_modules node_modules"
-	},
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "test": "sh ./scripts/e2e.sh",
+    "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules"
+  },
   "devDependencies": {
     "@types/cache-manager": "4.0.2",
     "@types/express": "4.17.15",

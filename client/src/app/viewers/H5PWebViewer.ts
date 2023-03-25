@@ -8,6 +8,7 @@ import {
   workspace,
 } from 'vscode';
 import { join, basename } from 'path';
+import { postCall } from '../utils/RestUtils';
 
 export default class H5PWebViewer
   implements CustomReadonlyEditorProvider<CustomDocument>
@@ -15,6 +16,8 @@ export default class H5PWebViewer
   public constructor(private readonly context: ExtensionContext) {}
 
   public async openCustomDocument(uri: Uri): Promise<CustomDocument> {
+    console.log('Opening Document', uri.fsPath);
+    await postCall('/vscode-h5p/extract', { fsPath: uri.fsPath }, undefined);
     return {
       uri,
       dispose: () => {

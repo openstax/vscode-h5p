@@ -20,33 +20,34 @@
     "color": "#333333",
     "theme": "dark"
   },
-	"engines": {
-		"vscode": "^1.75.0"
-	},
-	"dependencies": {
-		"vscode-languageclient": "^8.1.0",
-		"@fortawesome/free-solid-svg-icons": "6.2.0",
-		"@fortawesome/react-fontawesome": "0.2.0",
-		"bootstrap": "5.2.3",
-		"await-lock": "^2.1.0",
-		"deepmerge": "^4.2.2",
-		"react": "18.2.0",
-		"react-bootstrap": "2.7.0",
-		"react-dom": "18.2.0"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.75.1",
-		"@vscode/test-electron": "^2.2.3",
-		"@lumieducation/h5p-server": "^9.1.2",
-		"@types/node": "18.11.18",
-		"@types/react-dom": "18.0.10",
-		"@types/react": "18.0.27",
-		"@vitejs/plugin-react": "1.3.2",
-		"vite": "4.2.0"
-	},
-	"scripts": {
-		"build": "pnpm build:app && pnpm build:extension --minify",
-		"build:app": "vite build",
-		"build:extension": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node"
-	}
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^8.1.0",
+    "@fortawesome/free-solid-svg-icons": "6.2.0",
+    "@fortawesome/react-fontawesome": "0.2.0",
+    "bootstrap": "5.2.3",
+    "await-lock": "^2.1.0",
+    "deepmerge": "^4.2.2",
+    "react": "18.2.0",
+    "react-bootstrap": "2.7.0",
+    "react-dom": "18.2.0",
+    "decompress": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.1",
+    "@vscode/test-electron": "^2.2.3",
+    "@lumieducation/h5p-server": "^9.1.2",
+    "@types/node": "18.11.18",
+    "@types/react-dom": "18.0.10",
+    "@types/react": "18.0.27",
+    "@vitejs/plugin-react": "1.3.2",
+    "vite": "4.2.0"
+  },
+  "scripts": {
+    "build": "pnpm build:app && pnpm build:extension --minify",
+    "build:app": "vite build",
+    "build:extension": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node"
+  }
 }
