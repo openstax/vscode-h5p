@@ -34,6 +34,8 @@ npm install
   - [ ] On save, zip the content and save it to the workspace or specified location
   - [ ] Add command to open the manager
   - [ ] Contextual menu option for h5p files
+  - [ ] Extension settings
+  - [ ] Bundle extension to vsix
   - [ ] Add tests
   - [ ] CI/CD
 
