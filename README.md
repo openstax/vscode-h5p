@@ -23,11 +23,19 @@ npm install
 - Create H5P content using preinstalled H5P libraries
 - Edit H5P content
 - Download the H5P content as a zip file
+- Extract and display the H5P content in the editor
 
 ## Requirements
 
 - VSCode
 - NodeJS
+
+## TODO
+  - [ ] On save, zip the content and save it to the workspace or specified location
+  - [ ] Add command to open the manager
+  - [ ] Contextual menu option for h5p files
+  - [ ] Add tests
+  - [ ] CI/CD
 
 ## Author
 
