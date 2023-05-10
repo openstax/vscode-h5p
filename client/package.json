@@ -31,6 +31,7 @@
     "bootstrap": "5.2.3",
     "decompress": "^4.2.1",
     "deepmerge": "^4.2.2",
+    "prettier": "^2.8.8",
     "react": "18.2.0",
     "react-bootstrap": "2.7.0",
     "react-dom": "18.2.0",

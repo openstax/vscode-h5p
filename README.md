@@ -17,10 +17,11 @@ npm install
 
 ```
 
-
 ## Run the extension in a new VSCode
-In the VSCode editor, open the debug panel and select `Launch Extension`. This will open a new VSCode window with the extension running.
-Clinking on a `H5P zipped file` in the workspace will open the H5P manager.
+
+In the VSCode editor, open the debug panel and select `Launch Extension`. This
+will open a new VSCode window with the extension running. Clinking on a
+`H5P zipped file` in the workspace will open the H5P manager.
 
 ## Features
 
@@ -36,13 +37,15 @@ Clinking on a `H5P zipped file` in the workspace will open the H5P manager.
 - NodeJS
 
 ## TODO
-  - [ ] On save, zip the content and save it to the workspace or specified location
-  - [ ] Add command to open the manager
-  - [ ] Contextual menu option for h5p files
-  - [ ] Extension settings
-  - [ ] Bundle extension to vsix
-  - [ ] Add tests
-  - [ ] CI/CD
+
+- [ ] On save, zip the content and save it to the workspace or specified
+      location
+- [ ] Add command to open the manager
+- [ ] Contextual menu option for h5p files
+- [ ] Extension settings
+- [ ] Bundle extension to vsix
+- [ ] Add tests
+- [ ] CI/CD
 
 ## Author
 

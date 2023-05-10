@@ -10,12 +10,13 @@ export async function postCall(
   headers: any
 ): Promise<any> {
   console.log('POST', buildUrl(path), JSON.stringify(data), headers);
-  return await axios.post(buildUrl(path), JSON.stringify(data), {
-    headers: headers || {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
+  return await axios
+    .post(buildUrl(path), JSON.stringify(data), {
+      headers: headers || {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
     .then((res) => {
       return res.data;
     })
