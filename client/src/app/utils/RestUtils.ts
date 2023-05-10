@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 function buildUrl(path: string) {
   return `http://localhost:8080${path}`;
 }
@@ -8,19 +10,14 @@ export async function postCall(
   headers: any
 ): Promise<any> {
   console.log('POST', buildUrl(path), JSON.stringify(data), headers);
-  return await fetch(buildUrl(path), {
-    method: 'POST',
-    body: JSON.stringify(data),
+  return await axios.post(buildUrl(path), JSON.stringify(data), {
     headers: headers || {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => {
-      if (!res.ok) {
-        throw new Error(`${res.status} ${res.statusText}`);
-      }
-      return res.json();
+      return res.data;
     })
     .catch((error) => {
       console.error(error);

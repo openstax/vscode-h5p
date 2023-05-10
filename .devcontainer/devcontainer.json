@@ -1,0 +1,11 @@
+
+{
+  "name": "Local Dev",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/vscode-h5p,type=bind,consistency=default",
+  "mounts": [],
+  "workspaceFolder": "/workspace/vscode-h5p"
+}
