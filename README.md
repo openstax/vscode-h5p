@@ -10,12 +10,17 @@ by Openstax.
 ## Getting Started
 
 ```bash
-git clone https://github.com/sparksam/vscode-h5p
+git clone https://github.com/openstax/vscode-h5p
 cd vscode-h5p
 npm install
 ./scripts/build.sh
 
 ```
+
+
+## Run the extension in a new VSCode
+In the VSCode editor, open the debug panel and select `Launch Extension`. This will open a new VSCode window with the extension running.
+Clinking on a `H5P zipped file` in the workspace will open the H5P manager.
 
 ## Features
 
