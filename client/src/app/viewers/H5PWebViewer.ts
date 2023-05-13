@@ -44,7 +44,8 @@ export default class H5PWebViewer
       localResourceRoots: [resourceRoot, extensionRoot],
     };
     console.log('Webview Options', webview.options);
-    console.log('Webview Uri', webview.asWebviewUri(document.uri).toString());
+    console.log('Webview Uri', webview.asWebviewUri(document.uri).toString(true));
+    console.log('Document Uri', document.uri);
     console.log('Generating Webview');
     webview.html = await this.getHtmlForWebview(webview);
 
