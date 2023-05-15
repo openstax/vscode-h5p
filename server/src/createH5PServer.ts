@@ -129,6 +129,15 @@ function displayIps(port: string): void {
   );
 }
 
+function buildServerURL(): string{
+  const port = Number(process.env.PORT) || 8080
+  if (process.env['GITPOD_WORKSPACE_ID']){
+    return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
+  }else{
+    return `http://localhost:${port}`
+  }
+}
+
 async function createH5PEditor(
   config: H5P.IH5PConfig,
   localLibraryPath: string,
@@ -365,6 +374,7 @@ export async function startH5P() {
   const port: number = Number(process.env.PORT) || 8080;
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
+  const server_url = buildServerURL()
   // Load the configuration file from the local file system
   fs.readFile(`${tempFolderPath}/config.json`, (err, data) => {
     if (err) throw err;
@@ -383,7 +393,7 @@ export async function startH5P() {
     protectContentUserData: false,
     protectSetFinished: false,
   });
-  urlGenerator.baseUrl = () => `http://${getIps()[0]}:${port}/h5p`;
+  urlGenerator.baseUrl = () => `${server_url}/h5p`;
   // The H5PEditor object is central to all operations of h5p-nodejs-library
   // if you want to user the editor component.
   //

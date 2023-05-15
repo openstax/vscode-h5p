@@ -4,6 +4,7 @@ export interface Message<T = unknown> {
   }
   
   export interface FileInfo {
+	server_url: string;
 	uri: string;
 	name: string;
 	size: number;
