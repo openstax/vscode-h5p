@@ -2,6 +2,7 @@ import type {
   IInstalledLibrary,
   ILibraryAdministrationOverviewItem,
 } from '@lumieducation/h5p-server';
+import axios, { AxiosHeaders } from 'axios';
 
 /**
  * The data model used to display the library list.
@@ -24,29 +25,27 @@ export class LibraryAdministrationService {
   constructor(private baseUrl: string) {}
 
   public async deleteLibrary(library: ILibraryViewModel): Promise<void> {
-    const response = await fetch(
-      `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`,
-      {
-        method: 'DELETE',
-      }
-    );
+    try {
+      const response = await axios.delete(
+        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`
+      );
 
-    if (response.ok) {
-      return;
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Could not delete library: ${response.status} - ${response.text}`
-    );
   }
 
   public async getLibraries(): Promise<ILibraryViewModel[]> {
-    const response = await fetch(this.baseUrl);
-    if (response.ok) {
-      return response.json();
+    try {
+      const response = await axios.get(this.baseUrl);
+
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Could not get library list: ${response.status} - ${response.statusText}`
-    );
   }
 
   public async getLibrary(library: ILibraryViewModel): Promise<
@@ -57,37 +56,36 @@ export class LibraryAdministrationService {
       isAddon: boolean;
     }
   > {
-    const response = await fetch(
-      `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`
-    );
-    if (response.ok) {
-      return response.json();
+    try {
+      const response = await axios.get(
+        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`
+      );
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Could not get library details: ${response.status} - ${response.statusText}`
-    );
   }
 
   public async patchLibrary(
     library: ILibraryViewModel,
     changes: Partial<ILibraryViewModel>
   ): Promise<ILibraryViewModel> {
-    const response = await fetch(
-      `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(changes),
-      }
-    );
-    if (response.ok) {
-      return { ...library, ...changes };
+    try {
+      const response = await axios.patch(
+        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`,
+        {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify(changes),
+        }
+      );
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Could not patch library: ${response.status} - ${response.statusText}`
-    );
   }
 
   public async postPackage(
@@ -95,17 +93,13 @@ export class LibraryAdministrationService {
   ): Promise<{ installed: number; updated: number }> {
     const formData = new FormData();
     formData.append('file', file);
-
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      body: formData,
-    });
-    if (response.ok) {
-      const result = await response.json();
+    try {
+      const response = await axios.post(this.baseUrl, formData);
+      const result = response.data;
       return { installed: result.installed, updated: result.updated };
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Could not upload package with libraries: ${response.status} - ${response.statusText}`
-    );
   }
 }

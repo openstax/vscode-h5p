@@ -3,6 +3,7 @@ import type {
   IPlayerModel,
   IContentMetadata,
 } from '@lumieducation/h5p-server';
+import axios from 'axios';
 
 export interface IContentListEntry {
   h5PUrl: string;
@@ -34,50 +35,50 @@ export class ContentService implements IContentService {
 
   delete = async (contentId: string): Promise<void> => {
     console.log(`ContentService: deleting ${contentId}...`);
-    const result = await fetch(`${this.baseUrl}/${contentId}`, {
-      method: 'delete',
-      headers: {
-        'CSRF-Token': this.csrfToken ?? '',
-      },
-    });
-    if (!result.ok) {
-      throw new Error(
-        `Error while deleting content: ${result.status} ${
-          result.statusText
-        } ${await result.text()}`
-      );
+    try {
+      const result = await axios.delete(`${this.baseUrl}/${contentId}`, {
+        method: 'delete',
+        headers: {
+          'CSRF-Token': this.csrfToken ?? '',
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   };
 
   getEdit = async (contentId: string): Promise<IEditorModel> => {
     console.log(`ContentService: Getting information to edit ${contentId}...`);
-    const res = await fetch(`${this.baseUrl}/${contentId}/edit`);
-    if (!res || !res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`);
+    try {
+      const res = await axios.get(`${this.baseUrl}/${contentId}/edit`);
+      return res.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    return res.json();
   };
 
   getPlay = async (contentId: string): Promise<IPlayerModel> => {
     console.log(`ContentService: Getting information to play ${contentId}...`);
-    const res = await fetch(`${this.baseUrl}/${contentId}/play`);
-    if (!res || !res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`);
+    try {
+      const res = await axios.get(`${this.baseUrl}/${contentId}/play`);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    return res.json();
   };
 
   list = async (): Promise<IContentListEntry[]> => {
     console.log(`ContentService: Listing content objects`);
-    const result = await fetch(this.baseUrl);
-    if (result.ok) {
-      return result.json();
+    try {
+      const result = await axios.get(this.baseUrl);
+      return result.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    throw new Error(
-      `Request to REST endpoint returned ${result.status} ${
-        result.statusText
-      }: ${await result.text()}`
-    );
   };
 
   save = async (
@@ -91,29 +92,25 @@ export class ContentService implements IContentService {
     }
 
     const body = JSON.stringify(requestBody);
-
-    const res = contentId
-      ? await fetch(`${this.baseUrl}/${contentId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'CSRF-Token': this.csrfToken ?? '',
-          },
-          body,
-        })
-      : await fetch(this.baseUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'CSRF-Token': this.csrfToken ?? '',
-          },
-          body,
-        });
-
-    if (!res || !res.ok) {
-      throw new Error(`${res.status} ${res.statusText} - ${await res.text()}`);
+    try {
+      const res = contentId
+        ? await axios.patch(`${this.baseUrl}/${contentId}`, body, {
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': this.csrfToken ?? '',
+            },
+          })
+        : await axios.post(this.baseUrl, body, {
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': this.csrfToken ?? '',
+            },
+          });
+      return res.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-    return res.json();
   };
   generateDownloadLink = (contentId: string): string =>
     `${this.baseUrl}/download/${contentId}`;

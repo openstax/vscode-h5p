@@ -26,6 +26,15 @@ export default class H5PWebViewer
     };
   }
 
+  public buildGitpodURL(){
+    const port = 8080
+    if (process.env['GITPOD_WORKSPACE_ID']){
+      return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
+    }else{
+      return `http://localhost:${port}`
+    }
+  }
+
   public async resolveCustomEditor(
     document: CustomDocument,
     webviewPanel: WebviewPanel
@@ -43,9 +52,6 @@ export default class H5PWebViewer
       enableScripts: true,
       localResourceRoots: [resourceRoot, extensionRoot],
     };
-    console.log('Webview Options', webview.options);
-    console.log('Webview Uri', webview.asWebviewUri(document.uri).toString());
-    console.log('Generating Webview');
     webview.html = await this.getHtmlForWebview(webview);
 
     webview.onDidReceiveMessage(async (evt) => {
@@ -54,6 +60,7 @@ export default class H5PWebViewer
         webview.postMessage({
           type: 'FileInfo',
           data: {
+            server_url: this.buildGitpodURL(),
             uri: webview.asWebviewUri(document.uri).toString(),
             name: basename(document.uri.fsPath),
             size,
