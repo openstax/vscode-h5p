@@ -1,4 +1,4 @@
-/out/
-/dist/
+**/out/
+**/dist/
 
 pnpm-lock.yaml
