@@ -20,12 +20,16 @@ import {
   IRequestWithLanguage,
 } from '@lumieducation/h5p-express';
 import {
+  copyDirectory,
   download,
   extractArchive,
   fsRemove,
   getIps,
   userContentId,
 } from './utils';
+
+const WORKSPACE_ROOT = process.argv[2];
+const CONTENT_DIRECTORY = `${WORKSPACE_ROOT}/interactives`;
 
 export async function prepareEnvironment() {
   console.log('Preparing environment');
@@ -65,7 +69,7 @@ export async function prepareEnvironment() {
     const editorFile = `${tempFolderPath}/editor_${version}.zip`;
 
     try {
-      fs.mkdirSync(`${tempFolderPath}/content`, { recursive: true });
+      fs.mkdirSync(CONTENT_DIRECTORY, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/libraries`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/temporary-storage`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/core`, { recursive: true });
@@ -129,12 +133,12 @@ function displayIps(port: string): void {
   );
 }
 
-function buildServerURL(): string{
-  const port = Number(process.env.PORT) || 8080
-  if (process.env['GITPOD_WORKSPACE_ID']){
-    return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
-  }else{
-    return `http://localhost:${port}`
+function buildServerURL(): string {
+  const port = Number(process.env.PORT) || 8080;
+  if (process.env['GITPOD_WORKSPACE_ID']) {
+    return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
+  } else {
+    return `http://localhost:${port}`;
   }
 }
 
@@ -374,7 +378,7 @@ export async function startH5P() {
   const port: number = Number(process.env.PORT) || 8080;
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
-  const server_url = buildServerURL()
+  const server_url = buildServerURL();
   // Load the configuration file from the local file system
   fs.readFile(`${tempFolderPath}/config.json`, (err, data) => {
     if (err) throw err;
@@ -408,7 +412,7 @@ export async function startH5P() {
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 
-    `${tempFolderPath}/content`, // the path on the local disc where content
+    CONTENT_DIRECTORY, // the path on the local disc where content
     // is stored. Only used / necessary if you use the local filesystem
     // content storage class.
 
@@ -589,9 +593,11 @@ const serverRoutes = (
       return;
     }
     console.log(`Extracting ${req.body.fsPath}`);
+    // TODO: Store id in adjacent file and check for it after extraction
+    // Use h5pEditor.exportContent to save the h5p files to workspace (somehow)
     await extractArchive(
       req.body.fsPath,
-      `${tempFolderPath}/content/${userContentId()}`,
+      `${CONTENT_DIRECTORY}/${userContentId()}`,
       false,
       undefined,
       ['content.json', 'h5p.json']
