@@ -13,7 +13,7 @@ by Openstax.
 git clone https://github.com/openstax/vscode-h5p
 cd vscode-h5p
 npm install
-./scripts/build.sh
+npm run build
 
 ```
 
@@ -40,7 +40,8 @@ will open a new VSCode window with the extension running. Clinking on a
 
 - [ ] On save, save h5p.json and content.json to the workspace or specified
       location (partially done, need configuration options)
-- [ ] Public/private switch (determines where files save to)
+- [ ] Public/private switch (determines if answers are saved outside
+      content.json or not)
 - [x] Add command to open the manager
 - [ ] Extension settings
 - [x] Bundle extension to vsix

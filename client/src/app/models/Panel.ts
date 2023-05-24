@@ -11,7 +11,7 @@ export abstract class Panel {
     return vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One;
   }
 
-	public abstract get id(): string;
+  public abstract get id(): string;
 
   protected onDidDispose() {}
 

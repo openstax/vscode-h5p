@@ -2,10 +2,9 @@ import vscode from 'vscode';
 import { Panel } from './Panel';
 import path from 'path';
 export class H5PEditorPanel extends Panel {
-
-	public get id(): string {
-		return 'h5p.web.editor'
-	}
+  public get id(): string {
+    return 'h5p.web.editor';
+  }
 
   protected createPanel(): vscode.WebviewPanel {
     const panel = vscode.window.createWebviewPanel(
@@ -23,15 +22,15 @@ export class H5PEditorPanel extends Panel {
       localResourceRoots: [resourceRoot, extensionRoot],
     };
 
-		webview.html = getHtmlForWebview(this.context, webview);
-		webview.onDidReceiveMessage(async (evt) => {
-			if (evt.type === 'ready') {
-				webview.postMessage({
-					type: 'FileInfo',
-					data: { server_url: buildGitpodURL() },
-				});
-			}
-		});
+    webview.html = getHtmlForWebview(this.context, webview);
+    webview.onDidReceiveMessage(async (evt) => {
+      if (evt.type === 'ready') {
+        webview.postMessage({
+          type: 'FileInfo',
+          data: { server_url: buildGitpodURL() },
+        });
+      }
+    });
 
     return panel;
   }
