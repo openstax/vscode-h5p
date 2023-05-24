@@ -30,26 +30,11 @@
   },
   "main": "./client/out/extension",
   "contributes": {
-    "customEditors": [
+    "commands": [
       {
-        "viewType": "h5p.web.viewer",
-        "displayName": "H5P Viewer",
-        "selector": [
-          {
-            "filenamePattern": "*.{h5p}"
-          }
-        ],
-        "priority": "default"
-      },
-      {
-        "viewType": "h5p.web.fallback-viewer",
-        "displayName": "H5P (any extension)",
-        "selector": [
-          {
-            "filenamePattern": "*"
-          }
-        ],
-        "priority": "option"
+        "command": "h5p.web.showEditor",
+        "title": "Show Editor",
+        "category": "H5P Editor"
       }
     ]
   },
@@ -58,6 +43,7 @@
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "format": "prettier --write .",
+    "build": "npm run build --prefix ./client && npm run build --prefix ./server",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh",

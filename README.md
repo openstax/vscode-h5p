@@ -39,13 +39,18 @@ will open a new VSCode window with the extension running. Clinking on a
 ## TODO
 
 - [ ] On save, zip the content and save it to the workspace or specified
-      location
-- [ ] Add command to open the manager
+      location (partially done)
+- [ ] Public/private switch (determines where files save to)
+- [x] Add command to open the manager
 - [ ] Contextual menu option for h5p files
 - [ ] Extension settings
 - [ ] Bundle extension to vsix
 - [ ] Add tests
 - [ ] CI/CD
+- [ ] Support for extra openstax metadata with editor Ideally, this would be
+      seamlessly integrated Maybe an express middleware? 1. Extract extra
+      metadata from request 2. Save file with name that matches it to the h5p 3.
+      When files are exported, combine the information?
 
 ## Author
 

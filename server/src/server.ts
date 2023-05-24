@@ -57,12 +57,11 @@ connection.onInitialized(() => {
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
       console.log('Preparing environment for server');
-      await prepareEnvironment().then(async (e) => {
-        console.log('Environment prepared');
-        await startH5P().then((e) => {
-          console.log('Starting server');
-        });
-      });
+      await prepareEnvironment();
+      console.log('Environment prepared');
+      console.log('Starting server');
+      await startH5P();
+      connection.sendNotification('server-ready')
     }
   };
   inner().catch((e) => {

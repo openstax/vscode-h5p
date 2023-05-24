@@ -11,7 +11,7 @@ function App() {
   useEventListener(window, 'message', (evt: MessageEvent<Message>) => {
     const { data: message } = evt;
     if (isFileInfoMessage(message)) {
-		console.log(`File received ${message.data.uri}`)
+      // console.log(`File received ${message.data.uri}`);
       setFileInfo(message.data);
     }
   });
@@ -28,7 +28,7 @@ function App() {
   return (
     <ErrorBoundary fallbackRender={({ error }) => <p>{error.message}</p>}>
       <Suspense fallback={<>Loading...</>}>
-    	<H5PViewerComponent h5pUrl={fileInfo.server_url} />
+        <H5PViewerComponent h5pUrl={fileInfo.server_url} />
       </Suspense>
     </ErrorBoundary>
   );
