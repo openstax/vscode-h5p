@@ -15,7 +15,6 @@
     "url": "https://github.com/sparksam/vscode-h5p/issues",
     "email": "klutse.samuel@gmail.com"
   },
-  "icon": "assets/favicon.png",
   "galleryBanner": {
     "color": "#333333",
     "theme": "dark"
@@ -28,7 +27,10 @@
     "pnpm": ">=7.x",
     "vscode": ">=1.46.0"
   },
-  "main": "./client/out/extension",
+  "main": "./client/out/extension.js",
+  "activationEvents": [
+    
+  ],
   "contributes": {
     "commands": [
       {
@@ -36,10 +38,33 @@
         "title": "Show Editor",
         "category": "H5P Editor"
       }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "os-h5p",
+          "title": "H5P Editor",
+          "icon": "$(preview)"
+        }
+      ]
+    },
+    "views": {
+      "os-h5p": [
+        {
+          "id": "h5p-controls",
+          "name": "Controls"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "h5p-controls",
+        "contents": "[Open H5P Editor](command:h5p.web.showEditor)"
+      }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "format": "prettier --write .",
@@ -47,7 +72,8 @@
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh",
-    "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules"
+    "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules",
+    "package": "vsce package"
   },
   "devDependencies": {
     "@types/cache-manager": "4.0.2",
@@ -63,9 +89,10 @@
     "esbuild": "0.14.49",
     "prettier": "2.7.1",
     "typescript": "4.7.3",
-    "vite": "4.0.0"
+    "vite": "4.0.0",
+    "vsce": "2.15.0",
+    "pnpm": "8.5.0"
   },
   "dependencies": {
-    "pnpm": "8.5.0"
   }
 }

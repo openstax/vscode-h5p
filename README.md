@@ -38,19 +38,18 @@ will open a new VSCode window with the extension running. Clinking on a
 
 ## TODO
 
-- [ ] On save, zip the content and save it to the workspace or specified
-      location (partially done)
+- [ ] On save, save h5p.json and content.json to the workspace or specified
+      location (partially done, need configuration options)
 - [ ] Public/private switch (determines where files save to)
 - [x] Add command to open the manager
-- [ ] Contextual menu option for h5p files
 - [ ] Extension settings
 - [ ] Bundle extension to vsix
 - [ ] Add tests
 - [ ] CI/CD
-- [ ] Support for extra openstax metadata with editor Ideally, this would be
-      seamlessly integrated Maybe an express middleware? 1. Extract extra
-      metadata from request 2. Save file with name that matches it to the h5p 3.
-      When files are exported, combine the information?
+- [ ] Support for extra openstax metadata with editor. It should be okay to save
+      this metadata next to the h5p.json and content.json. H5P spec allows
+      inclusion of arbitrary json files, so it would be safe to include this in
+      the final h5p file too.
 
 ## Author
 
