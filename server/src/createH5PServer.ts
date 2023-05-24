@@ -28,10 +28,7 @@ import {
   userContentId,
 } from './utils';
 
-const WORKSPACE_ROOT = process.argv[2];
-const CONTENT_DIRECTORY = `${WORKSPACE_ROOT}/interactives`;
-
-export async function prepareEnvironment() {
+export async function prepareEnvironment(contentDirectory: string) {
   console.log('Preparing environment');
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   const lastUpdatedFile = `${tempFolderPath}/lastUpdatedDate.json`;
@@ -69,7 +66,7 @@ export async function prepareEnvironment() {
     const editorFile = `${tempFolderPath}/editor_${version}.zip`;
 
     try {
-      fs.mkdirSync(CONTENT_DIRECTORY, { recursive: true });
+      fs.mkdirSync(contentDirectory, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/libraries`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/temporary-storage`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/core`, { recursive: true });
@@ -374,7 +371,7 @@ function serverRoute(
   return router;
 }
 
-export async function startH5P() {
+export async function startH5P(contentDirectory: string) {
   const port: number = Number(process.env.PORT) || 8080;
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
@@ -412,7 +409,7 @@ export async function startH5P() {
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 
-    CONTENT_DIRECTORY, // the path on the local disc where content
+    contentDirectory, // the path on the local disc where content
     // is stored. Only used / necessary if you use the local filesystem
     // content storage class.
 
@@ -512,7 +509,7 @@ export async function startH5P() {
   //     object in the addCsrfTokenToUser middleware.
   // const csrfProtection = csurf();
 
-  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath);
+  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath, contentDirectory);
   // For developer convenience we display a list of IPs, the server is running
   // on. You can then simply click on it in the terminal.
   displayIps(port.toString());
@@ -534,7 +531,8 @@ const serverRoutes = (
   server: express.Express,
   h5pEditor: H5P.H5PEditor,
   h5pPlayer: H5P.H5PPlayer,
-  tempFolderPath: string
+  tempFolderPath: string,
+  contentDirectory: string
 ) => {
   //H5P Routes
 
@@ -597,7 +595,7 @@ const serverRoutes = (
     // Use h5pEditor.exportContent to save the h5p files to workspace (somehow)
     await extractArchive(
       req.body.fsPath,
-      `${CONTENT_DIRECTORY}/${userContentId()}`,
+      `${contentDirectory}/${userContentId()}`,
       false,
       undefined,
       ['content.json', 'h5p.json']

@@ -43,7 +43,7 @@ will open a new VSCode window with the extension running. Clinking on a
 - [ ] Public/private switch (determines where files save to)
 - [x] Add command to open the manager
 - [ ] Extension settings
-- [ ] Bundle extension to vsix
+- [x] Bundle extension to vsix
 - [ ] Add tests
 - [ ] CI/CD
 - [ ] Support for extra openstax metadata with editor. It should be okay to save

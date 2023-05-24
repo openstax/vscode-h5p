@@ -61,9 +61,7 @@ export async function activate(context: ExtensionContext) {
       module: serverModule,
       transport: TransportKind.ipc,
       options: debugOptions,
-      args: [workspaceRoot],
     },
-    args: [workspaceRoot],
   };
 
   // Options to control the language client
