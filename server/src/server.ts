@@ -9,6 +9,7 @@ import {
   InitializeParams,
   InitializeResult,
 } from 'vscode-languageserver/node';
+import { URI } from 'vscode-uri';
 
 import { prepareEnvironment, startH5P } from './createH5PServer';
 
@@ -56,12 +57,14 @@ connection.onInitialized(() => {
     const currentWorkspaces =
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
+      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
+      const contentDirectory = `${workspaceRoot}/interactives`;
       console.log('Preparing environment for server');
-      await prepareEnvironment();
+      await prepareEnvironment(contentDirectory);
       console.log('Environment prepared');
       console.log('Starting server');
-      await startH5P();
-      connection.sendNotification('server-ready')
+      await startH5P(contentDirectory);
+      connection.sendNotification('server-ready');
     }
   };
   inner().catch((e) => {

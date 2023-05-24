@@ -13,7 +13,7 @@ import {
   TransportKind,
 } from 'vscode-languageclient/node';
 import { H5PEditorPanel } from './app/models/H5PEditorPanel';
-import { AsyncEvent } from './app/models/Event';
+import { AsyncEvent } from './app/models/AsyncEvent';
 
 let client: LanguageClient;
 
@@ -36,7 +36,7 @@ export async function activate(context: ExtensionContext) {
     commands.registerCommand('h5p.web.showEditor', () => {
       serverReadyEvent.wait().then(() => {
         h5pEditor.revealOrNew();
-      })
+      });
     })
   );
 
@@ -61,9 +61,7 @@ export async function activate(context: ExtensionContext) {
       module: serverModule,
       transport: TransportKind.ipc,
       options: debugOptions,
-      args: [workspaceRoot],
     },
-    args: [workspaceRoot],
   };
 
   // Options to control the language client
@@ -84,7 +82,7 @@ export async function activate(context: ExtensionContext) {
   client.start();
   context.subscriptions.push(
     client.onNotification('server-ready', () => {
-      serverReadyEvent.set()
+      serverReadyEvent.set();
     })
   );
 }
