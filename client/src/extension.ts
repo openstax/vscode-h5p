@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
-import { ExtensionContext, window } from 'vscode';
+import { ExtensionContext, window, workspace, Uri, commands } from 'vscode';
 
 import {
   LanguageClient,
@@ -12,22 +12,32 @@ import {
   ServerOptions,
   TransportKind,
 } from 'vscode-languageclient/node';
-import H5WebViewer from './app/viewers/H5PWebViewer';
+import { H5PEditorPanel } from './app/models/H5PEditorPanel';
+import { AsyncEvent } from './app/models/Event';
 
 let client: LanguageClient;
 
-const EDITOR_IDS = ['h5p.web.viewer', 'h5p.web.fallback-viewer'];
+function expectValue<T>(val: T | null | undefined, message: string): T {
+  if (val == null) throw new Error(message);
+  return val;
+}
 
-export function activate(context: ExtensionContext) {
+export function getRootPathUri(): Uri | null {
+  const maybeWorkspace = workspace.workspaceFolders;
+  const rootPath = maybeWorkspace != null ? maybeWorkspace[0] : null;
+  return rootPath != null ? rootPath.uri : null;
+}
+
+export async function activate(context: ExtensionContext) {
   console.log('Activating extension');
-
+  const serverReadyEvent = new AsyncEvent();
+  const h5pEditor = new H5PEditorPanel(context);
   context.subscriptions.push(
-    ...EDITOR_IDS.map((id) =>
-      window.registerCustomEditorProvider(id, new H5WebViewer(context), {
-        webviewOptions: { retainContextWhenHidden: true },
-        supportsMultipleEditorsPerDocument: true,
+    commands.registerCommand('h5p.web.showEditor', () => {
+      serverReadyEvent.wait().then(() => {
+        h5pEditor.revealOrNew();
       })
-    )
+    })
   );
 
   // The server is implemented in node
@@ -38,6 +48,11 @@ export function activate(context: ExtensionContext) {
   // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
   const debugOptions = { execArgv: ['--nolazy', '--inspect=16009'] };
 
+  const workspaceRoot = expectValue(
+    getRootPathUri(),
+    'Could not get workspace root'
+  ).fsPath;
+
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
   const serverOptions: ServerOptions = {
@@ -46,7 +61,9 @@ export function activate(context: ExtensionContext) {
       module: serverModule,
       transport: TransportKind.ipc,
       options: debugOptions,
+      args: [workspaceRoot],
     },
+    args: [workspaceRoot],
   };
 
   // Options to control the language client
@@ -65,6 +82,11 @@ export function activate(context: ExtensionContext) {
   );
 
   client.start();
+  context.subscriptions.push(
+    client.onNotification('server-ready', () => {
+      serverReadyEvent.set()
+    })
+  );
 }
 
 export function deactivate(): Thenable<void> | undefined {
