@@ -51,7 +51,14 @@ will open a new VSCode window with the extension running. Clinking on a
       this metadata next to the h5p.json and content.json. H5P spec allows
       inclusion of arbitrary json files, so it would be safe to include this in
       the final h5p file too.
+- [ ] Custom content fs implementation that can 'hide' private solutions/hints -
+      Maybe different names (not content id)
 
 ## Author
 
 - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+
+## What we still need to know
+
+- What metadata should be added
+- How private solutions will be handled - Probably placeholder values

@@ -23,11 +23,12 @@ import {
   faCopyright,
 } from '@fortawesome/free-solid-svg-icons';
 
-import H5PEditorUI from './H5PEditorUI';
 import H5PPlayerUI from './H5PPlayerUI';
+import H5PEditorUI from './H5PEditorUI';
 
 import { IContentListEntry, IContentService } from '../services/ContentService';
 import './ContentListEntryComponent.css';
+import OpenstaxMetadataForm from './OpenstaxMetadataForm';
 
 export default class ContentListEntryComponent extends React.Component<{
   h5pUrl: string;
@@ -62,6 +63,7 @@ export default class ContentListEntryComponent extends React.Component<{
     this.h5pEditor = React.createRef();
     this.saveButton = React.createRef();
     this.h5pPlayer = React.createRef();
+    this.openstaxForm = React.createRef();
     this.h5pUrl = props.h5pUrl;
   }
 
@@ -79,6 +81,7 @@ export default class ContentListEntryComponent extends React.Component<{
   private h5pPlayer: React.RefObject<H5PPlayerUI>;
   private h5pEditor: React.RefObject<H5PEditorUI>;
   private saveButton: React.RefObject<HTMLButtonElement>;
+  private openstaxForm: React.RefObject<OpenstaxMetadataForm>;
 
   public render(): React.ReactNode {
     return (
@@ -238,6 +241,7 @@ export default class ContentListEntryComponent extends React.Component<{
                 : ''
             }
           >
+            <OpenstaxMetadataForm ref={this.openstaxForm} />
             <H5PEditorUI
               ref={this.h5pEditor}
               h5pUrl={this.h5pUrl}
@@ -334,6 +338,7 @@ export default class ContentListEntryComponent extends React.Component<{
     try {
       const returnData = await this.h5pEditor.current?.save();
       if (returnData) {
+        this.openstaxForm.current?.save(returnData.contentId);
         await this.props.onSaved({
           h5PUrl: this.h5pUrl,
           contentId: returnData.contentId,
@@ -348,6 +353,7 @@ export default class ContentListEntryComponent extends React.Component<{
     }
   }
 
+  // TODO: This is almost certainly broken
   protected onSaveError = async (event) => {
     this.setState({
       saving: false,

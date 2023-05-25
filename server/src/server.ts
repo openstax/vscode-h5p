@@ -13,7 +13,7 @@ import {
 import { URI } from 'vscode-uri';
 
 import { prepareEnvironment, startH5P } from './createH5PServer';
-import { Config } from './model/config';
+import Config from './models/config';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -58,9 +58,10 @@ connection.onInitialized(() => {
     const currentWorkspaces =
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
-      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath
+      // TODO: workspace switching
+      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
       const config = new Config(workspaceRoot);
-      
+
       console.log('Preparing environment for server');
       await prepareEnvironment(config);
       console.log('Environment prepared');
