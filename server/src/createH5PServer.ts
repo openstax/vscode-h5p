@@ -1,33 +1,16 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
-import fetch from 'node-fetch';
-import cors from 'cors';
-
-import express from 'express';
-import fileUpload from 'express-fileupload';
-import bodyParser from 'body-parser';
 
 import { Cache, caching } from 'cache-manager';
 
 import * as H5P from '@lumieducation/h5p-server';
 
-import {
-  h5pAjaxExpressRouter,
-  libraryAdministrationExpressRouter,
-  contentTypeCacheExpressRouter,
-  IRequestWithUser,
-  IRequestWithLanguage,
-} from '@lumieducation/h5p-express';
-import {
-  copyDirectory,
-  download,
-  extractArchive,
-  fsRemove,
-  getIps,
-  userContentId,
-} from './utils';
-import { Config } from './model/config';
+import { download, extractArchive, fsRemove } from './utils';
+import Config from './models/config';
+import OSH5PEditor from './models/OpenStax/H5PEditor';
+import OSStorage from './models/OpenStax/FileContentStoreage';
+import OSH5PServer from './models/OpenStax/H5PServer';
 
 export async function prepareEnvironment(globalConfig: Config) {
   console.log('Preparing environment');
@@ -120,17 +103,6 @@ export async function prepareEnvironment(globalConfig: Config) {
   }
 }
 
-/**
- * Displays links to the server at all available IP addresses.
- * @param port The port at which the server can be accessed.
- */
-function displayIps(port: string): void {
-  console.log('H5P Server Started!');
-  getIps().forEach((address) =>
-    console.log(`Server address....  http://${address}:${port}`)
-  );
-}
-
 function buildServerURL(): string {
   const port = Number(process.env.PORT) || 8080;
   if (process.env['GITPOD_WORKSPACE_ID']) {
@@ -163,7 +135,7 @@ async function createH5PEditor(
       user: H5P.IUser
     ) => Promise<void>;
   }
-): Promise<H5P.H5PEditor> {
+): Promise<OSH5PEditor> {
   console.debug(`Using in memory cache for caching library storage.`);
   const cache: Cache = caching({
     store: 'memory',
@@ -183,11 +155,11 @@ async function createH5PEditor(
   const userStorage: H5P.IContentUserDataStorage =
     new H5P.fsImplementations.FileContentUserDataStorage(localUserContentPath);
 
-  const h5pEditor = new H5P.H5PEditor(
+  const h5pEditor = new OSH5PEditor(
     new H5P.cacheImplementations.CachedKeyValueStorage('kvcache', cache), // this is a general-purpose cache
     config,
     new H5P.cacheImplementations.CachedLibraryStorage(libraryStorage, cache),
-    new H5P.fsImplementations.FileContentStorage(localContentPath),
+    new OSStorage(localContentPath),
     new H5P.fsImplementations.DirectoryTemporaryFileStorage(localTemporaryPath),
     translationCallback,
     urlGenerator,
@@ -201,175 +173,6 @@ async function createH5PEditor(
   );
 
   return h5pEditor;
-}
-
-class User implements H5P.IUser {
-  constructor() {
-    this.id = '1';
-    this.name = 'Mock User';
-    this.canInstallRecommended = true;
-    this.canUpdateAndInstallLibraries = true;
-    this.canCreateRestricted = true;
-    this.type = 'local';
-    this.email = 'test@openstax.com';
-  }
-
-  public canCreateRestricted: boolean;
-  public canInstallRecommended: boolean;
-  public canUpdateAndInstallLibraries: boolean;
-  public email: string;
-  public id: string;
-  public name: string;
-  public type: 'local';
-}
-
-/**
- * @param h5pEditor
- * @param h5pPlayer
- * @param languageOverride the language to use. Set it to 'auto' to use the
- * language set by a language detector in the req.language property.
- * (recommended)
- */
-function serverRoute(
-  h5pEditor: H5P.H5PEditor,
-  h5pPlayer: H5P.H5PPlayer,
-  languageOverride: string | 'auto' = 'auto'
-): express.Router {
-  const router = express.Router();
-
-  router.get(`/:contentId/play`, async (req: any, res: any) => {
-    try {
-      const h5pPage = await h5pPlayer.render(
-        req.params.contentId,
-        req.user,
-        languageOverride === 'auto' ? req.language ?? 'en' : languageOverride,
-        {
-          showCopyButton: true,
-          showDownloadButton: true,
-          showFrame: true,
-          showH5PIcon: true,
-          showLicenseButton: true,
-        }
-      );
-      res.send(h5pPage);
-      res.status(200).end();
-    } catch (error: any) {
-      res.status(500).end(error.message);
-    }
-  });
-
-  router.get(
-    '/:contentId/edit',
-    async (req: IRequestWithLanguage & IRequestWithUser, res: any) => {
-      // This route merges the render and the /ajax/params routes to avoid a
-      // second request.
-      const editorModel = (await h5pEditor.render(
-        req.params.contentId,
-        languageOverride === 'auto' ? req.language ?? 'en' : languageOverride,
-        req.user
-      )) as H5P.IEditorModel;
-      if (!req.params.contentId || req.params.contentId === 'undefined') {
-        res.send(editorModel);
-      } else {
-        const content = await h5pEditor.getContent(req.params.contentId);
-        res.send({
-          ...editorModel,
-          library: content.library,
-          metadata: content.params.metadata,
-          params: content.params.params,
-        });
-      }
-      res.status(200).end();
-    }
-  );
-
-  router.post('/', async (req: IRequestWithUser, res: any) => {
-    if (
-      !req.body.params ||
-      !req.body.params.params ||
-      !req.body.params.metadata ||
-      !req.body.library ||
-      !req.user
-    ) {
-      res.status(400).send('Malformed request').end();
-      return;
-    }
-    const { id: contentId, metadata } =
-      await h5pEditor.saveOrUpdateContentReturnMetaData(
-        undefined!,
-        req.body.params.params,
-        req.body.params.metadata,
-        req.body.library,
-        req.user
-      );
-
-    res.send(JSON.stringify({ contentId, metadata }));
-    res.status(200).end();
-  });
-
-  router.patch('/:contentId', async (req: IRequestWithUser, res: any) => {
-    if (
-      !req.body.params ||
-      !req.body.params.params ||
-      !req.body.params.metadata ||
-      !req.body.library ||
-      !req.user
-    ) {
-      res.status(400).send('Malformed request').end();
-      return;
-    }
-    const { id: contentId, metadata } =
-      await h5pEditor.saveOrUpdateContentReturnMetaData(
-        req.params.contentId.toString(),
-        req.body.params.params,
-        req.body.params.metadata,
-        req.body.library,
-        req.user
-      );
-
-    res.send(JSON.stringify({ contentId, metadata }));
-    res.status(200).end();
-  });
-
-  router.delete('/:contentId', async (req: IRequestWithUser, res: any) => {
-    try {
-      await h5pEditor.deleteContent(req.params.contentId, req.user);
-    } catch (error: any) {
-      res.send(
-        `Error deleting content with id ${req.params.contentId}: ${error.message}`
-      );
-      res.status(500).end();
-      return;
-    }
-
-    res.send(`Content ${req.params.contentId} successfully deleted.`);
-    res.status(200).end();
-  });
-
-  router.get('/', async (req: IRequestWithUser, res: any) => {
-    // TODO: check access permissions
-
-    const contentIds = await h5pEditor.contentManager.listContent();
-    const contentObjects = await Promise.all(
-      contentIds.map(async (id) => ({
-        content: await h5pEditor.contentManager.getContentMetadata(
-          id,
-          req.user
-        ),
-        id,
-      }))
-    );
-
-    res.status(200).send(
-      contentObjects.map((o) => ({
-        contentId: o.id,
-        title: o.content.title,
-        mainLibrary: o.content.mainLibrary,
-      }))
-    );
-  });
-
-  return router;
 }
 
 export async function startH5P(globalConfig: Config) {
@@ -406,7 +209,7 @@ export async function startH5P(globalConfig: Config) {
   // In your implementation, you will probably instantiate H5PEditor by
   // calling new H5P.H5PEditor(...) or by using the convenience function
   // H5P.fs(...).
-  const h5pEditor: H5P.H5PEditor = await createH5PEditor(
+  const h5pEditor: OSH5PEditor = await createH5PEditor(
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 
@@ -452,182 +255,6 @@ export async function startH5P(globalConfig: Config) {
 
   process.env['DEBUG'] = '*';
 
-  const server = express();
-  server.use((err, req, res, next) => {
-    next();
-    if (err || res.statusCode >= 400) {
-      console.error(err.stack);
-      res.status(500).send('Something broke!');
-    }
-    console.log(req.headers);
-    res.set('Access-Control-Allow-Origin', getIps());
-    res.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
-    res.set('Access-Control-Allow-Credentials', 'true');
-  });
-  server.use(
-    cors({
-      origin: '*',
-      credentials: false,
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    })
-  );
-
-  server.use(bodyParser.json({ limit: '500mb' }));
-  server.use(
-    bodyParser.urlencoded({
-      extended: true,
-    })
-  );
-
-  // Configure file uploads
-  server.use(
-    fileUpload({
-      limits: { fileSize: h5pEditor.config.maxTotalSize },
-      useTempFiles: true,
-      tempFileDir: `${tempFolderPath}/tmp`,
-    })
-  );
-
-  // It is important that you inject a user object into the request object!
-  // The Express adapter below (H5P.adapters.express) expects the user
-  // object to be present in requests.
-  // In your real implementation you would create the object using sessions,
-  // JSON webtokens or some other means.
-  server.use((req: IRequestWithUser, res: any, next: any) => {
-    req.user = new User();
-    next();
-  });
-
-  // Initialize CSRF protection. If we add it as middleware, it checks if a
-  // token was passed into a state altering route. We pass this token to the
-  // client in two ways:
-  //   - Return it as a property of the return data on login (used for the CUD
-  //     routes in the content service)
-  //   - Add the token to the URLs in the H5PIntegration object as a query
-  //     parameter. This is done by passing in a custom UrlGenerator that gets
-  //     the csrfToken from the user object. We put the token into the user
-  //     object in the addCsrfTokenToUser middleware.
-  // const csrfProtection = csurf();
-
-  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath, globalConfig.contentDirectory);
-  // For developer convenience we display a list of IPs, the server is running
-  // on. You can then simply click on it in the terminal.
-  displayIps(port.toString());
-
-  server.listen(port, getIps()[0], async function () {
-    console.log(
-      `... port ${port} with Settings:  ${JSON.stringify(server.settings)} mode`
-    );
-    await downloadLibraries(
-      getIps()[0],
-      port,
-      '/h5p/ajax?action=content-type-cache',
-      h5pEditor
-    );
-  });
-}
-
-const serverRoutes = (
-  server: express.Express,
-  h5pEditor: H5P.H5PEditor,
-  h5pPlayer: H5P.H5PPlayer,
-  tempFolderPath: string,
-  contentDirectory: string
-) => {
-  //H5P Routes
-
-  // The Express adapter handles GET and POST requests to various H5P
-  // endpoints. You can add an options object as a last parameter to configure
-  // which endpoints you want to use. In this case we don't pass an options
-  // object, which means we get all of them.
-  console.log(`H5P Editor base URL: ${h5pEditor.config.baseUrl}`);
-  server.use(
-    h5pEditor.config.baseUrl,
-    h5pAjaxExpressRouter(
-      h5pEditor,
-      `${tempFolderPath}/core`, // the path on the local disc where the
-      // files of the JavaScript client of the player are stored
-      `${tempFolderPath}/editor`, // the path on the local disc where the
-      // files of the JavaScript client of the editor are stored
-      undefined,
-      'en' // You can change the language of the editor here by setting
-      // the language code you need here. 'auto' means the route will try
-      // to use the language detected by the i18next language detector.
-    )
-  );
-  // The expressRoutes are routes that create pages for these actions:
-  // - Creating new content
-  // - Editing content
-  // - Saving content
-  // - Deleting content
-  server.use(
-    h5pEditor.config.baseUrl,
-    serverRoute(
-      h5pEditor,
-      h5pPlayer,
-      'en' // You can change the language of the editor by setting
-      // the language code you need here. 'auto' means the route will try
-      // to use the language detected by the i18next language detector.
-    )
-  );
-  // The LibraryAdministrationExpress routes are REST endpoints that offer
-  // library management functionality.
-  server.use(
-    `${h5pEditor.config.baseUrl}/libraries`,
-    libraryAdministrationExpressRouter(h5pEditor)
-  );
-
-  // The ContentTypeCacheExpress routes are REST endpoints that allow updating
-  // the content type cache manually.
-  server.use(
-    `${h5pEditor.config.baseUrl}/content-type-cache`,
-    contentTypeCacheExpressRouter(h5pEditor.contentTypeCache)
-  );
-
-  //Custom Routes
-  server.post('/vscode-h5p/extract', async (req, res) => {
-    if (!req.body.fsPath) {
-      res.status(400).send('Malformed request').end();
-      return;
-    }
-    console.log(`Extracting ${req.body.fsPath}`);
-    // TODO: Store id in adjacent file and check for it after extraction
-    // Use h5pEditor.exportContent to save the h5p files to workspace (somehow)
-    await extractArchive(
-      req.body.fsPath,
-      `${contentDirectory}/${userContentId()}`,
-      false,
-      undefined,
-      ['content.json', 'h5p.json']
-    );
-    res.send(JSON.stringify({}));
-    res.status(200).end();
-  });
-};
-
-async function downloadLibraries(
-  hostname: string,
-  port: number,
-  path: string,
-  h5PEditor: H5P.H5PEditor
-): Promise<any> {
-  console.log(`Updating libraries`);
-  const res = await fetch(`http://${hostname}:${port}${path}`).then((res) =>
-    res.json()
-  );
-  const user = new User();
-  return Promise.all(
-    res.libraries
-      .filter((lib) => !lib.installed || !lib.isUpToDate)
-      .map((lib) => lib.machineName)
-      .map(async (libraryName) => {
-        console.log(`Installing ${libraryName}`);
-        return h5PEditor
-          .installLibraryFromHub(libraryName, user)
-          .then((res) => {
-            console.log(res);
-          });
-      })
-  );
+  const server = new OSH5PServer(h5pEditor, h5pPlayer, tempFolderPath);
+  server.start(port);
 }
