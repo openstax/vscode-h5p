@@ -58,9 +58,9 @@ connection.onInitialized(() => {
     const currentWorkspaces =
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
-      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath
+      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
       const config = new Config(workspaceRoot);
-      
+
       console.log('Preparing environment for server');
       await prepareEnvironment(config);
       console.log('Environment prepared');

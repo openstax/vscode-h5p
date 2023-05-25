@@ -1,5 +1,6 @@
 import * as os from 'os';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import fetch from 'node-fetch';
 import cors from 'cors';
@@ -20,7 +21,6 @@ import {
   IRequestWithLanguage,
 } from '@lumieducation/h5p-express';
 import {
-  copyDirectory,
   download,
   extractArchive,
   fsRemove,
@@ -28,6 +28,32 @@ import {
   userContentId,
 } from './utils';
 import { Config } from './model/config';
+import { randomUUID } from 'crypto';
+import { IContentMetadata } from '@lumieducation/h5p-server';
+import { IUser } from '@lumieducation/h5p-server';
+import { ContentId } from '@lumieducation/h5p-server';
+
+class MyStorage extends H5P.fsImplementations.FileContentStorage {
+  protected async createContentId() {
+    return randomUUID();
+  }
+
+  // Add custom metadata to also be saved (and save it)
+  public async addContent(
+    metadata: IContentMetadata,
+    content: any,
+    user: IUser,
+    id?: ContentId
+  ) {
+    // Here is where we would handle private solutions (before calling addContent)
+    const realId = await super.addContent(metadata, content, user, id);
+    await fsExtra.writeJSON(
+      path.join(this.getContentPath(), realId, 'openstax.json'),
+      { something: 1234 }
+    );
+    return realId;
+  }
+}
 
 export async function prepareEnvironment(globalConfig: Config) {
   console.log('Preparing environment');
@@ -187,7 +213,7 @@ async function createH5PEditor(
     new H5P.cacheImplementations.CachedKeyValueStorage('kvcache', cache), // this is a general-purpose cache
     config,
     new H5P.cacheImplementations.CachedLibraryStorage(libraryStorage, cache),
-    new H5P.fsImplementations.FileContentStorage(localContentPath),
+    new MyStorage(localContentPath),
     new H5P.fsImplementations.DirectoryTemporaryFileStorage(localTemporaryPath),
     translationCallback,
     urlGenerator,
@@ -510,7 +536,13 @@ export async function startH5P(globalConfig: Config) {
   //     object in the addCsrfTokenToUser middleware.
   // const csrfProtection = csurf();
 
-  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath, globalConfig.contentDirectory);
+  serverRoutes(
+    server,
+    h5pEditor,
+    h5pPlayer,
+    tempFolderPath,
+    globalConfig.contentDirectory
+  );
   // For developer convenience we display a list of IPs, the server is running
   // on. You can then simply click on it in the terminal.
   displayIps(port.toString());

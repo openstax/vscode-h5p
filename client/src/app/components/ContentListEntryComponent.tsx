@@ -23,7 +23,7 @@ import {
   faCopyright,
 } from '@fortawesome/free-solid-svg-icons';
 
-import H5PEditorUI from './H5PEditorUI';
+import { OpenstaxH5PEditorUI } from './OpenstaxMetadataForm';
 import H5PPlayerUI from './H5PPlayerUI';
 
 import { IContentListEntry, IContentService } from '../services/ContentService';
@@ -77,7 +77,7 @@ export default class ContentListEntryComponent extends React.Component<{
   };
 
   private h5pPlayer: React.RefObject<H5PPlayerUI>;
-  private h5pEditor: React.RefObject<H5PEditorUI>;
+  private h5pEditor: React.RefObject<OpenstaxH5PEditorUI>;
   private saveButton: React.RefObject<HTMLButtonElement>;
 
   public render(): React.ReactNode {
@@ -238,7 +238,7 @@ export default class ContentListEntryComponent extends React.Component<{
                 : ''
             }
           >
-            <H5PEditorUI
+            <OpenstaxH5PEditorUI
               ref={this.h5pEditor}
               h5pUrl={this.h5pUrl}
               contentId={this.props.data.contentId}
