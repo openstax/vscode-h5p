@@ -27,8 +27,9 @@ import {
   getIps,
   userContentId,
 } from './utils';
+import { Config } from './model/config';
 
-export async function prepareEnvironment(contentDirectory: string) {
+export async function prepareEnvironment(globalConfig: Config) {
   console.log('Preparing environment');
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   const lastUpdatedFile = `${tempFolderPath}/lastUpdatedDate.json`;
@@ -66,7 +67,7 @@ export async function prepareEnvironment(contentDirectory: string) {
     const editorFile = `${tempFolderPath}/editor_${version}.zip`;
 
     try {
-      fs.mkdirSync(contentDirectory, { recursive: true });
+      fs.mkdirSync(globalConfig.contentDirectory, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/libraries`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/temporary-storage`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/core`, { recursive: true });
@@ -371,7 +372,7 @@ function serverRoute(
   return router;
 }
 
-export async function startH5P(contentDirectory: string) {
+export async function startH5P(globalConfig: Config) {
   const port: number = Number(process.env.PORT) || 8080;
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
@@ -409,7 +410,7 @@ export async function startH5P(contentDirectory: string) {
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 
-    contentDirectory, // the path on the local disc where content
+    globalConfig.contentDirectory, // the path on the local disc where content
     // is stored. Only used / necessary if you use the local filesystem
     // content storage class.
 
@@ -509,7 +510,7 @@ export async function startH5P(contentDirectory: string) {
   //     object in the addCsrfTokenToUser middleware.
   // const csrfProtection = csurf();
 
-  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath, contentDirectory);
+  serverRoutes(server, h5pEditor, h5pPlayer, tempFolderPath, globalConfig.contentDirectory);
   // For developer convenience we display a list of IPs, the server is running
   // on. You can then simply click on it in the terminal.
   displayIps(port.toString());
