@@ -20,17 +20,6 @@ export class OpenstaxH5PEditorUI extends H5PEditorUI {
     // gets the request to save
     // adds our information
     // forwards request to our own endpoint
-    axios.interceptors.request.use(
-      (config) => {
-        console.log(config, this.metadata);
-        // Do something before request is sent
-        return config;
-      },
-      function (error) {
-        // Do something with request error
-        return Promise.reject(error);
-      }
-    );
 
     return (
       <>
@@ -47,7 +36,19 @@ export class OpenstaxH5PEditorUI extends H5PEditorUI {
   public async save(): Promise<
     { contentId: string; metadata: IContentMetadata } | undefined
   > {
+    const interceptor = axios.interceptors.request.use(
+      (config) => {
+        console.log(config, this.metadata);
+        // Do something before request is sent
+        return config;
+      },
+      function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+      }
+    );
     const result = await super.save();
+    axios.interceptors.request.eject(interceptor);
     if (result !== undefined) {
       console.log(result.contentId);
     }

@@ -1,4 +1,4 @@
-export class Config {
+export default class Config {
   constructor(
     public workspaceRoot: string,
     public contentPath: string = 'interactives'

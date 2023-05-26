@@ -13,7 +13,7 @@ import {
 import { URI } from 'vscode-uri';
 
 import { prepareEnvironment, startH5P } from './createH5PServer';
-import { Config } from './model/config';
+import Config from './models/config';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
