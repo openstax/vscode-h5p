@@ -28,7 +28,7 @@ import H5PEditorUI from './H5PEditorUI';
 
 import { IContentListEntry, IContentService } from '../services/ContentService';
 import './ContentListEntryComponent.css';
-import OpenstaxMetadataForm from './OpenstaxMetadataForm';
+import OpenstaxMetadataForm from './OpenStax/OpenstaxMetadataForm';
 
 export default class ContentListEntryComponent extends React.Component<{
   h5pUrl: string;
