@@ -1,14 +1,13 @@
 import React from 'react';
-import { InputSet } from './InputSet';
 import BloomsDropdown from './Blooms';
 import AssignmentType from './AssignmentType';
 import { BookDropdown } from './Book';
 import DokTag from './Dok';
 import { chunk } from './utils';
-
-interface InputState {
-  value: string;
-}
+import { InputState } from './types';
+import LO from './lo';
+import ModuleID from './ModuleID';
+import APLO from './APLO';
 
 type SingleInputs = {
   blooms: InputState;
@@ -20,18 +19,22 @@ type InputSets = {
   books: InputState[];
   lo: InputState[];
   moduleId: InputState[];
+  apLo: InputState[];
 };
 
 type FormState = SingleInputs & InputSets;
+
+const defaultInputState: InputState = { value: '', isValid: true };
 
 export default class OpenstaxMetadataForm extends React.Component {
   state: FormState = {
     books: [],
     lo: [],
     moduleId: [],
-    blooms: { value: '' },
-    assignmentType: { value: '' },
-    dokTag: { value: '' },
+    apLo: [],
+    blooms: { ...defaultInputState },
+    assignmentType: { ...defaultInputState },
+    dokTag: { ...defaultInputState },
   };
 
   save(contentId) {
@@ -51,48 +54,52 @@ export default class OpenstaxMetadataForm extends React.Component {
   }
 
   render() {
-    const inputSetHandleChange = (type, index, value) => {
-      const inputs = this.state[type];
-      const newInputs = [...inputs];
-      newInputs[index] = { value };
-      this.setState({ [type]: newInputs });
-    };
-
-    const handleAddInput = (type) => {
-      const inputs = this.state[type];
-      this.setState({ [type]: [...inputs, { value: '' }] });
-    };
-
-    const handleRemoveInput = (type, index) => {
-      const inputs = this.state[type];
-      const newInputs = [...inputs];
-      newInputs.splice(index, 1);
-      this.setState({ [type]: newInputs });
-    };
-
     const inputSetHandlerProps = (type: keyof InputSets) => {
       return {
         inputs: this.state[type],
-        handleAddInput: () => handleAddInput(type),
-        handleRemoveInput: (index) => handleRemoveInput(type, index),
-        handleInputChange: (index, value) =>
-          inputSetHandleChange(type, index, value),
+        handleAddInput: () => {
+          const inputs = this.state[type];
+          this.setState({ [type]: [...inputs, { ...defaultInputState }] });
+        },
+        handleRemoveInput: (index) => {
+          const inputs = this.state[type];
+          const newInputs = [...inputs];
+          newInputs.splice(index, 1);
+          this.setState({ [type]: newInputs });
+        },
+        handleInputChange: (
+          index: number,
+          value: string,
+          isValid: boolean = true
+        ) => {
+          const inputs = this.state[type];
+          const newInputs = [...inputs];
+          newInputs[index] = { value, isValid };
+          this.setState({ [type]: newInputs });
+        },
       };
     };
 
     const inputHandlerProps = (type: keyof SingleInputs) => ({
-      handleInputChange: (value: string) =>
-        this.setState({ [type]: { value } }),
-      value: this.state[type].value,
+      handleInputChange: (value: string, isValid: boolean = true) =>
+        this.setState({ [type]: { value, isValid } }),
+      ...this.state[type],
     });
 
     const inputs = [
       <BookDropdown {...inputSetHandlerProps('books')} />,
-      <InputSet title={'LO'} {...inputSetHandlerProps('lo')} />,
+      <LO {...inputSetHandlerProps('lo')} />,
+      <ModuleID {...inputSetHandlerProps('moduleId')} />,
       <BloomsDropdown {...inputHandlerProps('blooms')} />,
       <AssignmentType {...inputHandlerProps('assignmentType')} />,
       <DokTag {...inputHandlerProps('dokTag')} />,
     ];
+
+    if (this.state.books.some(b => b.value.includes('stax-ap'))) {
+      inputs.splice(2, 0, <APLO {...inputSetHandlerProps('apLo')} />);
+    } else if (this.state.apLo.length > 0) {
+      this.setState({ apLo: [] })
+    }
 
     const inputsPerRow = 2;
     const colClass = `col-${Math.ceil(12 / inputsPerRow)}`;

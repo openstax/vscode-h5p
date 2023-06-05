@@ -1,17 +1,21 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { DropdownOption } from './types';
+import { DropdownOption, InputState } from './types';
 import { SingleDropdown } from './SingleDropdown';
+import SingleInput from './SingleInput';
 
-export interface InputSetProps<
-  OptionType extends DropdownOption = DropdownOption
-> {
-  inputs: any;
-  handleAddInput: () => void;
-  handleRemoveInput: (index: number) => void;
-  handleInputChange: (index: number, value: string) => void;
-  options?: Array<OptionType>;
-}
+export type InputSetProps<OptionType extends DropdownOption = DropdownOption> =
+  {
+    inputs: InputState[];
+    handleAddInput: () => void;
+    handleRemoveInput: (index: number) => void;
+    handleInputChange: (
+      index: number,
+      value: string,
+      isValid?: boolean
+    ) => void;
+    options?: Array<OptionType>;
+  };
 
 export function InputSet<OptionType extends DropdownOption = DropdownOption>({
   title,
@@ -40,11 +44,12 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
           <div key={index} className="row pt-1 pb-1">
             <div className="col-11">
               {options === undefined || options.length === 0 ? (
-                <input
+                <SingleInput
                   value={input.value}
-                  onChange={(event) =>
-                    handleInputChange(index, event.target.value)
-                  }
+                  isValid={input.isValid}
+                  handleInputChange={(value: string) => {
+                    handleInputChange(index, value);
+                  }}
                   style={{ width: '100%' }}
                 />
               ) : (
