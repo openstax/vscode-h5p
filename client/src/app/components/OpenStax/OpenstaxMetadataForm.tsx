@@ -3,15 +3,35 @@ import { InputSet } from './InputSet';
 import BloomsDropdown from './Blooms';
 import AssignmentType from './AssignmentType';
 import { BookDropdown } from './Book';
-import DokTag from './dok';
+import DokTag from './Dok';
+import { chunk } from './utils';
+
+interface InputState {
+  value: string;
+}
+
+type SingleInputs = {
+  blooms: InputState;
+  assignmentType: InputState;
+  dokTag: InputState;
+};
+
+type InputSets = {
+  books: InputState[];
+  lo: InputState[];
+  moduleId: InputState[];
+};
+
+type FormState = SingleInputs & InputSets;
 
 export default class OpenstaxMetadataForm extends React.Component {
-  state = {
+  state: FormState = {
     books: [],
     lo: [],
-    blooms: '',
-    assignmentType: '',
-    dokTag: '',
+    moduleId: [],
+    blooms: { value: '' },
+    assignmentType: { value: '' },
+    dokTag: { value: '' },
   };
 
   save(contentId) {
@@ -31,10 +51,10 @@ export default class OpenstaxMetadataForm extends React.Component {
   }
 
   render() {
-    const handleInputChange = (type, index, value) => {
+    const inputSetHandleChange = (type, index, value) => {
       const inputs = this.state[type];
       const newInputs = [...inputs];
-      newInputs[index].value = value;
+      newInputs[index] = { value };
       this.setState({ [type]: newInputs });
     };
 
@@ -50,49 +70,42 @@ export default class OpenstaxMetadataForm extends React.Component {
       this.setState({ [type]: newInputs });
     };
 
-    const inputSetHandlerProps = (type) => {
+    const inputSetHandlerProps = (type: keyof InputSets) => {
       return {
         inputs: this.state[type],
         handleAddInput: () => handleAddInput(type),
         handleRemoveInput: (index) => handleRemoveInput(type, index),
         handleInputChange: (index, value) =>
-          handleInputChange(type, index, value),
+          inputSetHandleChange(type, index, value),
       };
     };
 
+    const inputHandlerProps = (type: keyof SingleInputs) => ({
+      handleInputChange: (value: string) =>
+        this.setState({ [type]: { value } }),
+      value: this.state[type].value,
+    });
+
+    const inputs = [
+      <BookDropdown {...inputSetHandlerProps('books')} />,
+      <InputSet title={'LO'} {...inputSetHandlerProps('lo')} />,
+      <BloomsDropdown {...inputHandlerProps('blooms')} />,
+      <AssignmentType {...inputHandlerProps('assignmentType')} />,
+      <DokTag {...inputHandlerProps('dokTag')} />,
+    ];
+
+    const inputsPerRow = 2;
+    const colClass = `col-${Math.ceil(12 / inputsPerRow)}`;
+
     return (
       <div className="container mb-4 mt-4">
-        <div className="row mb-4">
-          <div className="col-6">
-            <BookDropdown {...inputSetHandlerProps('books')} />
+        {chunk(inputs, inputsPerRow).map((inputsChunk) => (
+          <div className="row mb-4">
+            {inputsChunk.map((input) => (
+              <div className={colClass}>{input}</div>
+            ))}
           </div>
-          <div className="col-6">
-            <InputSet title={'LO'} {...inputSetHandlerProps('lo')} />
-          </div>
-        </div>
-        <div className="row mb-4">
-          <div className="col-6">
-            <BloomsDropdown
-              handleInputChange={(v) => this.setState({ blooms: v })}
-              value={this.state.blooms}
-            />
-          </div>
-          <div className="col-6">
-            <AssignmentType
-              handleInputChange={(v) => this.setState({ assignmentType: v })}
-              value={this.state.assignmentType}
-            />
-          </div>
-        </div>
-        <div className="row mb-4">
-          <div className="col-6">
-            <DokTag
-              handleInputChange={(v) => this.setState({ dokTag: v })}
-              value={this.state.dokTag}
-            />
-          </div>
-          <div className="col-6"></div>
-        </div>
+        ))}
       </div>
     );
   }
