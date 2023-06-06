@@ -5,14 +5,18 @@ import { BookDropdown } from './Book';
 import DokTag from './Dok';
 import { chunk } from './utils';
 import { InputState } from './types';
-import LO from './lo';
+import LO from './LO';
 import ModuleID from './ModuleID';
 import APLO from './APLO';
+import Time from './Time';
+import Nickname from './Nickname';
 
 type SingleInputs = {
   blooms: InputState;
   assignmentType: InputState;
   dokTag: InputState;
+  time: InputState;
+  nickname: InputState;
 };
 
 type InputSets = {
@@ -35,6 +39,8 @@ export default class OpenstaxMetadataForm extends React.Component {
     blooms: { ...defaultInputState },
     assignmentType: { ...defaultInputState },
     dokTag: { ...defaultInputState },
+    time: { ...defaultInputState },
+    nickname: { ...defaultInputState },
   };
 
   save(contentId) {
@@ -87,18 +93,20 @@ export default class OpenstaxMetadataForm extends React.Component {
     });
 
     const inputs = [
+      <Nickname {...inputHandlerProps('nickname')} />,
       <BookDropdown {...inputSetHandlerProps('books')} />,
       <LO {...inputSetHandlerProps('lo')} />,
       <ModuleID {...inputSetHandlerProps('moduleId')} />,
       <BloomsDropdown {...inputHandlerProps('blooms')} />,
       <AssignmentType {...inputHandlerProps('assignmentType')} />,
       <DokTag {...inputHandlerProps('dokTag')} />,
+      <Time {...inputHandlerProps('time')} />,
     ];
 
-    if (this.state.books.some(b => b.value.includes('stax-ap'))) {
+    if (this.state.books.some((b) => b.value.includes('stax-ap'))) {
       inputs.splice(2, 0, <APLO {...inputSetHandlerProps('apLo')} />);
     } else if (this.state.apLo.length > 0) {
-      this.setState({ apLo: [] })
+      this.setState({ apLo: [] });
     }
 
     const inputsPerRow = 2;
