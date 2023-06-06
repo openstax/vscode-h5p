@@ -6,7 +6,7 @@ export type DropdownOption = {
 export type SingleInputProps = {
   value: string;
   isValid: boolean;
-  handleInputChange: (v: string, isValid?: boolean) => void;
+  handleInputChange: (value: string, isValid?: boolean) => void;
 };
 
 export type InputState = {
