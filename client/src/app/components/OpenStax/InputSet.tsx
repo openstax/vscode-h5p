@@ -15,6 +15,7 @@ export type InputSetProps<OptionType extends DropdownOption = DropdownOption> =
       isValid?: boolean
     ) => void;
     options?: Array<OptionType>;
+    placeholder?: string;
   };
 
 export function InputSet<OptionType extends DropdownOption = DropdownOption>({
@@ -24,6 +25,7 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
   handleRemoveInput,
   handleInputChange,
   options,
+  placeholder,
 }: InputSetProps<OptionType> & { title: string }) {
   return (
     <>
@@ -51,6 +53,7 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
                     handleInputChange(index, value);
                   }}
                   style={{ width: '100%' }}
+                  placeholder={placeholder}
                 />
               ) : (
                 <SingleDropdown

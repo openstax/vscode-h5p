@@ -1,4 +1,4 @@
-export default function FormComponent({ title, content }) {
+export default function BasicFormComponent({ title, content }) {
   return (
     <>
       <div className="container">
