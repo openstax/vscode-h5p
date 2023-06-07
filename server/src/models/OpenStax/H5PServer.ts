@@ -10,15 +10,15 @@ export default class OSH5PServer extends H5PServer<OSH5PEditor> {
 
   protected async getMetadata(req, res) {
     const id = req.params.contentId;
-    const metadata = this.h5pEditor.contentStorage.getOSMeta(id);
+    const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);
     res.send(metadata);
     res.status(200).end();
   }
 
   protected async saveMetadata(req, res) {
     const id = req.params.contentId;
-    // const extra = req.body;
-    this.h5pEditor.contentStorage.saveOSMeta(id, {});
+    const metadata = req.body;
+    this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
     res.status(200).end();
   }
 

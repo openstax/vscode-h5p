@@ -10,6 +10,7 @@ import ModuleID from './ModuleID';
 import APLO from './APLO';
 import Time from './Time';
 import Nickname from './Nickname';
+import { IContentService } from '../../services/ContentService';
 
 type SingleInputs = {
   blooms: InputState;
@@ -28,10 +29,18 @@ type InputSets = {
 
 type FormState = SingleInputs & InputSets;
 
+type FormProps = {
+  contentService: IContentService;
+  contentId: string;
+};
+
 const defaultInputState: InputState = { value: '', isValid: true };
 
-export default class OpenstaxMetadataForm extends React.Component {
-  state: FormState = {
+export default class OpenstaxMetadataForm extends React.Component<FormProps> {
+  private contentService: IContentService;
+  private contentId: string;
+
+  public state: FormState = {
     books: [],
     lo: [],
     moduleId: [],
@@ -43,20 +52,78 @@ export default class OpenstaxMetadataForm extends React.Component {
     nickname: { ...defaultInputState },
   };
 
-  save(contentId) {
-    // TODO: Validate, encode, send values to server
+  constructor(props: FormProps) {
+    super(props);
+    this.contentService = props.contentService;
+    this.contentId = props.contentId;
   }
 
-  encodeValues() {
-    // TODO: Transform values from the format used here into the format they are stored in
+  public async componentDidMount(): Promise<void> {
+    try {
+      const metadata = await this.contentService.getOSMeta(this.contentId);
+      if (metadata) {
+        this.setState({ ...this.decodeValues(metadata) });
+      }
+    } catch (err) {
+      // TODO: Do something when there is an error
+    }
   }
 
-  decodeValues() {
-    // TODO: Transform values from the format they are stored in into the format used here
+  async save() {
+    if (this.isInputValid) {
+      try {
+        await this.contentService.saveOSMeta(
+          this.contentId,
+          this.encodeValues(this.state)
+        );
+      } catch (err) {
+        // TODO: Do something when there is an error
+      }
+    }
+    // TODO: Do something when input is not valid
   }
 
-  validate() {
-    // TODO: Maybe have an array of { element, validation, enabled }
+  encodeValues(metadata: FormState) {
+    // TODO: Add encoders for each value type
+    // TODO: Use `key` to determine which encoder to use for each value
+    // TODO: Remove optional fields that are empty?
+    const encodeValue = (key: string, state: InputState) => state.value;
+    return Object.fromEntries(
+      Object.entries(metadata).map(([key, oneOrMany]) => [
+        key,
+        Array.isArray(oneOrMany)
+          ? oneOrMany.map((item) => encodeValue(key, item))
+          : encodeValue(key, oneOrMany),
+      ])
+    );
+  }
+
+  decodeValues(metadata: any) {
+    // TODO: Add decoders for each value type
+    // TODO: Use `key` to determine which decoder to use for each value
+    const decodeValue = (key: string, value: any) => ({
+      ...defaultInputState,
+      value,
+    });
+    return Object.fromEntries(
+      Object.entries(metadata).map(([key, oneOrMany]) => [
+        key,
+        Array.isArray(oneOrMany)
+          ? oneOrMany.map((item) => decodeValue(key, item))
+          : decodeValue(key, oneOrMany),
+      ])
+    );
+  }
+
+  get isInputValid() {
+    // TODO: Make a list of required fields
+    // TODO: Use `key` to determine which fields need a value
+    const isInputValid = (key: string, value: InputState) => value.isValid;
+    return Object.entries(this.state).every(([key, oneOrMany]) =>
+      Array.isArray(oneOrMany)
+        ? oneOrMany.every((inputState) => isInputValid(key, inputState))
+        : isInputValid(key, oneOrMany)
+    );
   }
 
   render() {

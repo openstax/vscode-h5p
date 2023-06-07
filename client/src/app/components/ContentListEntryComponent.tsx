@@ -241,7 +241,11 @@ export default class ContentListEntryComponent extends React.Component<{
                 : ''
             }
           >
-            <OpenstaxMetadataForm ref={this.openstaxForm} />
+            <OpenstaxMetadataForm
+              ref={this.openstaxForm}
+              contentService={this.props.contentService}
+              contentId={this.props.data.contentId}
+            />
             <H5PEditorUI
               ref={this.h5pEditor}
               h5pUrl={this.h5pUrl}
@@ -338,7 +342,7 @@ export default class ContentListEntryComponent extends React.Component<{
     try {
       const returnData = await this.h5pEditor.current?.save();
       if (returnData) {
-        this.openstaxForm.current?.save(returnData.contentId);
+        await this.openstaxForm.current?.save();
         await this.props.onSaved({
           h5PUrl: this.h5pUrl,
           contentId: returnData.contentId,
