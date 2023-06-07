@@ -24,6 +24,7 @@ export interface IContentService {
   ): Promise<{ contentId: string; metadata: IContentMetadata }>;
   generateDownloadLink(contentId: string): string;
   getOSMeta(contentId: string): Promise<any>;
+  saveOSMeta(contentId: string, metadata: any): Promise<void>;
 }
 
 export class ContentService implements IContentService {
@@ -123,15 +124,27 @@ export class ContentService implements IContentService {
     return this.csrfToken;
   };
   getOSMeta = async (contentId): Promise<any> => {
-    console.log(`ContentService: Getting information to play ${contentId}...`);
+    console.log(`ContentService: Getting OSMeta for ${contentId}...`);
     try {
       const res = await axios.get(
         `${this.baseUrl}/${contentId}/openstax-metadata/`
       );
       return res.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+  saveOSMeta = async (contentId, metadata: any): Promise<void> => {
+    console.log(`ContentService: Saving OSMeta for ${contentId}...`);
+    try {
+      await axios.post(
+        `${this.baseUrl}/${contentId}/openstax-metadata/`,
+        metadata
+      );
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   };
 }
