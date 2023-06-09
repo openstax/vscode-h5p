@@ -344,7 +344,7 @@ export default class ContentListEntryComponent extends React.Component<{
     try {
       const returnData = await this.h5pEditor.current?.save();
       if (returnData) {
-        await this.openstaxForm.current?.save();
+        await this.openstaxForm.current?.save(returnData.contentId);
         await this.props.onSaved({
           h5PUrl: this.h5pUrl,
           contentId: returnData.contentId,
