@@ -32,14 +32,36 @@ type FormState = SingleInputs & InputSets;
 type FormProps = {
   contentService: IContentService;
   contentId: string;
+  onSaveError: (message: string) => void;
 };
+
+type SavedState = Record<keyof SingleInputs | keyof InputSets, any>;
+type MetadataEntry = [keyof SavedState, InputState | InputState[]];
+type SavedEntry = [keyof SavedState, string | string[]];
 
 const defaultInputState: InputState = { value: '', isValid: true };
 
-export default class OpenstaxMetadataForm extends React.Component<FormProps> {
-  private contentService: IContentService;
-  private contentId: string;
+const metadataKeys: Array<keyof SavedState> = [
+  'blooms',
+  'assignmentType',
+  'dokTag',
+  'time',
+  'nickname',
+  'books',
+  'lo',
+  'moduleId',
+  'apLo',
+];
 
+function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
+  return metadataKeys.includes(entry[0]);
+}
+
+function isSavedEntry(entry: [any, any]): entry is SavedEntry {
+  return metadataKeys.includes(entry[0]);
+}
+
+export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public state: FormState = {
     books: [],
     lo: [],
@@ -54,42 +76,45 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
 
   constructor(props: FormProps) {
     super(props);
-    this.contentService = props.contentService;
-    this.contentId = props.contentId;
   }
 
   public async componentDidMount(): Promise<void> {
     try {
-      const metadata = await this.contentService.getOSMeta(this.contentId);
+      const metadata = await this.props.contentService.getOSMeta(
+        this.props.contentId
+      );
       if (metadata) {
         this.setState({ ...this.decodeValues(metadata) });
       }
     } catch (err) {
-      // TODO: Do something when there is an error
+      this.props.onSaveError((err as Error).message);
     }
   }
 
   async save() {
     if (this.isInputValid) {
       try {
-        await this.contentService.saveOSMeta(
-          this.contentId,
-          this.encodeValues(this.state)
+        await this.props.contentService.saveOSMeta(
+          this.props.contentId,
+          this.encodedValues
         );
       } catch (err) {
-        // TODO: Do something when there is an error
+        this.props.onSaveError((err as Error).message);
       }
     }
-    // TODO: Do something when input is not valid
   }
 
-  encodeValues(metadata: FormState) {
+  get metadataEntries(): MetadataEntry[] {
+    return Object.entries(this.state).filter(isMetadataEntry);
+  }
+
+  get encodedValues() {
     // TODO: Add encoders for each value type
     // TODO: Use `key` to determine which encoder to use for each value
     // TODO: Remove optional fields that are empty?
     const encodeValue = (key: string, state: InputState) => state.value;
     return Object.fromEntries(
-      Object.entries(metadata).map(([key, oneOrMany]) => [
+      this.metadataEntries.map(([key, oneOrMany]) => [
         key,
         Array.isArray(oneOrMany)
           ? oneOrMany.map((item) => encodeValue(key, item))
@@ -98,30 +123,53 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     );
   }
 
-  decodeValues(metadata: any) {
+  decodeValues(metadata: any): SavedState {
     // TODO: Add decoders for each value type
     // TODO: Use `key` to determine which decoder to use for each value
-    const decodeValue = (key: string, value: any) => ({
+    const decodeValue = (key: string, value: string): InputState => ({
       ...defaultInputState,
       value,
     });
     return Object.fromEntries(
-      Object.entries(metadata).map(([key, oneOrMany]) => [
-        key,
-        Array.isArray(oneOrMany)
-          ? oneOrMany.map((item) => decodeValue(key, item))
-          : decodeValue(key, oneOrMany),
-      ])
-    );
+      Object.entries(metadata)
+        .filter(isSavedEntry)
+        .map(([key, oneOrMany]) => [
+          key,
+          Array.isArray(oneOrMany)
+            ? oneOrMany.map((item) => decodeValue(key, item))
+            : decodeValue(key, oneOrMany),
+        ])
+    ) as SavedState;
   }
 
   get isInputValid() {
-    // TODO: Make a list of required fields
-    // TODO: Use `key` to determine which fields need a value
-    const isInputValid = (key: string, value: InputState) => value.isValid;
-    return Object.entries(this.state).every(([key, oneOrMany]) =>
+    const required: Array<keyof SavedState> = [
+      'nickname',
+      'books',
+      'blooms',
+      'lo',
+    ];
+    const isInputValid = (key: keyof SavedState, value: InputState) => {
+      if (!value.isValid) {
+        this.props.onSaveError(`Value for "${key}" is invalid`);
+        return false;
+      }
+      if (required.includes(key) && value.value === '') {
+        this.props.onSaveError(`"${key}" cannot be empty.`);
+        return false;
+      }
+      return true;
+    };
+    const isArrayValid = (key: keyof SavedState, inputSet: InputState[]) => {
+      if (required.includes(key) && inputSet.length === 0) {
+        this.props.onSaveError(`Expected at least one value for ${key}`);
+        return false;
+      }
+      return inputSet.every((inputState) => isInputValid(key, inputState));
+    };
+    return this.metadataEntries.every(([key, oneOrMany]) =>
       Array.isArray(oneOrMany)
-        ? oneOrMany.every((inputState) => isInputValid(key, inputState))
+        ? isArrayValid(key, oneOrMany)
         : isInputValid(key, oneOrMany)
     );
   }
