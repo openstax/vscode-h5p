@@ -245,6 +245,7 @@ export default class ContentListEntryComponent extends React.Component<{
               ref={this.openstaxForm}
               contentService={this.props.contentService}
               contentId={this.props.data.contentId}
+              onSaveError={this.onSaveError}
             />
             <H5PEditorUI
               ref={this.h5pEditor}
@@ -338,6 +339,7 @@ export default class ContentListEntryComponent extends React.Component<{
   };
 
   protected async save() {
+    if (!this.openstaxForm.current?.isInputValid) return;
     this.setState({ saving: true });
     try {
       const returnData = await this.h5pEditor.current?.save();
@@ -357,13 +359,12 @@ export default class ContentListEntryComponent extends React.Component<{
     }
   }
 
-  // TODO: This is almost certainly broken
-  protected onSaveError = async (event) => {
+  protected onSaveError = async (saveErrorMessage) => {
     this.setState({
       saving: false,
       saved: false,
       saveError: true,
-      saveErrorMessage: event.detail.message,
+      saveErrorMessage,
     });
     setTimeout(() => {
       this.setState({
