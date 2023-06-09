@@ -91,12 +91,11 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     }
   }
 
-  async save() {
+  async save(contentId: string) {
     if (this.isInputValid) {
       try {
         await this.props.contentService.saveOSMeta(
-          this.props.contentId,
-          this.encodedValues
+          contentId, this.encodedValues
         );
       } catch (err) {
         this.props.onSaveError((err as Error).message);
