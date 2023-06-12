@@ -11,6 +11,7 @@ import APLO from './APLO';
 import Time from './Time';
 import Nickname from './Nickname';
 import { IContentService } from '../../services/ContentService';
+import PublicCheckbox from './PublicCheckbox';
 
 type SingleInputs = {
   blooms: InputState;
@@ -18,6 +19,7 @@ type SingleInputs = {
   dokTag: InputState;
   time: InputState;
   nickname: InputState;
+  isSolutionPublic: InputState;
 };
 
 type InputSets = {
@@ -51,6 +53,7 @@ const metadataKeys: Array<keyof SavedState> = [
   'lo',
   'moduleId',
   'apLo',
+  'isSolutionPublic',
 ];
 
 function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
@@ -72,6 +75,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     dokTag: { ...defaultInputState },
     time: { ...defaultInputState },
     nickname: { ...defaultInputState },
+    isSolutionPublic: { ...defaultInputState, value: 'false' },
   };
 
   constructor(props: FormProps) {
@@ -216,6 +220,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       <AssignmentType {...inputHandlerProps('assignmentType')} />,
       <DokTag {...inputHandlerProps('dokTag')} />,
       <Time {...inputHandlerProps('time')} />,
+      <PublicCheckbox {...inputHandlerProps('isSolutionPublic')} />,
     ];
 
     if (this.state.books.some((b) => b.value.includes('stax-ap'))) {
