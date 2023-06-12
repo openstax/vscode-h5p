@@ -5,9 +5,11 @@ import { SingleInputProps } from './types';
 const pattern = /^\w+$/;
 
 export default function Nickname(props: SingleInputProps) {
-  const baseHandleInputChange = props.handleInputChange;
-  props.handleInputChange = (value: string) => {
-    baseHandleInputChange(value, !!value.match(pattern));
+  const subProps = {
+    ...props,
+    handleInputChange: (value: string) => {
+      props.handleInputChange(value, !!value.match(pattern));
+    },
   };
 
   return (
@@ -15,7 +17,7 @@ export default function Nickname(props: SingleInputProps) {
       title={'Nickname'}
       content={
         <div className="col-12">
-          <SingleInput {...props} style={{ width: '100%' }} />
+          <SingleInput {...subProps} style={{ width: '100%' }} />
         </div>
       }
     />

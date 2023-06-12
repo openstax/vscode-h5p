@@ -95,7 +95,8 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     if (this.isInputValid) {
       try {
         await this.props.contentService.saveOSMeta(
-          contentId, this.encodedValues
+          contentId,
+          this.encodedValues
         );
       } catch (err) {
         this.props.onSaveError((err as Error).message);
@@ -228,10 +229,12 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
 
     return (
       <div className="container mb-4 mt-4">
-        {chunk(inputs, inputsPerRow).map((inputsChunk) => (
-          <div className="row mb-4">
-            {inputsChunk.map((input) => (
-              <div className={colClass}>{input}</div>
+        {chunk(inputs, inputsPerRow).map((inputsChunk, rowIdx) => (
+          <div className="row mb-4" key={`row-${rowIdx}`}>
+            {inputsChunk.map((input, colIdx) => (
+              <div className={colClass} key={`col-${colIdx}`}>
+                {input}
+              </div>
             ))}
           </div>
         ))}
