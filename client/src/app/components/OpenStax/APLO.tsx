@@ -1,10 +1,12 @@
 import { InputSet, InputSetProps } from './InputSet';
 
 export default function APLO(props: InputSetProps) {
-  const baseHandleInputChange = props.handleInputChange;
-  props.handleInputChange = (index: number, value: string) => {
-    baseHandleInputChange(index, value, !!value.match(/\w+/));
+  const subProps = {
+    ...props,
+    handleInputChange: (index: number, value: string) => {
+      props.handleInputChange(index, value, !!value.match(/\w+/));
+    },
   };
 
-  return <InputSet title={'AP LO'} {...props} />;
+  return <InputSet title={'AP LO'} {...subProps} />;
 }
