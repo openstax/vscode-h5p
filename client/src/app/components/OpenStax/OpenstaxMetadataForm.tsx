@@ -1,7 +1,7 @@
 import React from 'react';
-import BloomsDropdown from './Blooms';
+import Blooms from './Blooms';
 import AssignmentType from './AssignmentType';
-import { BookDropdown } from './Book';
+import { Book as Book } from './Book';
 import DokTag from './Dok';
 import { chunk } from './utils';
 import { InputState } from './types';
@@ -12,6 +12,9 @@ import Time from './Time';
 import Nickname from './Nickname';
 import { IContentService } from '../../services/ContentService';
 import PublicCheckbox from './PublicCheckbox';
+import HistoricalThinking from './HistoricalThinking';
+import ReasoningProcess from './ReasoningProcess';
+import SciencePractice from './SciencePractice';
 
 type SingleInputs = {
   blooms: InputState;
@@ -20,6 +23,9 @@ type SingleInputs = {
   time: InputState;
   nickname: InputState;
   isSolutionPublic: InputState;
+  hts: InputState;
+  rp: InputState;
+  'science-practice': InputState;
 };
 
 type InputSets = {
@@ -54,6 +60,9 @@ const metadataKeys: Array<keyof SavedState> = [
   'moduleId',
   'apLo',
   'isSolutionPublic',
+  'hts',
+  'rp',
+  'science-practice',
 ];
 
 function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
@@ -75,7 +84,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     dokTag: { ...defaultInputState },
     time: { ...defaultInputState },
     nickname: { ...defaultInputState },
-    isSolutionPublic: { ...defaultInputState, value: 'false' },
+    hts: { ...defaultInputState },
+    rp: { ...defaultInputState },
+    'science-practice': { ...defaultInputState },
+    isSolutionPublic: { ...defaultInputState, value: 'true' },
   };
 
   constructor(props: FormProps) {
@@ -116,7 +128,12 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     // TODO: Add encoders for each value type
     // TODO: Use `key` to determine which encoder to use for each value
     // TODO: Remove optional fields that are empty?
-    const encodeValue = (key: string, state: InputState) => state.value;
+    const encodeValue = (key: keyof FormState, state: InputState): any => {
+      switch (key) {
+        default:
+          return state.value;
+      }
+    };
     return Object.fromEntries(
       this.metadataEntries.map(([key, oneOrMany]) => [
         key,
@@ -130,10 +147,12 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   decodeValues(metadata: any): SavedState {
     // TODO: Add decoders for each value type
     // TODO: Use `key` to determine which decoder to use for each value
-    const decodeValue = (key: string, value: string): InputState => ({
-      ...defaultInputState,
-      value,
-    });
+    const decodeValue = (key: keyof SavedState, value: any): InputState => {
+      return {
+        ...defaultInputState,
+        value: value.toString(),
+      };
+    };
     return Object.fromEntries(
       Object.entries(metadata)
         .filter(isSavedEntry)
@@ -178,6 +197,33 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     );
   }
 
+  get hasApBook() {
+    return this.state.books.some((b) => b.value.startsWith('stax-ap'));
+  }
+
+  get hasApScienceBook() {
+    return this.state.books.some(
+      (b) => b.value === 'stax-apphys' || b.value === 'stax-apbio'
+    );
+  }
+
+  get hasApHistoryBook() {
+    return this.state.books.some((b) => b.value === 'stax-apush');
+  }
+
+  private reset(key: keyof SingleInputs | keyof InputSets) {
+    const state = this.state[key];
+    if (Array.isArray(state)) {
+      if (state.length !== 0) {
+        this.setState({ [key]: [] });
+      }
+      return;
+    }
+    if (!Object.keys(state).every((k) => state[k] === defaultInputState[k])) {
+      this.setState({ [key]: { ...defaultInputState } });
+    }
+  }
+
   render() {
     const inputSetHandlerProps = (type: keyof InputSets) => {
       return {
@@ -212,21 +258,53 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     });
 
     const inputs = [
-      <Nickname {...inputHandlerProps('nickname')} />,
-      <BookDropdown {...inputSetHandlerProps('books')} />,
-      <LO {...inputSetHandlerProps('lo')} />,
-      <ModuleID {...inputSetHandlerProps('moduleId')} />,
-      <BloomsDropdown {...inputHandlerProps('blooms')} />,
-      <AssignmentType {...inputHandlerProps('assignmentType')} />,
-      <DokTag {...inputHandlerProps('dokTag')} />,
-      <Time {...inputHandlerProps('time')} />,
-      <PublicCheckbox {...inputHandlerProps('isSolutionPublic')} />,
+      { make: () => <Nickname {...inputHandlerProps('nickname')} /> },
+      { make: () => <Book {...inputSetHandlerProps('books')} /> },
+      { make: () => <LO {...inputSetHandlerProps('lo')} /> },
+      {
+        make: () => <APLO {...inputSetHandlerProps('apLo')} />,
+        isActive: this.hasApBook,
+      },
+      {
+        make: () => (
+          <SciencePractice
+            {...inputHandlerProps('science-practice')}
+            books={this.state.books.map((b) => b.value)}
+          />
+        ),
+        isActive: this.hasApScienceBook,
+      },
+      {
+        make: () => <HistoricalThinking {...inputHandlerProps('hts')} />,
+        isActive: this.hasApHistoryBook,
+      },
+      {
+        make: () => <ReasoningProcess {...inputHandlerProps('rp')} />,
+        isActive: this.hasApHistoryBook,
+      },
+      { make: () => <ModuleID {...inputSetHandlerProps('moduleId')} /> },
+      { make: () => <Blooms {...inputHandlerProps('blooms')} /> },
+      {
+        make: () => <AssignmentType {...inputHandlerProps('assignmentType')} />,
+      },
+      { make: () => <DokTag {...inputHandlerProps('dokTag')} /> },
+      { make: () => <Time {...inputHandlerProps('time')} /> },
+      {
+        make: () => (
+          <PublicCheckbox {...inputHandlerProps('isSolutionPublic')} />
+        ),
+      },
     ];
 
-    if (this.state.books.some((b) => b.value.includes('stax-ap'))) {
-      inputs.splice(2, 0, <APLO {...inputSetHandlerProps('apLo')} />);
-    } else if (this.state.apLo.length > 0) {
-      this.setState({ apLo: [] });
+    if (!this.hasApBook) {
+      this.reset('apLo');
+    }
+    if (!this.hasApHistoryBook) {
+      this.reset('hts');
+      this.reset('rp');
+    }
+    if (!this.hasApScienceBook) {
+      this.reset('science-practice');
     }
 
     const inputsPerRow = 2;
@@ -234,7 +312,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
 
     return (
       <div className="container mb-4 mt-4">
-        {chunk(inputs, inputsPerRow).map((inputsChunk, rowIdx) => (
+        {chunk(
+          inputs.filter((i) => i.isActive !== false).map((i) => i.make()),
+          inputsPerRow
+        ).map((inputsChunk, rowIdx) => (
           <div className="row mb-4" key={`row-${rowIdx}`}>
             {inputsChunk.map((input, colIdx) => (
               <div className={colClass} key={`col-${colIdx}`}>
