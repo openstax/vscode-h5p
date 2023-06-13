@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
@@ -8,7 +7,17 @@ const METADATA_NAME = 'metadata.json';
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
   protected async createContentId() {
-    return randomUUID();
+    const numbered = fsExtra
+      .readdirSync(this.getContentPath(), { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => parseInt(d.name))
+      .filter((n) => !isNaN(n))
+      .sort();
+    let i = 0;
+    // Scan for first available id
+    while (i < numbered.length && (i === numbered[i] || numbered.includes(i)))
+      i++;
+    return i.toString();
   }
 
   public async saveOSMeta(contentId: string, metadata: any) {
