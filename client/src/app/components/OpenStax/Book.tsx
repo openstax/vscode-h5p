@@ -34,7 +34,7 @@ export const BOOKS = {
   'stax-worldhist': 'World History',
 };
 
-export function BookDropdown(props: InputSetProps) {
+export function Book(props: InputSetProps) {
   props.options = Object.entries(BOOKS).map(([k, v]) => ({
     label: v,
     value: k,
