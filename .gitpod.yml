@@ -7,3 +7,6 @@
 tasks:
   - init: npm install && npm run compile
     command: npm run watch
+ports:
+  - port: 8080
+    visibility: public
