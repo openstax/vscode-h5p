@@ -34,6 +34,12 @@ export async function activate(context: ExtensionContext) {
   const h5pEditor = new H5PEditorPanel(context);
   context.subscriptions.push(
     commands.registerCommand('h5p.web.showEditor', () => {
+      context.subscriptions.push(
+        window.setStatusBarMessage(
+          'H5P Editor: Loading...',
+          serverReadyEvent.wait()
+        )
+      );
       serverReadyEvent.wait().then(() => {
         h5pEditor.revealOrNew();
       });
