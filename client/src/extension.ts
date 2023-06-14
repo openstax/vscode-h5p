@@ -17,11 +17,6 @@ import { AsyncEvent } from './app/models/AsyncEvent';
 
 let client: LanguageClient;
 
-function expectValue<T>(val: T | null | undefined, message: string): T {
-  if (val == null) throw new Error(message);
-  return val;
-}
-
 export function getRootPathUri(): Uri | null {
   const maybeWorkspace = workspace.workspaceFolders;
   const rootPath = maybeWorkspace != null ? maybeWorkspace[0] : null;
@@ -53,11 +48,6 @@ export async function activate(context: ExtensionContext) {
   // The debug options for the server
   // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
   const debugOptions = { execArgv: ['--nolazy', '--inspect=16009'] };
-
-  const workspaceRoot = expectValue(
-    getRootPathUri(),
-    'Could not get workspace root'
-  ).fsPath;
 
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used

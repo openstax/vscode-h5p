@@ -55,10 +55,11 @@ will open a new VSCode window with the extension running. Clinking on a
       Maybe different names (not content id)
 
 ## Authors
+
 - [OpenStax CE-BE](https://github.com/openstax)
-    - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
-    - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
-    - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
+  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+  - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
+  - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
 
 ## What we still need to know
 
