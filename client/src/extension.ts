@@ -36,7 +36,7 @@ export async function activate(context: ExtensionContext) {
     commands.registerCommand('h5p.web.showEditor', () => {
       context.subscriptions.push(
         window.setStatusBarMessage(
-          'H5P Editor: Loading...',
+          'H5P Editor: Loading $(sync~spin)',
           serverReadyEvent.wait()
         )
       );

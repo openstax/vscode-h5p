@@ -54,9 +54,11 @@ will open a new VSCode window with the extension running. Clinking on a
 - [ ] Custom content fs implementation that can 'hide' private solutions/hints -
       Maybe different names (not content id)
 
-## Author
-
-- [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+## Authors
+- [OpenStax CE-BE](https://github.com/openstax)
+    - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+    - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
+    - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
 
 ## What we still need to know
 
