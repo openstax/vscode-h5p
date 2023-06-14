@@ -46,18 +46,21 @@ export default class H5PServer<
     // on. You can then simply click on it in the terminal.
     displayIps(port.toString());
 
-    server.listen(port, getIps()[0], async () => {
-      console.log(
-        `... port ${port} with Settings:  ${JSON.stringify(
-          server.settings
-        )} mode`
-      );
-      await downloadLibraries(
-        getIps()[0],
-        port,
-        '/h5p/ajax?action=content-type-cache',
-        this.h5pEditor
-      );
+    return new Promise((resolve, reject) => {
+      server.listen(port, getIps()[0], async () => {
+        console.log(
+          `... port ${port} with Settings:  ${JSON.stringify(
+            server.settings
+          )} mode`
+        );
+        await downloadLibraries(
+          getIps()[0],
+          port,
+          '/h5p/ajax?action=content-type-cache',
+          this.h5pEditor
+        );
+        resolve(null);
+      });
     });
   }
 

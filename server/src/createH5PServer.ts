@@ -39,11 +39,10 @@ export async function prepareEnvironment(globalConfig: Config) {
   if (!environmentReady) {
     console.log('Environment is not ready');
     await fsRemove(tempFolderPath);
-    fs.access(tempFolderPath, function (err: any) {
-      if (err && err.code === 'ENOENT') {
-        fs.mkdirSync(`${tempFolderPath}`, { recursive: true });
-      }
-    });
+
+    if (!fsExtra.existsSync(tempFolderPath)) {
+      fs.mkdirSync(`${tempFolderPath}`, { recursive: true });
+    }
 
     const version = `1.24.4`;
     const coreFile = `${tempFolderPath}/core_${version}.zip`;
@@ -186,7 +185,7 @@ export async function startH5P(globalConfig: Config) {
   });
   const config = await new H5P.H5PConfig(
     new H5P.fsImplementations.JsonStorage(`${tempFolderPath}/config.json`)
-  );
+  ).load();
   const urlGenerator = new H5P.UrlGenerator(config, {
     queryParamGenerator: (user) => {
       return {
@@ -256,5 +255,5 @@ export async function startH5P(globalConfig: Config) {
   process.env['DEBUG'] = '*';
 
   const server = new OSH5PServer(h5pEditor, h5pPlayer, tempFolderPath);
-  server.start(port);
+  await server.start(port);
 }
