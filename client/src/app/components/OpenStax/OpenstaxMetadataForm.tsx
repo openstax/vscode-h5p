@@ -15,6 +15,7 @@ import PublicCheckbox from './PublicCheckbox';
 import HistoricalThinking from './HistoricalThinking';
 import ReasoningProcess from './ReasoningProcess';
 import SciencePractice from './SciencePractice';
+import Accordion from './Accordion';
 
 type SingleInputs = {
   blooms: InputState;
@@ -94,6 +95,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     super(props);
   }
 
+  private onSaveError(message: string) {
+    this.props.onSaveError(`OpenStax Metadata: ${message}`);
+  }
+
   public async componentDidMount(): Promise<void> {
     try {
       const metadata = await this.props.contentService.getOSMeta(
@@ -103,7 +108,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         this.setState({ ...this.decodeValues(metadata) });
       }
     } catch (err) {
-      this.props.onSaveError((err as Error).message);
+      this.onSaveError((err as Error).message);
     }
   }
 
@@ -115,7 +120,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           this.encodedValues
         );
       } catch (err) {
-        this.props.onSaveError((err as Error).message);
+        this.onSaveError((err as Error).message);
       }
     }
   }
@@ -174,18 +179,18 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     ];
     const isInputValid = (key: keyof SavedState, value: InputState) => {
       if (!value.isValid) {
-        this.props.onSaveError(`Value for "${key}" is invalid`);
+        this.onSaveError(`Value for "${key}" is invalid`);
         return false;
       }
       if (required.includes(key) && value.value === '') {
-        this.props.onSaveError(`"${key}" cannot be empty.`);
+        this.onSaveError(`"${key}" cannot be empty.`);
         return false;
       }
       return true;
     };
     const isArrayValid = (key: keyof SavedState, inputSet: InputState[]) => {
       if (required.includes(key) && inputSet.length === 0) {
-        this.props.onSaveError(`Expected at least one value for ${key}`);
+        this.onSaveError(`Expected at least one value for ${key}`);
         return false;
       }
       return inputSet.every((inputState) => isInputValid(key, inputState));
@@ -311,20 +316,32 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     const colClass = `col-${Math.ceil(12 / inputsPerRow)}`;
 
     return (
-      <div className="container mb-4 mt-4">
-        {chunk(
-          inputs.filter((i) => i.isActive !== false).map((i) => i.make()),
-          inputsPerRow
-        ).map((inputsChunk, rowIdx) => (
-          <div className="row mb-4" key={`row-${rowIdx}`}>
-            {inputsChunk.map((input, colIdx) => (
-              <div className={colClass} key={`col-${colIdx}`}>
-                {input}
+      <Accordion
+        style={{ maxWidth: '960px', margin: '10px 0' }}
+        children={[
+          {
+            title: 'OpenStax Metadata',
+            content: (
+              <div className="container mb-4 mt-4">
+                {chunk(
+                  inputs
+                    .filter((i) => i.isActive !== false)
+                    .map((i) => i.make()),
+                  inputsPerRow
+                ).map((inputsChunk, rowIdx) => (
+                  <div className="row mb-4" key={`row-${rowIdx}`}>
+                    {inputsChunk.map((input, colIdx) => (
+                      <div className={colClass} key={`col-${colIdx}`}>
+                        {input}
+                      </div>
+                    ))}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ))}
-      </div>
+            ),
+          },
+        ]}
+      />
     );
   }
 }
