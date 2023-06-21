@@ -1,7 +1,6 @@
 import { InputSet, InputSetProps } from './InputSet';
 
-const moduleIdPattern =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const moduleIdPattern = /^.+?\/modules\/m[0-9]+\/index\.cnxml$/;
 
 export default function ModuleID(props: InputSetProps) {
   const subProps = {
@@ -11,5 +10,5 @@ export default function ModuleID(props: InputSetProps) {
     },
   };
 
-  return <InputSet title={'Module UUID'} {...subProps} />;
+  return <InputSet title={'Module Path'} {...subProps} />;
 }
