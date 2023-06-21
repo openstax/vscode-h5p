@@ -135,6 +135,8 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     // TODO: Remove optional fields that are empty?
     const encodeValue = (key: keyof FormState, state: InputState): any => {
       switch (key) {
+        case 'moduleId':
+          return `modules/${state.value}/index.cnxml`;
         default:
           return state.value;
       }
@@ -152,10 +154,18 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   decodeValues(metadata: any): SavedState {
     // TODO: Add decoders for each value type
     // TODO: Use `key` to determine which decoder to use for each value
+    const decode = (key: keyof SavedState, value: any): string => {
+      switch (key) {
+        case 'moduleId':
+          return value.split('/').at(-2);
+        default:
+          return value.toString();
+      }
+    };
     const decodeValue = (key: keyof SavedState, value: any): InputState => {
       return {
         ...defaultInputState,
-        value: value.toString(),
+        value: decode(key, value),
       };
     };
     return Object.fromEntries(

@@ -1,6 +1,6 @@
 import { InputSet, InputSetProps } from './InputSet';
 
-const moduleIdPattern = /^.+?\/modules\/m[0-9]+\/index\.cnxml$/;
+const moduleIdPattern = /m\d+$/;
 
 export default function ModuleID(props: InputSetProps) {
   const subProps = {
@@ -10,5 +10,5 @@ export default function ModuleID(props: InputSetProps) {
     },
   };
 
-  return <InputSet title={'Module Path'} {...subProps} />;
+  return <InputSet title={'Module Id'} {...subProps} />;
 }
