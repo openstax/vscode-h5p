@@ -69,8 +69,8 @@ export async function activate(context: ExtensionContext) {
 
   // Create the language client and start the client.
   client = new LanguageClient(
-    'languageServerExample',
-    'Language Server Example',
+    'h5pEditorServer',
+    'H5P Editor Server',
     serverOptions,
     clientOptions
   );
