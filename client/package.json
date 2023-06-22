@@ -1,19 +1,17 @@
 {
   "name": "vscode-h5p-client",
   "displayName": "H5P Viewer",
-  "publisher": "sparksam",
+  "publisher": "openstax",
   "description": "Visualize H5P files in VS Code",
   "version": "0.0.1",
-  "author": "Samuel A. Klutse",
+  "author": "openstax",
   "license": "MIT",
-  "homepage": "https://samuelklutse.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sparksam/vscode-h5p"
+    "url": "https://github.com/openstax/vscode-h5p"
   },
   "bugs": {
-    "url": "https://github.com/sparksam/vscode-h5p/issues",
-    "email": "klutse.samuel@gmail.com"
+    "url": "https://github.com/openstax/vscode-h5p/issues"
   },
   "icon": "assets/favicon.png",
   "galleryBanner": {
@@ -59,6 +57,6 @@
     "build": "pnpm build:app && pnpm build:extension --minify",
     "build:app": "vite build",
     "build:extension": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "test": "npx jest --verbose"
+    "test": "npx jest --verbose --updateSnapshot"
   }
 }
