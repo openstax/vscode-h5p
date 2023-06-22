@@ -116,7 +116,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         this.setState({ ...this.decodeValues(metadata) });
       }
     } catch (err) {
-      this.onSaveError((err as Error).message);
+      console.error((err as Error).message);
     }
   }
 
