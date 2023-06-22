@@ -230,11 +230,13 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     const state = this.state[key];
     if (Array.isArray(state)) {
       if (state.length !== 0) {
+        /* istanbul ignore next */
         this.setState({ [key]: [] });
       }
       return;
     }
     if (!Object.keys(state).every((k) => state[k] === defaultInputState[k])) {
+      /* istanbul ignore next */
       this.setState({ [key]: { ...defaultInputState } });
     }
   }

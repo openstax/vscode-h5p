@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
+{
+  "blooms": {
+    "isValid": true,
+    "value": "1",
+  },
+  "books": [
+    {
+      "isValid": true,
+      "value": "stax-psy",
+    },
+  ],
+  "lo": [
+    {
+      "isValid": true,
+      "value": "00-00-01",
+    },
+  ],
+  "moduleId": [
+    {
+      "isValid": true,
+      "value": "m000001",
+    },
+    {
+      "isValid": true,
+      "value": "m000002",
+    },
+  ],
+  "nickname": {
+    "isValid": true,
+    "value": "test",
+  },
+}
+`;
+
+exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 2`] = `
+[
+  [
+    undefined,
+    {
+      "apLo": [],
+      "assignmentType": "",
+      "blooms": "1",
+      "books": [
+        "stax-psy",
+      ],
+      "dokTag": "",
+      "hts": "",
+      "isSolutionPublic": "true",
+      "lo": [
+        "00-00-01",
+      ],
+      "moduleId": [
+        "modules/m000001/index.cnxml",
+        "modules/m000002/index.cnxml",
+      ],
+      "nickname": "test",
+      "rp": "",
+      "science-practice": "",
+      "time": "",
+    },
+  ],
+]
+`;
