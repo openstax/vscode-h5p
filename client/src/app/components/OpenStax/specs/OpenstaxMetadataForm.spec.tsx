@@ -55,8 +55,8 @@ describe('OpenstaxMetadataForm', () => {
     return controller;
   };
 
-  const initFormWithMinData = async (formDataOverride) => {
-    return await initForm({ ...minFormData, ...formDataOverride });
+  const initFormWithMinData = async (formPropsOverride) => {
+    return await initForm({ ...minFormData, ...formPropsOverride });
   };
 
   afterEach(cleanup);
@@ -110,6 +110,29 @@ describe('OpenstaxMetadataForm', () => {
           expect(await getByText(text)).toBeTruthy();
         });
       });
+    });
+  });
+  describe('encode/decode form state', () => {
+    const formDataEncoded = {
+      ...minFormData,
+      moduleId: ['m000001', 'm000002'].map((id) => `modules/${id}/index.cnxml`),
+    };
+    it('decodes form state when loading and encodes when saving', async () => {
+      const contentService = {
+        ...defaultMockContentService,
+      };
+      const controller = await initFormWithMinData({
+        ...formDataEncoded,
+        contentService,
+      });
+      const { openstaxForm } = controller;
+      await openstaxForm.current!.save();
+      expect(
+        openstaxForm.current!.decodeValues(formDataEncoded)
+      ).toMatchSnapshot();
+      expect(
+        (contentService.saveOSMeta as jest.Mock).mock.calls
+      ).toMatchSnapshot();
     });
   });
 });
