@@ -32,6 +32,16 @@ export const BOOKS = {
   'stax-ushist': 'U.S. History',
   'stax-apush': 'U.S. History for AP® Courses',
   'stax-worldhist': 'World History',
+  'stax-matnewborn': 'Maternal Newborn Nursing',
+  'stax-nursingskills': 'Clinical Nursing Skills',
+  'stax-psychnursing': 'Psychiatric-Mental Health Nursing',
+  'stax-medsurg': 'Medical-Surgical Nursing',
+  'stax-nursingfundamentals': 'Fundamentals of Nursing',
+  'stax-pharmacology': 'Pharmacology for Nurses',
+  'stax-nutrition': 'Nutrition',
+  'stax-pophealth': 'Community-Population Health',
+  'stax-neuroscience': 'Introduction to Behavioral Neuroscience',
+  'stax-datascience': 'Data Science',
 };
 
 export function Book(props: InputSetProps) {
