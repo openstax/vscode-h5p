@@ -42,21 +42,29 @@ describe('OpenstaxMetadataForm', () => {
     fireEvent.click(formTitle.parentElement!, { button: 1 });
   };
 
-  const initForm = async (formData) => {
+  const initForm = async (formData, formPropsOverride) => {
     const formProps = {
       ...defaultFormProps,
       contentService: {
         ...defaultMockContentService,
         getOSMeta: jest.fn().mockResolvedValue(formData),
       },
+      ...formPropsOverride,
     };
     const controller = await createForm(formProps);
     await revealForm(controller);
     return controller;
   };
 
-  const initFormWithMinData = async (formPropsOverride) => {
-    return await initForm({ ...minFormData, ...formPropsOverride });
+  const initFormWithMinData = async (args: {
+    formDataOverride?;
+    formPropsOverride?;
+  }) => {
+    const { formDataOverride = {}, formPropsOverride = {} } = args;
+    return await initForm(
+      { ...minFormData, ...formDataOverride },
+      formPropsOverride
+    );
   };
 
   afterEach(cleanup);
@@ -93,20 +101,45 @@ describe('OpenstaxMetadataForm', () => {
       expect(formProps.onSaveError).not.toBeCalled();
       expect(formProps.contentService.saveOSMeta).toBeCalledTimes(1);
     });
+    it('renders when there is an error in getOSMeta', async () => {
+      const { getByText } = await initFormWithMinData({
+        formPropsOverride: {
+          contentService: {
+            ...defaultMockContentService,
+            getOSMeta: jest.fn().mockRejectedValue(new Error('Test')),
+          },
+        },
+      });
+      expect(await getByText('Books')).toBeTruthy();
+    });
   });
   describe('Conditional Input Set', () => {
     const apScienceBooks = ['stax-apphys', 'stax-apbio'];
     const apHistoryBooks = ['stax-apush'];
     const apAll = apScienceBooks.concat(apHistoryBooks);
+    const nursingBooks = [
+      'stax-matnewborn',
+      'stax-nursingskills',
+      'stax-psychnursing',
+      'stax-medsurg',
+      'stax-nursingfundamentals',
+      'stax-pharmacology',
+      'stax-nutrition',
+      'stax-pophealth',
+    ];
     const tests: Array<[string, string, string[]]> = [
       ['AP LO', 'AP LO', apAll],
       ['Science Practice', 'Science Practice', apScienceBooks],
       ['Historical Thinking', 'Historical Thinking', apHistoryBooks],
+      ['AACN', 'AACN', nursingBooks],
+      ['NCLEX', 'NCLEX', nursingBooks],
     ];
     tests.forEach(([name, text, books]) => {
       books.forEach((book) => {
         it(`shows "${name}" when "${book}" is selected`, async () => {
-          const { getByText } = await initFormWithMinData({ books: [book] });
+          const { getByText } = await initFormWithMinData({
+            formDataOverride: { books: [book] },
+          });
           expect(await getByText(text)).toBeTruthy();
         });
       });
@@ -118,12 +151,8 @@ describe('OpenstaxMetadataForm', () => {
       moduleId: ['m000001', 'm000002'].map((id) => `modules/${id}/index.cnxml`),
     };
     it('decodes form state when loading and encodes when saving', async () => {
-      const contentService = {
-        ...defaultMockContentService,
-      };
       const controller = await initFormWithMinData({
-        ...formDataEncoded,
-        contentService,
+        formDataOverride: formDataEncoded,
       });
       const { openstaxForm } = controller;
       await openstaxForm.current!.save();
@@ -131,7 +160,7 @@ describe('OpenstaxMetadataForm', () => {
         openstaxForm.current!.decodeValues(formDataEncoded)
       ).toMatchSnapshot();
       expect(
-        (contentService.saveOSMeta as jest.Mock).mock.calls
+        (defaultMockContentService.saveOSMeta as jest.Mock).mock.calls
       ).toMatchSnapshot();
     });
   });
