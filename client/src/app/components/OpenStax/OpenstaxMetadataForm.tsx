@@ -16,6 +16,8 @@ import HistoricalThinking from './HistoricalThinking';
 import ReasoningProcess from './ReasoningProcess';
 import SciencePractice from './SciencePractice';
 import Accordion from './Accordion';
+import AACN from './AACN';
+import NCLEX from './NCLEX';
 
 type SingleInputs = {
   blooms: InputState;
@@ -27,6 +29,8 @@ type SingleInputs = {
   hts: InputState;
   rp: InputState;
   'science-practice': InputState;
+  aacn: InputState;
+  nclex: InputState;
 };
 
 type InputSets = {
@@ -64,6 +68,8 @@ const metadataKeys: Array<keyof SavedState> = [
   'hts',
   'rp',
   'science-practice',
+  'aacn',
+  'nclex',
 ];
 
 function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
@@ -89,6 +95,8 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     rp: { ...defaultInputState },
     'science-practice': { ...defaultInputState },
     isSolutionPublic: { ...defaultInputState, value: 'true' },
+    aacn: { ...defaultInputState },
+    nclex: { ...defaultInputState },
   };
 
   constructor(props: FormProps) {
@@ -226,6 +234,20 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     return this.state.books.some((b) => b.value === 'stax-apush');
   }
 
+  get hasNursingBook() {
+    const nursingBooks = [
+      'stax-matnewborn',
+      'stax-nursingskills',
+      'stax-psychnursing',
+      'stax-medsurg',
+      'stax-nursingfundamentals',
+      'stax-pharmacology',
+      'stax-nutrition',
+      'stax-pophealth',
+    ];
+    return this.state.books.some((b) => nursingBooks.includes(b.value));
+  }
+
   private reset(key: keyof SingleInputs | keyof InputSets) {
     const state = this.state[key];
     if (Array.isArray(state)) {
@@ -306,6 +328,14 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       },
       { make: () => <DokTag {...inputHandlerProps('dokTag')} /> },
       { make: () => <Time {...inputHandlerProps('time')} /> },
+      {
+        make: () => <AACN {...inputHandlerProps('aacn')} />,
+        isActive: this.hasNursingBook,
+      },
+      {
+        make: () => <NCLEX {...inputHandlerProps('nclex')} />,
+        isActive: this.hasNursingBook,
+      },
       {
         make: () => (
           <PublicCheckbox {...inputHandlerProps('isSolutionPublic')} />
