@@ -40,6 +40,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
   [
     undefined,
     {
+      "aacn": "",
       "apLo": [],
       "assignmentType": "",
       "blooms": "1",
@@ -56,6 +57,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
         "modules/m000001/index.cnxml",
         "modules/m000002/index.cnxml",
       ],
+      "nclex": "",
       "nickname": "test",
       "rp": "",
       "science-practice": "",
