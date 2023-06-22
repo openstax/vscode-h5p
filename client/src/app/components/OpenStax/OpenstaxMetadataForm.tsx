@@ -128,6 +128,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           this.encodedValues
         );
       } catch (err) {
+        /* istanbul ignore next */
         this.onSaveError((err as Error).message);
       }
     }

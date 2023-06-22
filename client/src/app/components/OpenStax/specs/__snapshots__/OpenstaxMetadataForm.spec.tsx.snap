@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`OpenstaxMetadataForm Form validation does not save when information is missing 1`] = `
+[
+  [
+    "OpenStax Metadata: Expected at least one value for books",
+  ],
+]
+`;
+
+exports[`OpenstaxMetadataForm Form validation does not save when information is missing 2`] = `
+[
+  [
+    "OpenStax Metadata: "nickname" cannot be empty.",
+  ],
+]
+`;
+
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
 {
   "blooms": {
