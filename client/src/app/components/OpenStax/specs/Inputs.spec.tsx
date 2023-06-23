@@ -7,6 +7,7 @@ import LO from '../LO';
 import Nickname from '../Nickname';
 import React from 'react';
 import { collect, range } from '../utils';
+import AACN from '../AACN';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -183,6 +184,21 @@ describe('Inputs', () => {
           ['Anything', true],
           [' ', false],
           ['Anything_else', true],
+        ]
+      );
+    });
+  });
+
+  describe('aacn', () => {
+    it('validates values', () => {
+      testSingleInputValidation(
+        (state) => <AACN {...state} />,
+        [
+          ['20.1m', true],
+          [' ', false],
+          ['1.1a', true],
+          ['10.9z', true],
+          ['10.10a', false],
         ]
       );
     });
