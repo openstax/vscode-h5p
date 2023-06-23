@@ -64,6 +64,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
         "stax-psy",
       ],
       "dokTag": "",
+      "elementId": [],
       "hts": "",
       "isSolutionPublic": "true",
       "lo": [

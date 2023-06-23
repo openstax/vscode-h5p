@@ -18,6 +18,7 @@ import SciencePractice from './SciencePractice';
 import Accordion from './Accordion';
 import AACN from './AACN';
 import NCLEX from './NCLEX';
+import ElementID from './ElementId';
 
 type SingleInputs = {
   blooms: InputState;
@@ -37,6 +38,7 @@ type InputSets = {
   books: InputState[];
   lo: InputState[];
   moduleId: InputState[];
+  elementId: InputState[];
   apLo: InputState[];
 };
 
@@ -63,6 +65,7 @@ const metadataKeys: Array<keyof SavedState> = [
   'books',
   'lo',
   'moduleId',
+  'elementId',
   'apLo',
   'isSolutionPublic',
   'hts',
@@ -85,6 +88,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     books: [],
     lo: [],
     moduleId: [],
+    elementId: [],
     apLo: [],
     blooms: { ...defaultInputState },
     assignmentType: { ...defaultInputState },
@@ -323,6 +327,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         isActive: this.hasApHistoryBook,
       },
       { make: () => <ModuleID {...inputSetHandlerProps('moduleId')} /> },
+      { make: () => <ElementID {...inputSetHandlerProps('elementId')} /> },
       { make: () => <Blooms {...inputHandlerProps('blooms')} /> },
       {
         make: () => <AssignmentType {...inputHandlerProps('assignmentType')} />,
