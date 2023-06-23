@@ -2,7 +2,7 @@ import BasicFormComponent from './BasicFormComponent';
 import SingleInput from './SingleInput';
 import { SingleInputProps } from './types';
 
-const pattern = /^\d\.\d[a-z]$/;
+const pattern = /^\d{1,2}\.\d[a-z]$/;
 
 export default function AACN(props: SingleInputProps) {
   const subProps = {
