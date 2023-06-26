@@ -102,8 +102,7 @@ export async function prepareEnvironment(globalConfig: Config) {
   }
 }
 
-function buildServerURL(): string {
-  const port = Number(process.env.PORT) || 8080;
+function buildServerURL(port: number): string {
   if (process.env['GITPOD_WORKSPACE_ID']) {
     return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
   } else {
@@ -175,10 +174,9 @@ async function createH5PEditor(
 }
 
 export async function startH5P(globalConfig: Config) {
-  const port: number = Number(process.env.PORT) || 8080;
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
-  const server_url = buildServerURL();
+  const server_url = buildServerURL(globalConfig.port);
   // Load the configuration file from the local file system
   fs.readFile(`${tempFolderPath}/config.json`, (err, data) => {
     if (err) throw err;
@@ -255,5 +253,5 @@ export async function startH5P(globalConfig: Config) {
   process.env['DEBUG'] = '*';
 
   const server = new OSH5PServer(h5pEditor, h5pPlayer, tempFolderPath);
-  await server.start(port);
+  await server.start(globalConfig.port);
 }
