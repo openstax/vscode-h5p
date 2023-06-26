@@ -37,7 +37,7 @@ export class H5PEditorPanel extends Panel {
 }
 
 function buildGitpodURL() {
-  const port = 8080;
+  const port = 27149;
   if (process.env['GITPOD_WORKSPACE_ID']) {
     return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
   } else {
