@@ -8,7 +8,7 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 // The .js references are necessary for requireJs to work in the browser.
 import { IContentService, IContentListEntry } from '../services/ContentService';
 import ContentListEntryComponent from './ContentListEntryComponent';
-import { chunk, range } from './OpenStax/utils';
+import { chunk, range, debounce } from './OpenStax/utils';
 
 export default class ContentList extends React.Component<{
   h5pUrl: string;
@@ -16,7 +16,7 @@ export default class ContentList extends React.Component<{
 }> {
   constructor(props: { h5pUrl: string; contentService: IContentService }) {
     super(props);
-    this.state = { contentList: [], page: 1 };
+    this.state = { contentList: [], page: 1, resultsPerPage: 50, search: '' };
     this.contentService = props.contentService;
     this.h5pUrl = props.h5pUrl;
   }
@@ -24,6 +24,8 @@ export default class ContentList extends React.Component<{
   public state: {
     contentList: IContentListEntry[];
     page: number;
+    resultsPerPage: number;
+    search: string;
   };
 
   protected contentService: IContentService;
@@ -38,16 +40,33 @@ export default class ContentList extends React.Component<{
     await this.updateList();
   }
 
+  get filteredItems() {
+    const search = this.state.search.trim().toLocaleLowerCase();
+    return search !== ''
+      ? this.state.contentList.filter((content) =>
+          content.title.toLocaleLowerCase().includes(search)
+        )
+      : this.state.contentList;
+  }
+
   public render(): React.ReactNode {
-    // TODO: Add filtering and pagination
-    const resultsPerPage = 50;
-    const pages = chunk(this.state.contentList, resultsPerPage);
+    const pages = chunk(this.filteredItems, this.state.resultsPerPage);
     return (
       <div>
         <Button variant="primary" onClick={() => this.new()} className="my-2">
           <FontAwesomeIcon icon={faPlusCircle} className="me-2" />
           Create new content
         </Button>
+        <div className="mt-2 mb-2">
+          <label htmlFor="search">Search: </label>
+          <input
+            id="search"
+            onChange={debounce(
+              (e) => this.setState({ search: e.target.value }),
+              300
+            )}
+          />
+        </div>
         <ListGroup>
           {(pages[this.state.page - 1] ?? []).map((content) => (
             <ContentListEntryComponent
