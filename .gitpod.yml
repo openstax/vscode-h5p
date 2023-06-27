@@ -5,8 +5,7 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - init: npm install && npm run compile
-    command: npm run watch
+  - command: code --install-extension ./vscode-h5p-0.0.1.vsix
 ports:
   - port: 27149
     visibility: public
