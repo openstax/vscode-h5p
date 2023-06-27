@@ -13,7 +13,7 @@ export default class OSStorage extends H5P.fsImplementations
       .map((d) => parseInt(d.name))
       .filter((n) => !isNaN(n))
       .sort();
-    let i = 0;
+    let i = 1;
     // Scan for first available id
     while (i < numbered.length && (i === numbered[i] || numbered.includes(i)))
       i++;
