@@ -15,3 +15,20 @@ export function chunk<T>(arr: T[], chunkSize: number): Array<T[]> {
     .map((n) => n * chunkSize)
     .map((offset) => arr.slice(offset, offset + chunkSize));
 }
+
+export function debounce<A = unknown, R = void>(
+  fn: (args: A) => R,
+  ms: number
+): (args: A) => Promise<R> {
+  let timer: NodeJS.Timeout;
+
+  return (args: A) => {
+    clearTimeout(timer);
+
+    return new Promise((resolve) => {
+      timer = setTimeout(() => {
+        resolve(fn(args));
+      }, ms);
+    });
+  };
+}
