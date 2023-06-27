@@ -1,12 +1,14 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Pagination from 'react-bootstrap/Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 // The .js references are necessary for requireJs to work in the browser.
 import { IContentService, IContentListEntry } from '../services/ContentService';
 import ContentListEntryComponent from './ContentListEntryComponent';
+import { chunk, range } from './OpenStax/utils';
 
 export default class ContentList extends React.Component<{
   h5pUrl: string;
@@ -14,13 +16,14 @@ export default class ContentList extends React.Component<{
 }> {
   constructor(props: { h5pUrl: string; contentService: IContentService }) {
     super(props);
-    this.state = { contentList: [] };
+    this.state = { contentList: [], page: 1 };
     this.contentService = props.contentService;
     this.h5pUrl = props.h5pUrl;
   }
 
   public state: {
     contentList: IContentListEntry[];
+    page: number;
   };
 
   protected contentService: IContentService;
@@ -36,6 +39,9 @@ export default class ContentList extends React.Component<{
   }
 
   public render(): React.ReactNode {
+    // TODO: Add filtering and pagination
+    const resultsPerPage = 50;
+    const pages = chunk(this.state.contentList, resultsPerPage);
     return (
       <div>
         <Button variant="primary" onClick={() => this.new()} className="my-2">
@@ -43,7 +49,7 @@ export default class ContentList extends React.Component<{
           Create new content
         </Button>
         <ListGroup>
-          {this.state.contentList.map((content) => (
+          {(pages[this.state.page - 1] ?? []).map((content) => (
             <ContentListEntryComponent
               h5pUrl={this.h5pUrl}
               contentService={this.contentService}
@@ -56,6 +62,49 @@ export default class ContentList extends React.Component<{
             ></ContentListEntryComponent>
           ))}
         </ListGroup>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '10px',
+          }}
+        >
+          <Pagination>
+            <Pagination.First
+              onClick={() => {
+                this.setState({ page: 1 });
+              }}
+            />
+            <Pagination.Prev
+              onClick={() => {
+                if (this.state.page > 1)
+                  this.setState({ page: this.state.page - 1 });
+              }}
+            />
+            {[...range(1, pages.length + 1)].map((pageNumber) => (
+              <Pagination.Item
+                key={pageNumber}
+                active={pageNumber === this.state.page}
+                onClick={() => {
+                  this.setState({ page: pageNumber });
+                }}
+              >
+                {pageNumber}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => {
+                if (this.state.page < pages.length)
+                  this.setState({ page: this.state.page + 1 });
+              }}
+            />
+            <Pagination.Last
+              onClick={() => {
+                this.setState({ page: pages.length });
+              }}
+            />
+          </Pagination>
+        </div>
       </div>
     );
   }
