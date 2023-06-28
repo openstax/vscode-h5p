@@ -1,6 +1,6 @@
 import { IH5PEditorOptions } from '@lumieducation/h5p-server/build/src/types';
 import * as H5P from '@lumieducation/h5p-server';
-import OSStorage from './FileContentStoreage';
+import OSStorage from './FileContentStorage';
 
 export default class OSH5PEditor extends H5P.H5PEditor {
   constructor(
