@@ -41,12 +41,30 @@ export default class ContentList extends React.Component<{
   }
 
   get filteredItems() {
-    const search = this.state.search.trim().toLocaleLowerCase();
-    return search !== ''
-      ? this.state.contentList.filter((content) =>
-          content.title.toLocaleLowerCase().includes(search)
-        )
-      : this.state.contentList;
+    const filters = this.state.search
+      .trim()
+      .toLocaleLowerCase()
+      .split(' ')
+      .map((s) => {
+        switch (true) {
+          case s.startsWith('id:'):
+            return (content: IContentListEntry) =>
+              content.contentId === s.slice(3);
+          case s.startsWith('lib:'):
+            return (content: IContentListEntry) =>
+              content.mainLibrary.toLocaleLowerCase().includes(s.slice(4));
+          default:
+            return (content: IContentListEntry) =>
+              content.title.toLocaleLowerCase().includes(s);
+        }
+      });
+    return (
+      filters.length !== 0
+        ? this.state.contentList.filter((content) =>
+            filters.every((filter) => filter(content))
+          )
+        : this.state.contentList
+    ).sort((a, b) => parseInt(a.contentId) - parseInt(b.contentId));
   }
 
   public render(): React.ReactNode {
@@ -61,9 +79,10 @@ export default class ContentList extends React.Component<{
           <label htmlFor="search">Search: </label>
           <input
             id="search"
+            placeholder="{title} | id:{id} | lib:{lib}"
             onChange={debounce(
               (e) => this.setState({ search: e.target.value }),
-              300
+              500
             )}
           />
         </div>
