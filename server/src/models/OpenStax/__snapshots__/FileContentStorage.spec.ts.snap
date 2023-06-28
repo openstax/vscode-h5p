@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`File Content Storage saves content as expected 1`] = `
+{
+  "1": {
+    "content.json": "{
+  "this": "could",
+  "literally": "be",
+  "anything": "because",
+  "it": "is",
+  "very": "loosely",
+  "defined": true
+}
+",
+    "h5p.json": "{
+  "title": "this should be stored in folder 1",
+  "mainLibrary": "something",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+    "metadata.json": "{
+  "books": [
+    "meta-1"
+  ]
+}
+",
+  },
+  "1234": {
+    "content.json": "{}
+",
+    "h5p.json": "{
+  "title": "this should be stored in folder 1234",
+  "mainLibrary": "something",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+  },
+  "2": {},
+  "3": {
+    "content.json": "{}
+",
+    "h5p.json": "{
+  "title": "this should be stored in folder 3",
+  "mainLibrary": "something",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+    "metadata.json": "{
+  "books": [
+    "meta-2"
+  ]
+}
+",
+  },
+  "4": {},
+}
+`;
