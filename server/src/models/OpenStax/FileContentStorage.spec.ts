@@ -1,0 +1,98 @@
+import * as fsExtra from 'fs-extra';
+import OSStorage from './FileContentStorage';
+import mockfs from 'mock-fs';
+import path from 'path';
+
+function dirToObj(base: string) {
+  const dir = {};
+  fsExtra.readdirSync(base, { withFileTypes: true }).forEach((dirent) => {
+    const p = path.join(base, dirent.name);
+    dir[dirent.name] = dirent.isDirectory()
+      ? dirToObj(p)
+      : fsExtra.readFileSync(p, { encoding: 'utf-8' });
+  });
+  return dir;
+}
+
+describe('File Content Storage', () => {
+  const interactivesPath = '/interactives';
+
+  beforeEach(() => {
+    const fs = {};
+    fs[interactivesPath] = mockfs.directory({});
+    mockfs(fs);
+  });
+  afterEach(() => {
+    mockfs.restore();
+  });
+
+  it('saves content as expected', async () => {
+    const storage = new OSStorage(interactivesPath);
+    expect(
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 1',
+          mainLibrary: 'something',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {
+          this: 'could',
+          literally: 'be',
+          anything: 'because',
+          it: 'is',
+          very: 'loosely',
+          defined: true,
+        },
+        {} as any
+      )
+    ).toBe('1');
+    await storage.saveOSMeta('1', { books: ['meta-1'] });
+    // Make sure it does not overwrite existing directories
+    fsExtra.ensureDirSync(path.join(interactivesPath, '2'));
+    // And that it finds the next available id
+    fsExtra.ensureDirSync(path.join(interactivesPath, '4'));
+    // Since 2 exists, 3 should be next
+    expect(
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 3',
+          mainLibrary: 'something',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {},
+        {} as any
+      )
+    ).toBe('3');
+    expect(
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 1234',
+          mainLibrary: 'something',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {},
+        {} as any,
+        '1234' // should use this id
+      )
+    ).toBe('1234');
+    await storage.saveOSMeta('3', { books: ['meta-2'] });
+    expect(await storage.getOSMeta('1')).toStrictEqual({ books: ['meta-1'] });
+    expect(await storage.getOSMeta('2')).toStrictEqual({});
+    expect(await storage.getOSMeta('3')).toStrictEqual({ books: ['meta-2'] });
+    const result = dirToObj(interactivesPath);
+    mockfs.restore();
+    expect(result).toMatchSnapshot();
+  });
+});
