@@ -3,11 +3,6 @@ import express from 'express';
 import OSH5PEditor from './H5PEditor';
 
 export default class OSH5PServer extends H5PServer<OSH5PEditor> {
-  protected async onPlay(req: any, res: any): Promise<void> {
-    console.log('Doing things and stuff');
-    await super.onPlay(req, res);
-  }
-
   protected async getMetadata(req, res) {
     const id = req.params.contentId;
     const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);

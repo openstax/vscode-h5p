@@ -68,7 +68,7 @@
     "build": "npm run build --prefix ./client && npm run build --prefix ./server",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "test": "npm --prefix ./client run test & npm --prefix ./server run test",
+    "test": "npm --prefix ./client run test && npm --prefix ./server run test",
     "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules",
     "package": "vsce package"
   },
