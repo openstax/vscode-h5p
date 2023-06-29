@@ -95,4 +95,25 @@ describe('File Content Storage', () => {
     mockfs.restore();
     expect(result).toMatchSnapshot();
   });
+  it('converts invalid searchable values when loading', async () => {
+    const storage = new OSStorage(interactivesPath);
+    const id = '1234';
+    await storage.addContent(
+      {
+        title: 1234 as any,
+        mainLibrary: 5678 as any,
+        language: 'U',
+        license: '',
+        embedTypes: ['iframe'],
+        preloadedDependencies: [],
+        defaultLanguage: '',
+      },
+      {},
+      {} as any,
+      id
+    )
+    const loaded = await storage.getMetadata(id);
+    expect(typeof loaded.title).toBe('string');
+    expect(typeof loaded.mainLibrary).toBe('string');
+  });
 });
