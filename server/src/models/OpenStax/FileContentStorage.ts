@@ -52,6 +52,20 @@ export default class OSStorage extends H5P.fsImplementations
     return id;
   }
 
+  public async getMetadata(
+    contentId: string,
+    user?: H5P.IUser
+  ): Promise<H5P.IContentMetadata> {
+    const metadata = await super.getMetadata(contentId, user);
+    switch (false) {
+      case (metadata.title as unknown) instanceof String:
+        metadata.title = metadata.title.toString();
+      case (metadata.mainLibrary as unknown) instanceof String:
+        metadata.mainLibrary = metadata.mainLibrary.toString();
+    }
+    return metadata;
+  }
+
   public async saveOSMeta(contentId: string, metadata: any) {
     await this.writeJSON(
       path.join(this.getContentPath(), contentId, METADATA_NAME),
