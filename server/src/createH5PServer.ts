@@ -113,7 +113,7 @@ function buildServerURL(port: number): string {
 async function createH5PEditor(
   config: H5P.IH5PConfig,
   localLibraryPath: string,
-  localContentPath: string,
+  extensionConfig: Config,
   localTemporaryPath: string,
   localUserContentPath: string,
   urlGenerator?: H5P.IUrlGenerator,
@@ -157,7 +157,7 @@ async function createH5PEditor(
     new H5P.cacheImplementations.CachedKeyValueStorage('kvcache', cache), // this is a general-purpose cache
     config,
     new H5P.cacheImplementations.CachedLibraryStorage(libraryStorage, cache),
-    new OSStorage(localContentPath),
+    new OSStorage(extensionConfig),
     new H5P.fsImplementations.DirectoryTemporaryFileStorage(localTemporaryPath),
     translationCallback,
     urlGenerator,
@@ -210,7 +210,7 @@ export async function startH5P(globalConfig: Config) {
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 
-    globalConfig.contentDirectory, // the path on the local disc where content
+    globalConfig, // the path on the local disc where content
     // is stored. Only used / necessary if you use the local filesystem
     // content storage class.
 
