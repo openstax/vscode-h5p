@@ -2,6 +2,7 @@ import * as fsExtra from 'fs-extra';
 import OSStorage from './FileContentStorage';
 import mockfs from 'mock-fs';
 import path from 'path';
+import Config from '../config';
 
 function dirToObj(base: string) {
   const dir = {};
@@ -16,7 +17,7 @@ function dirToObj(base: string) {
 
 describe('File Content Storage', () => {
   const interactivesPath = '/interactives';
-
+  const config = new Config('/');
   beforeEach(() => {
     const fs = {};
     fs[interactivesPath] = mockfs.directory({});
@@ -27,7 +28,7 @@ describe('File Content Storage', () => {
   });
 
   it('saves content as expected', async () => {
-    const storage = new OSStorage(interactivesPath);
+    const storage = new OSStorage(config);
     expect(
       await storage.addContent(
         {
@@ -96,7 +97,7 @@ describe('File Content Storage', () => {
     expect(result).toMatchSnapshot();
   });
   it('converts invalid searchable values when loading', async () => {
-    const storage = new OSStorage(interactivesPath);
+    const storage = new OSStorage(config);
     const id = '1234';
     await storage.addContent(
       {
