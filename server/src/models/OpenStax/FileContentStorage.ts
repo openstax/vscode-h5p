@@ -100,10 +100,16 @@ export default class OSStorage extends H5P.fsImplementations
       await fsExtra.rm(privatePath, { recursive: true });
     }
 
-    await this.writeJSON(
-      path.join(this.contentPath, contentId, METADATA_NAME),
-      osMeta
-    );
+    const metadataFile = path.join(this.contentPath, contentId, METADATA_NAME);
+
+    if (await fsExtra.exists(metadataFile)) {
+      osMeta = {
+        ...(await fsExtra.readJSON(metadataFile)),
+        ...osMeta,
+      };
+    }
+
+    await this.writeJSON(metadataFile, osMeta);
   }
 
   public async getOSMeta(contentId: string) {

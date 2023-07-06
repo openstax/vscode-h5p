@@ -71,5 +71,14 @@ exports[`File Content Storage saves content as expected 1`] = `
 ",
   },
   "4": {},
+  "9876": {
+    "metadata.json": "{
+  "extra": "Something extra",
+  "books": [
+    "meta-3"
+  ]
+}
+",
+  },
 }
 `;
