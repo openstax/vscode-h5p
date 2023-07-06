@@ -1,15 +1,14 @@
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
-import * as fs from 'fs';
 import Config from '../config';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 
-export default class OSStorage extends H5P.fsImplementations.FileContentStorage {
-
-  private privateContentDirectory
+export default class OSStorage extends H5P.fsImplementations
+  .FileContentStorage {
+  private privateContentDirectory;
 
   constructor(config: Config) {
     super(config.contentDirectory);
@@ -43,10 +42,7 @@ export default class OSStorage extends H5P.fsImplementations.FileContentStorage 
     }
     try {
       await fsExtra.ensureDir(path.join(this.contentPath, id));
-      await this.writeJSON(
-        path.join(this.contentPath, id, 'h5p.json'),
-        osMeta
-      );
+      await this.writeJSON(path.join(this.contentPath, id, 'h5p.json'), osMeta);
       await this.writeJSON(
         path.join(this.contentPath, id, 'content.json'),
         content
@@ -67,19 +63,21 @@ export default class OSStorage extends H5P.fsImplementations.FileContentStorage 
     user?: H5P.IUser
   ): Promise<H5P.IContentMetadata> {
     const metadata = await super.getMetadata(contentId, user);
-    switch (false) {
-      case (metadata.title as unknown) instanceof String:
-        metadata.title = metadata.title.toString();
-      case (metadata.mainLibrary as unknown) instanceof String:
-        metadata.mainLibrary = metadata.mainLibrary.toString();
-    }
+    const typeConversions: Array<[keyof H5P.IContentMetadata, Function]> = [
+      ['title', String],
+      ['mainLibrary', String],
+    ];
+    typeConversions.forEach(([key, typ]) => {
+      if ((metadata[key] as unknown) instanceof typ) return;
+      metadata[key] = typ(metadata[key]);
+    });
     return metadata;
   }
 
   public async saveOSMeta(contentId: string, osMeta: any) {
-      // check if private
+    // check if private
     const privatePath = path.join(this.privateContentDirectory, contentId);
-    if (osMeta.isSolutionPublic === "false") {
+    if (osMeta.isSolutionPublic === 'false') {
       const h5pPath = path.join(this.contentPath, contentId, CONTENT_NAME);
 
       const h5p = await fsExtra.readJSON(h5pPath, 'utf8');
@@ -99,7 +97,7 @@ export default class OSStorage extends H5P.fsImplementations.FileContentStorage 
       await this.writeJSON(h5pPath, h5p);
     } else {
       await fsExtra.ensureDir(privatePath);
-      await fsExtra.rm(privatePath, {"recursive": true});
+      await fsExtra.rm(privatePath, { recursive: true });
     }
 
     await this.writeJSON(
@@ -116,18 +114,25 @@ export default class OSStorage extends H5P.fsImplementations.FileContentStorage 
     // read metadata
     // if private data exists, read it and add to file
     const osMeta = await fsExtra.readJSON(mdPath);
-    if (osMeta.isSolutionPublic === "false") {
-      const privatePath = path.join(this.privateContentDirectory, contentId, CONTENT_NAME);
+    if (osMeta.isSolutionPublic === 'false') {
+      const privatePath = path.join(
+        this.privateContentDirectory,
+        contentId,
+        CONTENT_NAME
+      );
       const privateData = await fsExtra.readJSON(privatePath);
       osMeta.answers = privateData.answers;
     }
     return osMeta;
   }
 
-  public async getParameters(contentId: string, user?: H5P.IUser | undefined): Promise<any> {
+  public async getParameters(
+    contentId: string,
+    user?: H5P.IUser | undefined
+  ): Promise<any> {
     const content = await super.getParameters(contentId, user);
     const osMeta = await this.getOSMeta(contentId);
-    if (osMeta.isSolutionPublic === "false") {
+    if (osMeta.isSolutionPublic === 'false') {
       content.answers = osMeta.answers;
     }
     const params = {
