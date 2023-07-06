@@ -8,7 +8,7 @@ const CONTENT_NAME = 'content.json';
 
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
-  private privateContentDirectory;
+  private privateContentDirectory: string;
 
   constructor(config: Config) {
     super(config.contentDirectory);
@@ -100,16 +100,10 @@ export default class OSStorage extends H5P.fsImplementations
       await fsExtra.rm(privatePath, { recursive: true });
     }
 
-    const metadataFile = path.join(this.contentPath, contentId, METADATA_NAME);
-
-    if (await fsExtra.exists(metadataFile)) {
-      osMeta = {
-        ...(await fsExtra.readJSON(metadataFile)),
-        ...osMeta,
-      };
-    }
-
-    await this.writeJSON(metadataFile, osMeta);
+    await this.writeJSON(
+      path.join(this.contentPath, contentId, METADATA_NAME),
+      { ...(await this.getOSMeta(contentId)), ...osMeta }
+    );
   }
 
   public async getOSMeta(contentId: string) {

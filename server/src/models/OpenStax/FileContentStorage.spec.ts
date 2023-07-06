@@ -25,6 +25,7 @@ describe('File Content Storage', () => {
         '9876': {
           'metadata.json': JSON.stringify({
             extra: 'Something extra',
+            books: ['should-not-appear-in-snapshot'],
           }),
         },
       },
