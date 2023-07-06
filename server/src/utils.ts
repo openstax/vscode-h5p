@@ -6,6 +6,7 @@ import express from 'express';
 import * as H5P from '@lumieducation/h5p-server';
 import User from './models/H5PUser';
 
+/* istanbul ignore next (pure function that depends solely on express) */
 export function createH5PRouter<EditRequestType, ContentRequestType>(
   onPlay: (req, res) => Promise<void>,
   onEdit: (req: EditRequestType, res) => Promise<void>,
@@ -16,7 +17,7 @@ export function createH5PRouter<EditRequestType, ContentRequestType>(
 ): express.Router {
   const router = express.Router();
 
-  router.get(`/:contentId/play`, onPlay);
+  router.get('/:contentId/play', onPlay);
   router.get('/:contentId/edit', onEdit);
   router.post('/', onNew);
   router.patch('/:contentId', onSave);
@@ -85,42 +86,29 @@ export async function download(
   });
 }
 
-export function userContentId() {
-  const min = 1e8;
-  const max = 9e8;
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 export async function extractArchive(
   path: string,
   destinationFolder: string,
   deleteArchive: boolean,
-  tempFolder?: string,
   filesToExtract?: string[]
 ): Promise<void> {
   console.log(`Extracting file ${path}`);
-  const fileExists = fs.statSync(path);
-  if (fileExists) {
-    return await decompress(path, destinationFolder, { strip: 1 })
-      .then((files) => {
-        console.log('Files extracted');
-        if (filesToExtract) {
-          files
-            .filter((file) => !filesToExtract.includes(file.path))
-            .forEach((file) => fsRemove(file.path));
-          filesToExtract.forEach((file) =>
-            console.log(`${destinationFolder}/${file}`)
-          );
-        } else {
-          files.forEach((file) =>
-            console.log(`${destinationFolder}/${file.path}`)
-          );
-        }
-        if (deleteArchive) fsRemove(path);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  try {
+    const files = await decompress(path, destinationFolder, { strip: 1 });
+    console.log('Files extracted');
+    if (filesToExtract) {
+      files
+        .filter((file) => !filesToExtract.includes(file.path))
+        .forEach((file) => fsRemove(file.path));
+      filesToExtract.forEach((file) =>
+        console.log(`${destinationFolder}/${file}`)
+      );
+    } else {
+      files.forEach((file) => console.log(`${destinationFolder}/${file.path}`));
+    }
+    if (deleteArchive) fsRemove(path);
+  } catch (e) {
+    /* istanbul ignore next */
+    console.error(e);
   }
-  return Promise.resolve();
 }

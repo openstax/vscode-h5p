@@ -18,6 +18,7 @@ function dirToObj(base: string) {
 describe('File Content Storage', () => {
   const interactivesPath = '/interactives';
   const config = new Config('/');
+
   beforeEach(() => {
     const fs = {};
     fs[interactivesPath] = mockfs.directory({});
@@ -112,7 +113,7 @@ describe('File Content Storage', () => {
       {},
       {} as any,
       id
-    )
+    );
     const loaded = await storage.getMetadata(id);
     expect(typeof loaded.title).toBe('string');
     expect(typeof loaded.mainLibrary).toBe('string');
