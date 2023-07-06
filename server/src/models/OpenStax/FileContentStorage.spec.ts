@@ -20,9 +20,15 @@ describe('File Content Storage', () => {
   const config = new Config('/');
 
   beforeEach(() => {
-    const fs = {};
-    fs[interactivesPath] = mockfs.directory({});
-    mockfs(fs);
+    mockfs({
+      [interactivesPath]: {
+        '9876': {
+          'metadata.json': JSON.stringify({
+            extra: 'Something extra',
+          }),
+        },
+      },
+    });
   });
   afterEach(() => {
     mockfs.restore();
@@ -90,9 +96,14 @@ describe('File Content Storage', () => {
       )
     ).toBe('1234');
     await storage.saveOSMeta('3', { books: ['meta-2'] });
+    await storage.saveOSMeta('9876', { books: ['meta-3'] });
     expect(await storage.getOSMeta('1')).toStrictEqual({ books: ['meta-1'] });
     expect(await storage.getOSMeta('2')).toStrictEqual({});
     expect(await storage.getOSMeta('3')).toStrictEqual({ books: ['meta-2'] });
+    expect(await storage.getOSMeta('9876')).toStrictEqual({
+      books: ['meta-3'],
+      extra: 'Something extra',
+    });
     const result = dirToObj(interactivesPath);
     mockfs.restore();
     expect(result).toMatchSnapshot();
