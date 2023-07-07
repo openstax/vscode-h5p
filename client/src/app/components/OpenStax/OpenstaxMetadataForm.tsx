@@ -1,7 +1,7 @@
 import React from 'react';
 import Blooms from './Blooms';
 import AssignmentType from './AssignmentType';
-import { Book as Book } from './Book';
+import { Book } from './Book';
 import DokTag from './Dok';
 import { chunk } from './utils';
 import { InputState } from './types';
@@ -83,6 +83,41 @@ function isSavedEntry(entry: [any, any]): entry is SavedEntry {
   return metadataKeys.includes(entry[0]);
 }
 
+function assertValue<T>(
+  v: T | null | undefined,
+  message = 'Expected a value but did not get anything'
+) {
+  if (v !== null && v !== undefined) return v;
+  /* istanbul ignore next */
+  throw new Error(`BUG: assertValue. Message: ${message}`);
+}
+
+function assertType<T>(
+  v: unknown,
+  type: string,
+  message = 'Got unexpected type'
+): T {
+  if (typeof v === type) return v as T;
+  /* istanbul ignore next */
+  throw new Error(`BUG: assertType. Message: ${message}`);
+}
+
+const coders: Partial<
+  Record<
+    keyof FormState,
+    {
+      encoder: (state: InputState) => any;
+      decoder: (value: unknown) => string;
+    }
+  >
+> = {
+  moduleId: {
+    encoder: (state: InputState) => `modules/${state.value}/index.cnxml`,
+    decoder: (value: unknown) =>
+      assertValue(assertType<string>(value, 'string').split('/').at(-2)),
+  },
+};
+
 export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public state: FormState = {
     books: [],
@@ -120,6 +155,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         this.setState({ ...this.decodeValues(metadata) });
       }
     } catch (err) {
+      // TODO: Improve error handling during decoding
       console.error((err as Error).message);
     }
   }
@@ -143,17 +179,9 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   }
 
   get encodedValues() {
-    // TODO: Add encoders for each value type
-    // TODO: Use `key` to determine which encoder to use for each value
     // TODO: Remove optional fields that are empty?
-    const encodeValue = (key: keyof FormState, state: InputState): any => {
-      switch (key) {
-        case 'moduleId':
-          return `modules/${state.value}/index.cnxml`;
-        default:
-          return state.value;
-      }
-    };
+    const encodeValue = (key: keyof FormState, state: InputState): any =>
+      key in coders ? coders[key]!.encoder(state) : state.value;
     return Object.fromEntries(
       this.metadataEntries.map(([key, oneOrMany]) => [
         key,
@@ -164,17 +192,9 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     );
   }
 
-  decodeValues(metadata: any): SavedState {
-    // TODO: Add decoders for each value type
-    // TODO: Use `key` to determine which decoder to use for each value
-    const decode = (key: keyof SavedState, value: any): string => {
-      switch (key) {
-        case 'moduleId':
-          return value.split('/').at(-2);
-        default:
-          return value.toString();
-      }
-    };
+  decodeValues(metadata: any): Partial<FormState> {
+    const decode = (key: keyof SavedState, value: any): string =>
+      key in coders ? coders[key]!.decoder(value) : value.toString();
     const decodeValue = (key: keyof SavedState, value: any): InputState => {
       return {
         ...defaultInputState,
@@ -190,7 +210,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
             ? oneOrMany.map((item) => decodeValue(key, item))
             : decodeValue(key, oneOrMany),
         ])
-    ) as SavedState;
+    );
   }
 
   get isInputValid() {
