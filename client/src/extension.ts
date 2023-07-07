@@ -35,9 +35,14 @@ export async function activate(context: ExtensionContext) {
           serverReadyEvent.wait()
         )
       );
-      serverReadyEvent.wait().then(() => {
-        h5pEditor.revealOrNew();
-      });
+      serverReadyEvent
+        .wait()
+        .then(() => {
+          h5pEditor.revealOrNew();
+        })
+        .catch((e: Error) => {
+          void window.showErrorMessage(e.message);
+        });
     })
   );
 
@@ -79,6 +84,11 @@ export async function activate(context: ExtensionContext) {
   context.subscriptions.push(
     client.onNotification('server-ready', () => {
       serverReadyEvent.set();
+    })
+  );
+  context.subscriptions.push(
+    client.onNotification('server-error', (e) => {
+      serverReadyEvent.cancel(new Error(e));
     })
   );
 }

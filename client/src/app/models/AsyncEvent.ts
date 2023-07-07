@@ -7,8 +7,8 @@ export class AsyncEvent extends TaskCompletionSource<void> {
     if (this.fired) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
-      this.task.then(() => resolve(true));
+    return new Promise<void>((resolve, reject) => {
+      this.task.then(() => resolve());
       this.task.catch((err) => reject(err));
     });
   }
