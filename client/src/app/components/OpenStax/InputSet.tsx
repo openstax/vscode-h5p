@@ -34,7 +34,7 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
           <div className="col-11">
             <h3>{title}</h3>
           </div>
-          <div className="col-1 pt-2">
+          <div className="col-1 pt-2" data-control-type={'input-set-add'}>
             <FontAwesomeIcon
               icon={faPlusCircle}
               onClick={() => handleAddInput()}
@@ -70,7 +70,7 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
                 />
               )}
             </div>
-            <div className="col-1">
+            <div className="col-1" data-control-type={'input-set-subtract'}>
               <FontAwesomeIcon
                 icon={faMinusCircle}
                 onClick={() => handleRemoveInput(index)}

@@ -108,16 +108,27 @@ describe('Inputs', () => {
   });
 
   describe('InputSet', () => {
-    it('displays a list of single inputs when no options are given', () => {
+    it('uses single inputs when no options are given and adds/removes inputs', () => {
+      let inputsState = [
+        { value: 'a', isValid: true },
+        { value: 'b', isValid: true },
+        { value: 'c', isValid: true },
+      ];
       const state: InputSetProps = {
-        inputs: [
-          { value: 'a', isValid: true },
-          { value: 'b', isValid: true },
-          { value: 'c', isValid: true },
-        ],
+        inputs: inputsState,
         handleInputChange: () => {},
-        handleRemoveInput: () => {},
-        handleAddInput: () => {},
+        handleRemoveInput: (idx) => {
+          const inputs = inputsState;
+          const newInputs = [...inputs];
+          newInputs.splice(idx, 1);
+          inputsState = newInputs;
+        },
+        handleAddInput: () => {
+          inputsState.push({
+            value: inputsState.length.toString(),
+            isValid: true,
+          });
+        },
       };
 
       const { container } = render(<InputSet title="Test" {...state} />);
@@ -127,6 +138,20 @@ describe('Inputs', () => {
         expect(input.value).toBe(state.inputs[idx].value);
       });
       expect(inputs.length).toBe(3);
+
+      const plusButton = container.querySelector(
+        '[data-control-type="input-set-add"]'
+      )?.firstElementChild;
+      expect(plusButton).not.toBe(null);
+      fireEvent.click(plusButton!, { button: 1 });
+      expect(inputsState.length).toBe(4);
+
+      const minusButton = container.querySelector(
+        '[data-control-type="input-set-subtract"]'
+      )?.firstElementChild;
+      expect(minusButton).not.toBe(null);
+      fireEvent.click(minusButton!, { button: 1 });
+      expect(inputsState.length).toBe(3);
     });
     it('displays a list of select boxes when options are given', () => {
       const state: InputSetProps = {
