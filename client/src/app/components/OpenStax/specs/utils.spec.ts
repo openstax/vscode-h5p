@@ -1,4 +1,4 @@
-import { chunk, collect, range } from '../utils';
+import { chunk, collect, debounce, range } from '../utils';
 
 describe('utils', () => {
   describe('collect', () => {
@@ -36,6 +36,15 @@ describe('utils', () => {
       )} for ${arr} chunked to ${chunkSize} chunk size`, () => {
         expect(chunk(arr, chunkSize)).toEqual(expected);
       });
+    });
+  });
+  describe('debounce', () => {
+    it('calls the function the correct number of times', async () => {
+      const mockFn = jest.fn();
+      const debounced = debounce(mockFn, 500);
+      void debounced(undefined);
+      await debounced(undefined);
+      expect(mockFn).toBeCalledTimes(1);
     });
   });
 });
