@@ -63,14 +63,12 @@ export default class OSStorage extends H5P.fsImplementations
     user?: H5P.IUser
   ): Promise<H5P.IContentMetadata> {
     const metadata = await super.getMetadata(contentId, user);
-    const typeConversions: Array<[keyof H5P.IContentMetadata, Function]> = [
-      ['title', String],
-      ['mainLibrary', String],
-    ];
-    typeConversions.forEach(([key, typ]) => {
-      if ((metadata[key] as unknown) instanceof typ) return;
-      metadata[key] = typ(metadata[key]);
-    });
+    if ((typeof metadata.title as unknown) !== 'string') {
+      metadata.title = metadata.title.toString();
+    }
+    if ((typeof metadata.mainLibrary as unknown) !== 'string') {
+      metadata.mainLibrary = metadata.mainLibrary.toString();
+    }
     return metadata;
   }
 

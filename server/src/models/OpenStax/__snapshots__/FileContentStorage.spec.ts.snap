@@ -3,6 +3,31 @@
 exports[`File Content Storage saves content as expected 1`] = `
 {
   "1": {
+    "metadata.json": "{
+  "extra": "Something extra",
+  "books": [
+    "meta-3"
+  ]
+}
+",
+  },
+  "1234": {
+    "content.json": "{}
+",
+    "h5p.json": "{
+  "title": "this should be stored in folder 1234",
+  "mainLibrary": "something",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+  },
+  "2": {
     "content.json": "{
   "this": "could",
   "literally": "be",
@@ -31,24 +56,8 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
   },
-  "1234": {
-    "content.json": "{}
-",
-    "h5p.json": "{
-  "title": "this should be stored in folder 1234",
-  "mainLibrary": "something",
-  "language": "U",
-  "license": "",
-  "embedTypes": [
-    "iframe"
-  ],
-  "preloadedDependencies": [],
-  "defaultLanguage": ""
-}
-",
-  },
-  "2": {},
-  "3": {
+  "3": {},
+  "4": {
     "content.json": "{}
 ",
     "h5p.json": "{
@@ -70,15 +79,6 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
   },
-  "4": {},
-  "9876": {
-    "metadata.json": "{
-  "extra": "Something extra",
-  "books": [
-    "meta-3"
-  ]
-}
-",
-  },
+  "5": {},
 }
 `;
