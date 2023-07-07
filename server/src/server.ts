@@ -68,10 +68,13 @@ connection.onInitialized(() => {
       console.log('Starting server');
       await startH5P(config);
       connection.sendNotification('server-ready');
+    } else {
+      /* istanbul ignore next */
+      throw new Error('Could not find workspace folder');
     }
   };
   inner().catch((e) => {
-    throw e;
+    connection.sendNotification('server-error', (e as Error).message);
   });
 });
 
