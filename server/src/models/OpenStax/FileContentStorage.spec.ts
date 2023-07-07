@@ -22,7 +22,7 @@ describe('File Content Storage', () => {
   beforeEach(() => {
     mockfs({
       [interactivesPath]: {
-        '9876': {
+        '1': {
           'metadata.json': JSON.stringify({
             extra: 'Something extra',
             books: ['should-not-appear-in-snapshot'],
@@ -58,12 +58,11 @@ describe('File Content Storage', () => {
         },
         {} as any
       )
-    ).toBe('1');
-    await storage.saveOSMeta('1', { books: ['meta-1'] });
+    ).toBe('2');
     // Make sure it does not overwrite existing directories
-    fsExtra.ensureDirSync(path.join(interactivesPath, '2'));
+    fsExtra.ensureDirSync(path.join(interactivesPath, '3'));
     // And that it finds the next available id
-    fsExtra.ensureDirSync(path.join(interactivesPath, '4'));
+    fsExtra.ensureDirSync(path.join(interactivesPath, '5'));
     // Since 2 exists, 3 should be next
     expect(
       await storage.addContent(
@@ -79,7 +78,7 @@ describe('File Content Storage', () => {
         {},
         {} as any
       )
-    ).toBe('3');
+    ).toBe('4');
     expect(
       await storage.addContent(
         {
@@ -96,12 +95,13 @@ describe('File Content Storage', () => {
         '1234' // should use this id
       )
     ).toBe('1234');
-    await storage.saveOSMeta('3', { books: ['meta-2'] });
-    await storage.saveOSMeta('9876', { books: ['meta-3'] });
-    expect(await storage.getOSMeta('1')).toStrictEqual({ books: ['meta-1'] });
-    expect(await storage.getOSMeta('2')).toStrictEqual({});
-    expect(await storage.getOSMeta('3')).toStrictEqual({ books: ['meta-2'] });
-    expect(await storage.getOSMeta('9876')).toStrictEqual({
+    await storage.saveOSMeta('2', { books: ['meta-1'] });
+    await storage.saveOSMeta('4', { books: ['meta-2'] });
+    await storage.saveOSMeta('1', { books: ['meta-3'] });
+    expect(await storage.getOSMeta('2')).toStrictEqual({ books: ['meta-1'] });
+    expect(await storage.getOSMeta('3')).toStrictEqual({});
+    expect(await storage.getOSMeta('4')).toStrictEqual({ books: ['meta-2'] });
+    expect(await storage.getOSMeta('1')).toStrictEqual({
       books: ['meta-3'],
       extra: 'Something extra',
     });
