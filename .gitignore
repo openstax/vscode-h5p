@@ -12,3 +12,4 @@ client/server
 .vscode-test
 
 **coverage
+**.nyc_output
