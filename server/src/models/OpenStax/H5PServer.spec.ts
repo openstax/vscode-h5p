@@ -26,6 +26,7 @@ describe('OSH5PServer', () => {
     expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(0);
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(0);
 
+    // fetch non-existing
     res = await request(app).get(
       `${h5pConfig.baseUrl}/undefined/openstax-metadata/`
     );
@@ -33,8 +34,29 @@ describe('OSH5PServer', () => {
     expect(res.body).toStrictEqual({});
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(1);
 
+    // save
     res = await request(app).post(`${h5pConfig.baseUrl}/1/openstax-metadata/`);
     expect(res.status).toBe(200);
+    expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(1);
+
+    // fetch error
+    mockEditor.contentStorage.getOSMeta = jest
+      .fn()
+      .mockRejectedValue('Fetch Error');
+    res = res = await request(app).get(
+      `${h5pConfig.baseUrl}/undefined/openstax-metadata/`
+    );
+    expect(res.status).toBe(500);
+    expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(1);
+
+    // save error
+    mockEditor.contentStorage.saveOSMeta = jest
+      .fn()
+      .mockRejectedValue('Save Error');
+    res = res = await request(app).post(
+      `${h5pConfig.baseUrl}/1/openstax-metadata/`
+    );
+    expect(res.status).toBe(500);
     expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(1);
   });
 });
