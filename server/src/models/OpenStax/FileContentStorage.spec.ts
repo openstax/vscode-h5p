@@ -4,6 +4,8 @@ import mockfs from 'mock-fs';
 import path from 'path';
 import Config from '../config';
 
+const VIRTUAL_ROOT = '/root';
+
 function dirToObj(base: string) {
   const dir = {};
   fsExtra.readdirSync(base, { withFileTypes: true }).forEach((dirent) => {
@@ -16,17 +18,19 @@ function dirToObj(base: string) {
 }
 
 describe('File Content Storage', () => {
-  const interactivesPath = '/interactives';
-  const config = new Config('/');
+  const interactivesPath = `${VIRTUAL_ROOT}/interactives`;
+  const config = new Config(VIRTUAL_ROOT, 'interactives', 'private');
 
   beforeEach(() => {
     mockfs({
-      [interactivesPath]: {
-        '1': {
-          'metadata.json': JSON.stringify({
-            extra: 'Something extra',
-            books: ['should-not-appear-in-snapshot'],
-          }),
+      [VIRTUAL_ROOT]: {
+        ['interactives']: {
+          '1': {
+            'metadata.json': JSON.stringify({
+              extra: 'Something extra',
+              books: ['should-not-appear-in-snapshot'],
+            }),
+          },
         },
       },
     });
@@ -40,7 +44,7 @@ describe('File Content Storage', () => {
     expect(
       await storage.addContent(
         {
-          title: 'this should be stored in folder 1',
+          title: 'this should be stored in folder 2',
           mainLibrary: 'something',
           language: 'U',
           license: '',
@@ -105,7 +109,7 @@ describe('File Content Storage', () => {
       books: ['meta-3'],
       extra: 'Something extra',
     });
-    const result = dirToObj(interactivesPath);
+    const result = dirToObj(VIRTUAL_ROOT);
     mockfs.restore();
     expect(result).toMatchSnapshot();
   });
@@ -129,5 +133,74 @@ describe('File Content Storage', () => {
     const loaded = await storage.getMetadata(id);
     expect(typeof loaded.title).toBe('string');
     expect(typeof loaded.mainLibrary).toBe('string');
+  });
+  ['1234', '12345'].forEach((id) => {
+    const isSolutionPublic = id === '1234';
+    it(
+      `${id}: ` +
+        (isSolutionPublic
+          ? 'removes private solutions'
+          : 'leaves public solutions'),
+      async () => {
+        const storage = new OSStorage(config);
+        const h5pContent = {
+          fake: 'to make sure it is saved too',
+          questions: [
+            `<p>This should ${
+              isSolutionPublic ? 'not' : ''
+            } appear in the content.json</p>`,
+          ],
+        };
+        await storage.addContent(
+          {
+            title: 'this should be stored in folder ' + id,
+            mainLibrary: 'H5P.Blanks',
+            language: 'U',
+            license: '',
+            embedTypes: ['iframe'],
+            preloadedDependencies: [],
+            defaultLanguage: '',
+          },
+          h5pContent,
+          {} as any,
+          id
+        );
+        await storage.saveOSMeta(id, {
+          isSolutionPublic: isSolutionPublic.toString(),
+        });
+        expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
+      }
+    );
+  });
+  it('throws an error when it cannot make solutions private', async () => {
+    const storage = new OSStorage(config);
+    const h5pContent = {
+      fake: 'to make sure it is saved too',
+    };
+    await storage.addContent(
+      {
+        title: '',
+        mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
+        language: 'U',
+        license: '',
+        embedTypes: ['iframe'],
+        preloadedDependencies: [],
+        defaultLanguage: '',
+      },
+      h5pContent,
+      {} as any,
+      '1234'
+    );
+    let err = '';
+    try {
+      await storage.saveOSMeta('1234', {
+        isSolutionPublic: 'false',
+      });
+    } catch (e) {
+      err = (e as Error).message;
+    }
+    expect(err).toMatch(
+      'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"'
+    );
   });
 });

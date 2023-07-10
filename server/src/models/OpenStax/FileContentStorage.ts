@@ -15,7 +15,7 @@ const privateDataKeyMap: Record<string, string[]> = {
 function yankAnswers(content: any, mainLibrary: string): [any, any] {
   const privateDataKeys = privateDataKeyMap[mainLibrary];
   if ((privateDataKeys?.length ?? 0) === 0) {
-    throw new Error(`Can not handle private answers for type "${mainLibrary}"`);
+    throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
   }
   const privateData = {};
   privateDataKeys.forEach((key) => {
@@ -111,8 +111,7 @@ export default class OSStorage extends H5P.fsImplementations
       // write sanitized content object back to content.json file
       await this.writeJSON(contentPath, sanitized);
     } else {
-      await fsExtra.ensureDir(privatePath);
-      await fsExtra.rm(privatePath, { recursive: true });
+      await fsExtra.rm(privatePath, { recursive: true, force: true });
     }
 
     await this.writeJSON(
