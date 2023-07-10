@@ -5,4 +5,5 @@ module.exports = {
   roots: ['src'],
   coverageDirectory: './coverage/',
   collectCoverage: true,
+  coverageReporters: ['json'],
 };

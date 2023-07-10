@@ -59,6 +59,6 @@
     "build": "esbuild ./src/server.ts --bundle --outfile=out/server.js --external:vscode --format=cjs --platform=node --minify",
     "postbuild": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out",
     "build:ts": "tsc -b",
-    "test": "npx jest --verbose --updateSnapshot"
+    "test": "npx jest --updateSnapshot"
   }
 }
