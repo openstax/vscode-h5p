@@ -5,6 +5,25 @@ import Config from '../config';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
+const H5P_NAME = 'h5p.json';
+
+const privateDataKeyMap: Record<string, string[]> = {
+  'H5P.Blanks': ['questions'],
+  'H5P.MultiChoice': ['answers'],
+};
+
+function yankAnswers(content: any, mainLibrary: string): [any, any] {
+  const privateDataKeys = privateDataKeyMap[mainLibrary];
+  if ((privateDataKeys?.length ?? 0) === 0) {
+    throw new Error(`Can not handle private answers for type "${mainLibrary}"`);
+  }
+  const privateData = {};
+  privateDataKeys.forEach((key) => {
+    privateData[key] = content[key];
+    delete content[key];
+  });
+  return [content, privateData];
+}
 
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
@@ -32,7 +51,7 @@ export default class OSStorage extends H5P.fsImplementations
   }
 
   public async addContent(
-    osMeta: H5P.IContentMetadata,
+    metadata: H5P.IContentMetadata,
     content: any,
     user: H5P.IUser,
     id?: string | undefined
@@ -42,9 +61,9 @@ export default class OSStorage extends H5P.fsImplementations
     }
     try {
       await fsExtra.ensureDir(path.join(this.contentPath, id));
-      await this.writeJSON(path.join(this.contentPath, id, 'h5p.json'), osMeta);
+      await this.writeJSON(path.join(this.contentPath, id, H5P_NAME), metadata);
       await this.writeJSON(
-        path.join(this.contentPath, id, 'content.json'),
+        path.join(this.contentPath, id, CONTENT_NAME),
         content
       );
     } catch (error) {
@@ -76,23 +95,21 @@ export default class OSStorage extends H5P.fsImplementations
     // check if private
     const privatePath = path.join(this.privateContentDirectory, contentId);
     if (osMeta.isSolutionPublic === 'false') {
-      const h5pPath = path.join(this.contentPath, contentId, CONTENT_NAME);
+      const contentPath = path.join(this.contentPath, contentId, CONTENT_NAME);
 
-      const h5p = await fsExtra.readJSON(h5pPath, 'utf8');
+      const content = await super.getParameters(contentId);
+      const h5pMeta = await this.getMetadata(contentId);
 
-      // move answer data to private folder
-      const privateData = {
-        answers: h5p.answers,
-      };
+      const [sanitized, privateData] = yankAnswers(
+        content,
+        h5pMeta.mainLibrary
+      );
 
       await fsExtra.ensureDir(privatePath);
       await this.writeJSON(path.join(privatePath, 'content.json'), privateData);
 
-      // remove answers from public h5p object
-      delete h5p.answers;
-
-      // write h5p object back to h5p file
-      await this.writeJSON(h5pPath, h5p);
+      // write sanitized content object back to content.json file
+      await this.writeJSON(contentPath, sanitized);
     } else {
       await fsExtra.ensureDir(privatePath);
       await fsExtra.rm(privatePath, { recursive: true });
@@ -106,22 +123,7 @@ export default class OSStorage extends H5P.fsImplementations
 
   public async getOSMeta(contentId: string) {
     const mdPath = path.join(this.contentPath, contentId, METADATA_NAME);
-    if (!fsExtra.existsSync(mdPath)) {
-      return {};
-    }
-    // read metadata
-    // if private data exists, read it and add to file
-    const osMeta = await fsExtra.readJSON(mdPath);
-    if (osMeta.isSolutionPublic === 'false') {
-      const privatePath = path.join(
-        this.privateContentDirectory,
-        contentId,
-        CONTENT_NAME
-      );
-      const privateData = await fsExtra.readJSON(privatePath);
-      osMeta.answers = privateData.answers;
-    }
-    return osMeta;
+    return fsExtra.existsSync(mdPath) ? await fsExtra.readJSON(mdPath) : {};
   }
 
   public async getParameters(
@@ -130,13 +132,18 @@ export default class OSStorage extends H5P.fsImplementations
   ): Promise<any> {
     const content = await super.getParameters(contentId, user);
     const osMeta = await this.getOSMeta(contentId);
-    if (osMeta.isSolutionPublic === 'false') {
-      content.answers = osMeta.answers;
+    if (osMeta.isSolutionPublic == 'true') {
+      return content;
     }
-    const params = {
-      ...osMeta,
+    const privatePath = path.join(
+      this.privateContentDirectory,
+      contentId,
+      CONTENT_NAME
+    );
+    const privateData = await fsExtra.readJSON(privatePath);
+    return {
       ...content,
+      ...privateData,
     };
-    return params;
   }
 }

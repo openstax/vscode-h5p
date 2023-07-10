@@ -5,16 +5,26 @@ import OSH5PEditor from './H5PEditor';
 export default class OSH5PServer extends H5PServer<OSH5PEditor> {
   protected async getMetadata(req, res) {
     const id = req.params.contentId;
-    const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);
-    res.send(metadata);
-    res.status(200).end();
+    try {
+      const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);
+      res.send(metadata);
+      res.status(200).end();
+    } catch (e) {
+      console.error(e);
+      res.status(500).end();
+    }
   }
 
   protected async saveMetadata(req, res) {
     const id = req.params.contentId;
     const metadata = req.body;
-    this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
-    res.status(200).end();
+    try {
+      await this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
+      res.status(200).end();
+    } catch (e) {
+      console.error(e);
+      res.status(500).end();
+    }
   }
 
   protected configureMiddleware(server: express.Express, port: number): void {
