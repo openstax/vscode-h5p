@@ -8,6 +8,7 @@ import Nickname from '../Nickname';
 import React from 'react';
 import { collect, range } from '../utils';
 import AACN from '../AACN';
+import { act } from 'react-dom/test-utils';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -139,19 +140,20 @@ describe('Inputs', () => {
       });
       expect(inputs.length).toBe(3);
 
-      const plusButton = container.querySelector(
-        '[data-control-type="input-set-add"]'
-      )?.firstElementChild;
-      expect(plusButton).not.toBe(null);
-      fireEvent.click(plusButton!, { button: 1 });
-      expect(inputsState.length).toBe(4);
-
-      const minusButton = container.querySelector(
-        '[data-control-type="input-set-subtract"]'
-      )?.firstElementChild;
-      expect(minusButton).not.toBe(null);
-      fireEvent.click(minusButton!, { button: 1 });
-      expect(inputsState.length).toBe(3);
+      [-1, 1].forEach((inc) => {
+        const isAdd = inc > 0;
+        const selector = isAdd
+          ? '[data-control-type="input-set-add"]'
+          : '[data-control-type="input-set-subtract"]';
+        const button = container.querySelector(selector)?.firstElementChild;
+        const countBefore = inputsState.length;
+        const expectedCount = countBefore + inc;
+        expect(button).not.toBe(null);
+        act(() => {
+          fireEvent.click(button!, { button: 1 });
+        });
+        expect(inputsState.length).toBe(expectedCount);
+      });
     });
     it('displays a list of select boxes when options are given', () => {
       const state: InputSetProps = {

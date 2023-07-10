@@ -89,6 +89,26 @@ describe('OpenstaxMetadataForm', () => {
       });
       expect(await getByText('Books')).toBeTruthy();
     });
+    [-1, 1].forEach((inc) => {
+      const isAdd = inc > 0;
+      it(`can ${isAdd ? 'add' : 'remove'} inputs in a set`, async () => {
+        const books = ['one'];
+        const { container } = await initFormWithMinData({
+          formDataOverride: { books },
+        });
+        const inputCountBefore = container.querySelectorAll('input').length;
+        const expectedCount = inputCountBefore + inc;
+        const selector = isAdd
+          ? '[data-control-type="input-set-add"]'
+          : '[data-control-type="input-set-subtract"]';
+        const button = container.querySelector(selector)?.firstElementChild;
+        expect(button).not.toBe(null);
+        act(() => {
+          fireEvent.click(button!, { button: 1 });
+        });
+        expect(container.querySelectorAll('input').length).toBe(expectedCount);
+      });
+    });
   });
   describe('Conditional Input Set', () => {
     const apScienceBooks = ['stax-apphys', 'stax-apbio'];
