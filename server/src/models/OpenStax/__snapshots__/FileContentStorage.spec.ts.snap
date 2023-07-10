@@ -2,19 +2,20 @@
 
 exports[`File Content Storage saves content as expected 1`] = `
 {
-  "1": {
-    "metadata.json": "{
+  "interactives": {
+    "1": {
+      "metadata.json": "{
   "extra": "Something extra",
   "books": [
     "meta-3"
   ]
 }
 ",
-  },
-  "1234": {
-    "content.json": "{}
+    },
+    "1234": {
+      "content.json": "{}
 ",
-    "h5p.json": "{
+      "h5p.json": "{
   "title": "this should be stored in folder 1234",
   "mainLibrary": "something",
   "language": "U",
@@ -26,9 +27,9 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }
 ",
-  },
-  "2": {
-    "content.json": "{
+    },
+    "2": {
+      "content.json": "{
   "this": "could",
   "literally": "be",
   "anything": "because",
@@ -37,8 +38,8 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defined": true
 }
 ",
-    "h5p.json": "{
-  "title": "this should be stored in folder 1",
+      "h5p.json": "{
+  "title": "this should be stored in folder 2",
   "mainLibrary": "something",
   "language": "U",
   "license": "",
@@ -49,18 +50,18 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }
 ",
-    "metadata.json": "{
+      "metadata.json": "{
   "books": [
     "meta-1"
   ]
 }
 ",
-  },
-  "3": {},
-  "4": {
-    "content.json": "{}
+    },
+    "3": {},
+    "4": {
+      "content.json": "{}
 ",
-    "h5p.json": "{
+      "h5p.json": "{
   "title": "this should be stored in folder 3",
   "mainLibrary": "something",
   "language": "U",
@@ -72,13 +73,14 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }
 ",
-    "metadata.json": "{
+      "metadata.json": "{
   "books": [
     "meta-2"
   ]
 }
 ",
+    },
+    "5": {},
   },
-  "5": {},
 }
 `;
