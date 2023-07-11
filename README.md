@@ -13,7 +13,7 @@ by Openstax.
 git clone https://github.com/openstax/vscode-h5p
 cd vscode-h5p
 npm install
-./scripts/build.sh
+npm run build
 
 ```
 
@@ -38,15 +38,30 @@ will open a new VSCode window with the extension running. Clinking on a
 
 ## TODO
 
-- [ ] On save, zip the content and save it to the workspace or specified
-      location
-- [ ] Add command to open the manager
-- [ ] Contextual menu option for h5p files
+- [ ] On save, save h5p.json and content.json to the workspace or specified
+      location (partially done, need configuration options)
+- [ ] Public/private switch (determines if answers are saved outside
+      content.json or not)
+- [x] Add command to open the manager
 - [ ] Extension settings
-- [ ] Bundle extension to vsix
+- [x] Bundle extension to vsix
 - [ ] Add tests
 - [ ] CI/CD
+- [ ] Support for extra openstax metadata with editor. It should be okay to save
+      this metadata next to the h5p.json and content.json. H5P spec allows
+      inclusion of arbitrary json files, so it would be safe to include this in
+      the final h5p file too.
+- [ ] Custom content fs implementation that can 'hide' private solutions/hints -
+      Maybe different names (not content id)
 
-## Author
+## Authors
 
-- [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+- [OpenStax CE-BE](https://github.com/openstax)
+  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
+  - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
+  - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
+
+## What we still need to know
+
+- What metadata should be added
+- How private solutions will be handled - Probably placeholder values

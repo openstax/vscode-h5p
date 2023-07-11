@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
-import { ExtensionContext, window } from 'vscode';
+import { ExtensionContext, window, workspace, Uri, commands } from 'vscode';
 
 import {
   LanguageClient,
@@ -12,22 +12,38 @@ import {
   ServerOptions,
   TransportKind,
 } from 'vscode-languageclient/node';
-import H5WebViewer from './app/viewers/H5PWebViewer';
+import { H5PEditorPanel } from './app/models/H5PEditorPanel';
+import { AsyncEvent } from './app/models/AsyncEvent';
 
 let client: LanguageClient;
 
-const EDITOR_IDS = ['h5p.web.viewer', 'h5p.web.fallback-viewer'];
+export function getRootPathUri(): Uri | null {
+  const maybeWorkspace = workspace.workspaceFolders;
+  const rootPath = maybeWorkspace != null ? maybeWorkspace[0] : null;
+  return rootPath != null ? rootPath.uri : null;
+}
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
   console.log('Activating extension');
-
+  const serverReadyEvent = new AsyncEvent();
+  const h5pEditor = new H5PEditorPanel(context);
   context.subscriptions.push(
-    ...EDITOR_IDS.map((id) =>
-      window.registerCustomEditorProvider(id, new H5WebViewer(context), {
-        webviewOptions: { retainContextWhenHidden: true },
-        supportsMultipleEditorsPerDocument: true,
-      })
-    )
+    commands.registerCommand('h5p.web.showEditor', () => {
+      context.subscriptions.push(
+        window.setStatusBarMessage(
+          'H5P Editor: Loading $(sync~spin)',
+          serverReadyEvent.wait()
+        )
+      );
+      serverReadyEvent
+        .wait()
+        .then(() => {
+          h5pEditor.revealOrNew();
+        })
+        .catch((e: Error) => {
+          void window.showErrorMessage(e.message);
+        });
+    })
   );
 
   // The server is implemented in node
@@ -58,13 +74,23 @@ export function activate(context: ExtensionContext) {
 
   // Create the language client and start the client.
   client = new LanguageClient(
-    'languageServerExample',
-    'Language Server Example',
+    'h5pEditorServer',
+    'H5P Editor Server',
     serverOptions,
     clientOptions
   );
 
   client.start();
+  context.subscriptions.push(
+    client.onNotification('server-ready', () => {
+      serverReadyEvent.set();
+    })
+  );
+  context.subscriptions.push(
+    client.onNotification('server-error', (e) => {
+      serverReadyEvent.cancel(new Error(e));
+    })
+  );
 }
 
 export function deactivate(): Thenable<void> | undefined {

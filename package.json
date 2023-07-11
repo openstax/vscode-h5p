@@ -1,21 +1,19 @@
 {
   "name": "vscode-h5p",
   "displayName": "H5P Viewer",
-  "publisher": "sparksam",
+  "publisher": "openstax",
   "description": "Visualize H5P files in VS Code",
   "version": "0.0.1",
-  "author": "Samuel A. Klutse",
+  "author": "OpenStax",
   "license": "MIT",
-  "homepage": "https://samuelklutse.com",
+  "homepage": "https://openstax.org/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sparksam/vscode-h5p"
+    "url": "https://github.com/openstax/vscode-h5p"
   },
   "bugs": {
-    "url": "https://github.com/sparksam/vscode-h5p/issues",
-    "email": "klutse.samuel@gmail.com"
+    "url": "https://github.com/openstax/vscode-h5p/issues"
   },
-  "icon": "assets/favicon.png",
   "galleryBanner": {
     "color": "#333333",
     "theme": "dark"
@@ -28,40 +26,54 @@
     "pnpm": ">=7.x",
     "vscode": ">=1.46.0"
   },
-  "main": "./client/out/extension",
+  "main": "./client/out/extension.js",
+  "activationEvents": [],
   "contributes": {
-    "customEditors": [
+    "commands": [
       {
-        "viewType": "h5p.web.viewer",
-        "displayName": "H5P Viewer",
-        "selector": [
-          {
-            "filenamePattern": "*.{h5p}"
-          }
-        ],
-        "priority": "default"
-      },
+        "command": "h5p.web.showEditor",
+        "title": "Show Editor",
+        "category": "H5P Editor"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "os-h5p",
+          "title": "H5P Editor",
+          "icon": "$(preview)"
+        }
+      ]
+    },
+    "views": {
+      "os-h5p": [
+        {
+          "id": "h5p-controls",
+          "name": "Controls"
+        }
+      ]
+    },
+    "viewsWelcome": [
       {
-        "viewType": "h5p.web.fallback-viewer",
-        "displayName": "H5P (any extension)",
-        "selector": [
-          {
-            "filenamePattern": "*"
-          }
-        ],
-        "priority": "option"
+        "view": "h5p-controls",
+        "contents": "[Open H5P Editor](command:h5p.web.showEditor)"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "format": "prettier --write .",
+    "build": "npm run build --prefix ./client && npm run build --prefix ./server",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "test": "sh ./scripts/e2e.sh",
-    "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules"
+    "test": "npm --prefix ./client run test && npm --prefix ./server run test",
+    "coverage:merge": "npx istanbul-merge --out ./.nyc_output/coverage.json ./*/coverage/coverage-final.json",
+    "coverage:report": "npx nyc report  --reporter=lcov --reporter=text --reporter=html",
+    "posttest": "npm run coverage:merge && npm run coverage:report",
+    "clean": "rm -rf client/out server/out client/node_modules server/node_modules node_modules",
+    "package": "vsce package"
   },
   "devDependencies": {
     "@types/cache-manager": "4.0.2",
@@ -75,11 +87,11 @@
     "@types/vscode": "1.46.0",
     "@vitejs/plugin-react": "1.3.2",
     "esbuild": "0.14.49",
+    "istanbul-merge": "2.0.0",
+    "nyc": "15.1.0",
+    "pnpm": "8.5.0",
     "prettier": "2.7.1",
-    "typescript": "4.7.3",
-    "vite": "4.0.0"
-  },
-  "dependencies": {
-    "pnpm": "8.5.0"
+    "vite": "4.0.0",
+    "vsce": "2.15.0"
   }
 }

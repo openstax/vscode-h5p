@@ -8,9 +8,12 @@ import {
   ProposedFeatures,
   InitializeParams,
   InitializeResult,
+  Connection,
 } from 'vscode-languageserver/node';
+import { URI } from 'vscode-uri';
 
 import { prepareEnvironment, startH5P } from './createH5PServer';
+import Config from './models/config';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -50,23 +53,28 @@ connection.onInitialize((params: InitializeParams) => {
   }
   return result;
 });
-
 connection.onInitialized(() => {
   const inner = async (): Promise<void> => {
     const currentWorkspaces =
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
+      // TODO: workspace switching
+      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
+      const config = new Config(workspaceRoot);
+
       console.log('Preparing environment for server');
-      await prepareEnvironment().then(async (e) => {
-        console.log('Environment prepared');
-        await startH5P().then((e) => {
-          console.log('Starting server');
-        });
-      });
+      await prepareEnvironment(config);
+      console.log('Environment prepared');
+      console.log('Starting server');
+      await startH5P(config);
+      connection.sendNotification('server-ready');
+    } else {
+      /* istanbul ignore next */
+      throw new Error('Could not find workspace folder');
     }
   };
   inner().catch((e) => {
-    throw e;
+    connection.sendNotification('server-error', (e as Error).message);
   });
 });
 

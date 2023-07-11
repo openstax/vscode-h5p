@@ -1,12 +1,14 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Pagination from 'react-bootstrap/Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 // The .js references are necessary for requireJs to work in the browser.
 import { IContentService, IContentListEntry } from '../services/ContentService';
 import ContentListEntryComponent from './ContentListEntryComponent';
+import { chunk, range, debounce } from './OpenStax/utils';
 
 export default class ContentList extends React.Component<{
   h5pUrl: string;
@@ -14,13 +16,16 @@ export default class ContentList extends React.Component<{
 }> {
   constructor(props: { h5pUrl: string; contentService: IContentService }) {
     super(props);
-    this.state = { contentList: [] };
+    this.state = { contentList: [], page: 1, resultsPerPage: 50, search: '' };
     this.contentService = props.contentService;
     this.h5pUrl = props.h5pUrl;
   }
 
   public state: {
     contentList: IContentListEntry[];
+    page: number;
+    resultsPerPage: number;
+    search: string;
   };
 
   protected contentService: IContentService;
@@ -35,15 +40,54 @@ export default class ContentList extends React.Component<{
     await this.updateList();
   }
 
+  get filteredItems() {
+    const filters = this.state.search
+      .trim()
+      .toLocaleLowerCase()
+      .split(' ')
+      .map((s) => {
+        switch (true) {
+          case s.startsWith('id:'):
+            return (content: IContentListEntry) =>
+              content.contentId === s.slice(3);
+          case s.startsWith('lib:'):
+            return (content: IContentListEntry) =>
+              content.mainLibrary.toLocaleLowerCase().includes(s.slice(4));
+          default:
+            return (content: IContentListEntry) =>
+              content.title.toLocaleLowerCase().includes(s);
+        }
+      });
+    return (
+      filters.length !== 0
+        ? this.state.contentList.filter((content) =>
+            filters.every((filter) => filter(content))
+          )
+        : this.state.contentList
+    ).sort((a, b) => parseInt(a.contentId) - parseInt(b.contentId));
+  }
+
   public render(): React.ReactNode {
+    const pages = chunk(this.filteredItems, this.state.resultsPerPage);
     return (
       <div>
         <Button variant="primary" onClick={() => this.new()} className="my-2">
           <FontAwesomeIcon icon={faPlusCircle} className="me-2" />
           Create new content
         </Button>
+        <div className="mt-2 mb-2">
+          <label htmlFor="search">Search: </label>
+          <input
+            id="search"
+            placeholder="{title} | id:{id} | lib:{lib}"
+            onChange={debounce(
+              (e) => this.setState({ search: e.target.value }),
+              500
+            )}
+          />
+        </div>
         <ListGroup>
-          {this.state.contentList.map((content) => (
+          {(pages[this.state.page - 1] ?? []).map((content) => (
             <ContentListEntryComponent
               h5pUrl={this.h5pUrl}
               contentService={this.contentService}
@@ -56,6 +100,49 @@ export default class ContentList extends React.Component<{
             ></ContentListEntryComponent>
           ))}
         </ListGroup>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '10px',
+          }}
+        >
+          <Pagination>
+            <Pagination.First
+              onClick={() => {
+                this.setState({ page: 1 });
+              }}
+            />
+            <Pagination.Prev
+              onClick={() => {
+                if (this.state.page > 1)
+                  this.setState({ page: this.state.page - 1 });
+              }}
+            />
+            {[...range(1, pages.length + 1)].map((pageNumber) => (
+              <Pagination.Item
+                key={pageNumber}
+                active={pageNumber === this.state.page}
+                onClick={() => {
+                  this.setState({ page: pageNumber });
+                }}
+              >
+                {pageNumber}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => {
+                if (this.state.page < pages.length)
+                  this.setState({ page: this.state.page + 1 });
+              }}
+            />
+            <Pagination.Last
+              onClick={() => {
+                this.setState({ page: pages.length });
+              }}
+            />
+          </Pagination>
+        </div>
       </div>
     );
   }
