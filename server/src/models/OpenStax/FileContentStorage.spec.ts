@@ -135,10 +135,10 @@ describe('File Content Storage', () => {
     expect(typeof loaded.mainLibrary).toBe('string');
   });
   ['1234', '12345'].forEach((id) => {
-    const isSolutionPublic = id === '1234';
+    const isSolutionPublic = id !== '1234';
     it(
       `${id}: ` +
-        (isSolutionPublic
+        (!isSolutionPublic
           ? 'removes private solutions'
           : 'leaves public solutions'),
       async () => {
@@ -147,7 +147,7 @@ describe('File Content Storage', () => {
           fake: 'to make sure it is saved too',
           questions: [
             `<p>This should ${
-              isSolutionPublic ? 'not' : ''
+              !isSolutionPublic ? 'not' : ''
             } appear in the content.json</p>`,
           ],
         };
@@ -169,6 +169,9 @@ describe('File Content Storage', () => {
           isSolutionPublic: isSolutionPublic.toString(),
         });
         expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
+        const result = dirToObj(VIRTUAL_ROOT);
+        mockfs.restore();
+        expect(result).toMatchSnapshot();
       }
     );
   });
