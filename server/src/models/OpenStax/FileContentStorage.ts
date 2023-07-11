@@ -106,7 +106,7 @@ export default class OSStorage extends H5P.fsImplementations
       );
 
       await fsExtra.ensureDir(privatePath);
-      await this.writeJSON(path.join(privatePath, 'content.json'), privateData);
+      await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
 
       // write sanitized content object back to content.json file
       await this.writeJSON(contentPath, sanitized);
@@ -133,16 +133,17 @@ export default class OSStorage extends H5P.fsImplementations
     const osMeta = await this.getOSMeta(contentId);
     if (osMeta.isSolutionPublic == 'true') {
       return content;
+    } else {
+      const privatePath = path.join(
+        this.privateContentDirectory,
+        contentId,
+        CONTENT_NAME
+      );
+      const privateData = await fsExtra.readJSON(privatePath);
+      return {
+        ...content,
+        ...privateData,
+      };
     }
-    const privatePath = path.join(
-      this.privateContentDirectory,
-      contentId,
-      CONTENT_NAME
-    );
-    const privateData = await fsExtra.readJSON(privatePath);
-    return {
-      ...content,
-      ...privateData,
-    };
   }
 }

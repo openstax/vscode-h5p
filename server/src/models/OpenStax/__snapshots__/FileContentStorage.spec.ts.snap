@@ -1,5 +1,84 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`File Content Storage 1234: removes private solutions 1`] = `
+{
+  "interactives": {
+    "1": {
+      "metadata.json": "{"extra":"Something extra","books":["should-not-appear-in-snapshot"]}",
+    },
+    "1234": {
+      "content.json": "{
+  "fake": "to make sure it is saved too"
+}
+",
+      "h5p.json": "{
+  "title": "this should be stored in folder 1234",
+  "mainLibrary": "H5P.Blanks",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+      "metadata.json": "{
+  "isSolutionPublic": "false"
+}
+",
+    },
+  },
+  "private": {
+    "interactives": {
+      "1234": {
+        "content.json": "{
+  "questions": [
+    "<p>This should not appear in the content.json</p>"
+  ]
+}
+",
+      },
+    },
+  },
+}
+`;
+
+exports[`File Content Storage 12345: leaves public solutions 1`] = `
+{
+  "interactives": {
+    "1": {
+      "metadata.json": "{"extra":"Something extra","books":["should-not-appear-in-snapshot"]}",
+    },
+    "12345": {
+      "content.json": "{
+  "fake": "to make sure it is saved too",
+  "questions": [
+    "<p>This should  appear in the content.json</p>"
+  ]
+}
+",
+      "h5p.json": "{
+  "title": "this should be stored in folder 12345",
+  "mainLibrary": "H5P.Blanks",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}
+",
+      "metadata.json": "{
+  "isSolutionPublic": "true"
+}
+",
+    },
+  },
+}
+`;
+
 exports[`File Content Storage saves content as expected 1`] = `
 {
   "interactives": {
