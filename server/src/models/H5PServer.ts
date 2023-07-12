@@ -39,7 +39,7 @@ export default class H5PServer<
     protected readonly languageOverride: string | 'auto' = 'auto'
   ) {}
 
-  public async start(port: number) {
+  public async start(port: number): Promise<void> {
     const server = express();
     this.configureMiddleware(server, port);
     // For developer convenience we display a list of IPs, the server is running
@@ -53,13 +53,14 @@ export default class H5PServer<
             server.settings
           )} mode`
         );
-        await downloadLibraries(
+        downloadLibraries(
           getIps()[0],
           port,
           '/h5p/ajax?action=content-type-cache',
           this.h5pEditor
-        );
-        resolve(null);
+        )
+          .then(resolve)
+          .catch((err) => reject(err));
       });
     });
   }
