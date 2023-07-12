@@ -57,8 +57,8 @@ export async function prepareEnvironment(globalConfig: Config) {
       fs.mkdirSync(`${tempFolderPath}/user-data`, { recursive: true });
       fs.mkdirSync(`${tempFolderPath}/tmp`, { recursive: true });
     } catch (err) {
-      console.log('Failed to create the folders');
       console.error(`${err}`);
+      throw new Error('Failed to create the folders');
     }
     await download(
       `https://github.com/h5p/h5p-php-library/archive/${version}.zip`,
@@ -72,27 +72,7 @@ export async function prepareEnvironment(globalConfig: Config) {
 
     await extractArchive(editorFile, `${tempFolderPath}/editor`, true);
 
-    const config = JSON.stringify({
-      disableFullscreen: false,
-      fetchingDisabled: 0,
-      uuid: '8de62c47-f335-42f6-909d-2d8f4b7fb7f5',
-      siteType: 'local',
-      sendUsageStatistics: false,
-      contentHubEnabled: true,
-      hubRegistrationEndpoint: 'https://api.h5p.org/v1/sites',
-      hubContentTypesEndpoint: 'https://api.h5p.org/v1/content-types/',
-      contentUserDataUrl: '/contentUserData',
-      contentTypeCacheRefreshInterval: 86400000,
-      enableLrsContentTypes: true,
-      maxFileSize: 1048576000,
-      maxTotalSize: 1048576000,
-      contentUserStateSaveInterval: 5000,
-      editorAddons: {
-        'H5P.CoursePresentation': ['H5P.MathDisplay'],
-        'H5P.InteractiveVideo': ['H5P.MathDisplay'],
-        'H5P.DragQuestion': ['H5P.MathDisplay'],
-      },
-    });
+    const config = JSON.stringify(Config.h5pConfig);
     const lastUpdated = JSON.stringify({
       lastUpdatedDate: new Date(),
     });
@@ -110,7 +90,7 @@ function buildServerURL(port: number): string {
   }
 }
 
-async function createH5PEditor(
+export function createH5PEditor(
   config: H5P.IH5PConfig,
   localLibraryPath: string,
   extensionConfig: Config,
@@ -133,7 +113,7 @@ async function createH5PEditor(
       user: H5P.IUser
     ) => Promise<void>;
   }
-): Promise<OSH5PEditor> {
+): OSH5PEditor {
   console.debug(`Using in memory cache for caching library storage.`);
   const cache: Cache = caching({
     store: 'memory',
@@ -206,7 +186,7 @@ export async function startH5P(globalConfig: Config) {
   // In your implementation, you will probably instantiate H5PEditor by
   // calling new H5P.H5PEditor(...) or by using the convenience function
   // H5P.fs(...).
-  const h5pEditor: OSH5PEditor = await createH5PEditor(
+  const h5pEditor: OSH5PEditor = createH5PEditor(
     config,
     `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
 

@@ -1,3 +1,5 @@
+import * as H5P from '@lumieducation/h5p-server';
+
 type SupportedLibrary = {
   privateData: string[];
 };
@@ -19,9 +21,33 @@ export default class Config {
         privateData: ['answers'],
       },
       'H5P.QuestionSet': {
-        privateData: []
-      }
+        privateData: [],
+      },
     };
+
+  public static readonly h5pConfig: Partial<H5P.IH5PConfig> = {
+    disableFullscreen: false,
+    fetchingDisabled: 0,
+    uuid: '8de62c47-f335-42f6-909d-2d8f4b7fb7f5',
+    siteType: 'local',
+    sendUsageStatistics: false,
+    contentHubEnabled: true,
+    hubRegistrationEndpoint: 'https://api.h5p.org/v1/sites',
+    hubContentTypesEndpoint: 'https://api.h5p.org/v1/content-types/',
+    contentUserDataUrl: '/contentUserData',
+    contentTypeCacheRefreshInterval: 86400000,
+    enableLrsContentTypes: true,
+    maxFileSize: 1048576000,
+    maxTotalSize: 1048576000,
+    contentUserStateSaveInterval: 5000,
+    editorAddons: {
+      'H5P.CoursePresentation': ['H5P.MathDisplay'],
+      'H5P.InteractiveVideo': ['H5P.MathDisplay'],
+      'H5P.DragQuestion': ['H5P.MathDisplay'],
+    },
+  };
+
+  public static readonly librariesArchiveName = `h5p-libraries.tar.gz`;
 
   public get contentDirectory() {
     return `${this.workspaceRoot}/${this.contentPath}`;

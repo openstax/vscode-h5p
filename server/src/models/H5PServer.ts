@@ -11,8 +11,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 
-import { createH5PRouter, downloadLibraries, getIps } from '../utils';
+import { createH5PRouter, extractArchive, getIps } from '../utils';
 import User from './H5PUser';
+import Config from './config';
 
 /**
  * Displays links to the server at all available IP addresses.
@@ -53,11 +54,10 @@ export default class H5PServer<
             server.settings
           )} mode`
         );
-        downloadLibraries(
-          getIps()[0],
-          port,
-          '/h5p/ajax?action=content-type-cache',
-          this.h5pEditor
+        extractArchive(
+          `${__dirname}/${Config.librariesArchiveName}`,
+          `${this.tempFolderPath}/libraries`,
+          false
         )
           .then(resolve)
           .catch((err) => reject(err));

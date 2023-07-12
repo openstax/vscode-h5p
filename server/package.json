@@ -52,12 +52,14 @@
     "mock-fs": "^5.2.0",
     "prettier": "^2.7.1",
     "supertest": "^6.3.3",
+    "tar": "^6.1.15",
     "ts-jest": "^29.1.0",
     "typescript": "^4.3.5"
   },
   "scripts": {
     "build": "esbuild ./src/server.ts --bundle --outfile=out/server.js --external:vscode --format=cjs --platform=node --minify",
-    "postbuild": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out",
+    "build:h5p-libs": "npx ts-node --swc ./downloadLibraries.ts",
+    "postbuild": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out && npm run build:h5p-libs",
     "build:ts": "tsc -b",
     "test": "npx jest --updateSnapshot"
   }
