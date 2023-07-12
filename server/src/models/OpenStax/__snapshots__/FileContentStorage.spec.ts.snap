@@ -24,7 +24,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
 }
 ",
       "metadata.json": "{
-  "isSolutionPublic": "false"
+  "is-solution-public": "false"
 }
 ",
     },
@@ -71,7 +71,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
 }
 ",
       "metadata.json": "{
-  "isSolutionPublic": "true"
+  "is-solution-public": "true"
 }
 ",
     },

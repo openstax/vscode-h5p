@@ -22,11 +22,11 @@ import ElementID from './ElementId';
 
 type SingleInputs = {
   blooms: InputState;
-  assignmentType: InputState;
-  dokTag: InputState;
+  'assignment-type': InputState;
+  'dok-tag': InputState;
   time: InputState;
   nickname: InputState;
-  isSolutionPublic: InputState;
+  'is-solution-public': InputState;
   hts: InputState;
   rp: InputState;
   'science-practice': InputState;
@@ -58,8 +58,8 @@ const defaultInputState: InputState = { value: '', isValid: true };
 
 const metadataKeys: Array<keyof SavedState> = [
   'blooms',
-  'assignmentType',
-  'dokTag',
+  'assignment-type',
+  'dok-tag',
   'time',
   'nickname',
   'books',
@@ -67,7 +67,7 @@ const metadataKeys: Array<keyof SavedState> = [
   'moduleId',
   'elementId',
   'apLo',
-  'isSolutionPublic',
+  'is-solution-public',
   'hts',
   'rp',
   'science-practice',
@@ -126,14 +126,14 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     elementId: [],
     apLo: [],
     blooms: { ...defaultInputState },
-    assignmentType: { ...defaultInputState },
-    dokTag: { ...defaultInputState },
+    'assignment-type': { ...defaultInputState },
+    'dok-tag': { ...defaultInputState },
     time: { ...defaultInputState },
     nickname: { ...defaultInputState },
     hts: { ...defaultInputState },
     rp: { ...defaultInputState },
     'science-practice': { ...defaultInputState },
-    isSolutionPublic: { ...defaultInputState, value: 'true' },
+    'is-solution-public': { ...defaultInputState, value: 'true' },
     aacn: { ...defaultInputState },
     nclex: { ...defaultInputState },
   };
@@ -350,9 +350,11 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       { make: () => <ElementID {...inputSetHandlerProps('elementId')} /> },
       { make: () => <Blooms {...inputHandlerProps('blooms')} /> },
       {
-        make: () => <AssignmentType {...inputHandlerProps('assignmentType')} />,
+        make: () => (
+          <AssignmentType {...inputHandlerProps('assignment-type')} />
+        ),
       },
-      { make: () => <DokTag {...inputHandlerProps('dokTag')} /> },
+      { make: () => <DokTag {...inputHandlerProps('dok-tag')} /> },
       { make: () => <Time {...inputHandlerProps('time')} /> },
       {
         make: () => <AACN {...inputHandlerProps('aacn')} />,
@@ -364,7 +366,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       },
       {
         make: () => (
-          <PublicCheckbox {...inputHandlerProps('isSolutionPublic')} />
+          <PublicCheckbox {...inputHandlerProps('is-solution-public')} />
         ),
       },
     ];
