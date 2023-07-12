@@ -43,7 +43,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
       ...baseValue,
       libraries: baseValue.libraries.filter((lib) =>
         supportedLibraryNames.includes(lib.machineName)
-      )
+      ),
     };
   }
 }

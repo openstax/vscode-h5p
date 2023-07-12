@@ -21,7 +21,7 @@ function yankAnswers(content: any, mainLibrary: string): [any, any] {
 }
 
 function isSolutionPublic(osMeta: any): boolean {
-  return (osMeta['is-solution-public'] ?? 'true') === 'true'
+  return (osMeta['is-solution-public'] ?? 'true') === 'true';
 }
 
 export default class OSStorage extends H5P.fsImplementations
