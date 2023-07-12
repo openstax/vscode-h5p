@@ -58,15 +58,15 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
     {
       "aacn": "",
       "apLo": [],
-      "assignmentType": "",
+      "assignment-type": "",
       "blooms": "1",
       "books": [
         "stax-psy",
       ],
-      "dokTag": "",
+      "dok-tag": "",
       "elementId": [],
       "hts": "",
-      "isSolutionPublic": "true",
+      "is-solution-public": "true",
       "lo": [
         "00-00-01",
       ],

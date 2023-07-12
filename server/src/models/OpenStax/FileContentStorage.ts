@@ -7,13 +7,8 @@ const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
 
-const privateDataKeyMap: Record<string, string[]> = {
-  'H5P.Blanks': ['questions'],
-  'H5P.MultiChoice': ['answers'],
-};
-
 function yankAnswers(content: any, mainLibrary: string): [any, any] {
-  const privateDataKeys = privateDataKeyMap[mainLibrary];
+  const privateDataKeys = Config.supportedLibraries[mainLibrary]?.privateData;
   if ((privateDataKeys?.length ?? 0) === 0) {
     throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
   }
@@ -23,6 +18,10 @@ function yankAnswers(content: any, mainLibrary: string): [any, any] {
     delete content[key];
   });
   return [content, privateData];
+}
+
+function isSolutionPublic(osMeta: any): boolean {
+  return (osMeta['is-solution-public'] ?? 'true') === 'true'
 }
 
 export default class OSStorage extends H5P.fsImplementations
@@ -94,7 +93,7 @@ export default class OSStorage extends H5P.fsImplementations
   public async saveOSMeta(contentId: string, osMeta: any) {
     // check if private
     const privatePath = path.join(this.privateContentDirectory, contentId);
-    if (osMeta.isSolutionPublic === 'false') {
+    if (!isSolutionPublic(osMeta)) {
       const contentPath = path.join(this.contentPath, contentId, CONTENT_NAME);
 
       const content = await super.getParameters(contentId);
@@ -131,7 +130,7 @@ export default class OSStorage extends H5P.fsImplementations
   ): Promise<any> {
     const content = await super.getParameters(contentId, user);
     const osMeta = await this.getOSMeta(contentId);
-    if (osMeta.isSolutionPublic == 'true') {
+    if (isSolutionPublic(osMeta)) {
       return content;
     } else {
       const privatePath = path.join(

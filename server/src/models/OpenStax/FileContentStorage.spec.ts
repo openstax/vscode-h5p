@@ -166,7 +166,7 @@ describe('File Content Storage', () => {
           id
         );
         await storage.saveOSMeta(id, {
-          isSolutionPublic: isSolutionPublic.toString(),
+          'is-solution-public': isSolutionPublic.toString(),
         });
         expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
         const result = dirToObj(VIRTUAL_ROOT);
@@ -197,7 +197,7 @@ describe('File Content Storage', () => {
     let err = '';
     try {
       await storage.saveOSMeta('1234', {
-        isSolutionPublic: 'false',
+        'is-solution-public': 'false',
       });
     } catch (e) {
       err = (e as Error).message;
