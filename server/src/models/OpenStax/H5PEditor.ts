@@ -1,6 +1,12 @@
-import { IH5PEditorOptions } from '@lumieducation/h5p-server/build/src/types';
+import {
+  IH5PEditorOptions,
+  IHubInfo,
+} from '@lumieducation/h5p-server/build/src/types';
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
+import Config from '../config';
+
+const supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
 export default class OSH5PEditor extends H5P.H5PEditor {
   constructor(
@@ -26,5 +32,18 @@ export default class OSH5PEditor extends H5P.H5PEditor {
       options,
       contentUserDataStorage
     );
+  }
+
+  public async getContentTypeCache(
+    user: H5P.IUser,
+    language?: string | undefined
+  ): Promise<IHubInfo> {
+    const baseValue = await super.getContentTypeCache(user, language);
+    return {
+      ...baseValue,
+      libraries: baseValue.libraries.filter((lib) =>
+        supportedLibraryNames.includes(lib.machineName)
+      )
+    };
   }
 }
