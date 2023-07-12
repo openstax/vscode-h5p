@@ -2,13 +2,11 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { connect } from 'http2';
 import {
   createConnection,
   ProposedFeatures,
   InitializeParams,
   InitializeResult,
-  Connection,
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 
