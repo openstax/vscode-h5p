@@ -11,7 +11,9 @@ import * as tar from 'tar';
 import { extractArchive } from './src/utils';
 import path from 'path';
 
-const archiveFile = `${__dirname}/out/${Config.librariesArchiveName}`;
+const archiveFile = path.resolve(
+  process.argv[2] ?? `${__dirname}/out/${Config.librariesArchiveName}`
+);
 const tempFolderPath = os.tmpdir() + '/h5p_builder';
 const config = new H5P.H5PConfig(undefined, Config.h5pConfig);
 const h5pEditor = createH5PEditor(
@@ -20,7 +22,7 @@ const h5pEditor = createH5PEditor(
   new Config(tempFolderPath),
   `${tempFolderPath}/temporary-storage`,
   `${tempFolderPath}/user-data`,
-  new H5P.UrlGenerator(config),
+  undefined,
   undefined,
   undefined
 );
@@ -71,14 +73,13 @@ async function main() {
         throw new Error(`Could not find "${libraryName}"`);
       }
       // Are there any existing libraries with the exact version?
-      return !existingLibraries
-        .filter((existingLib) => existingLib.name.startsWith(libraryName))
-        .some(
-          (existingLib) =>
-            existingLib.majorVersion === lib.version.major &&
-            existingLib.minorVersion === lib.version.minor &&
-            existingLib.patchVersion === lib.version.patch
-        );
+      return !existingLibraries.some(
+        (existingLib) =>
+          existingLib.name.startsWith(libraryName) &&
+          existingLib.majorVersion === lib.version.major &&
+          existingLib.minorVersion === lib.version.minor &&
+          existingLib.patchVersion === lib.version.patch
+      );
     }
   );
   if (toInstall.length === 0) {
