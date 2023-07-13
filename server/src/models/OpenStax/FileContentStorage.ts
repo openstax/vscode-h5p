@@ -7,17 +7,27 @@ const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
 
-function yankAnswers(content: any, mainLibrary: string): [any, any] {
-  const privateDataKeys = Config.supportedLibraries[mainLibrary]?.privateData;
-  if ((privateDataKeys?.length ?? 0) === 0) {
+function yankAnswers(
+  content: unknown,
+  mainLibrary: string
+): [unknown, unknown] {
+  const library = Config.supportedLibraries[mainLibrary];
+  if (library == null) {
     throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
   }
-  const privateData = {};
-  privateDataKeys.forEach((key) => {
-    privateData[key] = content[key];
-    delete content[key];
-  });
-  return [content, privateData];
+  return library.yankAnswers(content);
+}
+
+function unYankAnswers(
+  publicData: unknown,
+  privateData: unknown,
+  mainLibrary: string
+): unknown {
+  const library = Config.supportedLibraries[mainLibrary];
+  if (library == null) {
+    throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
+  }
+  return library.unyankAnswers(publicData, privateData);
 }
 
 function isSolutionPublic(osMeta: any): boolean {
@@ -138,11 +148,9 @@ export default class OSStorage extends H5P.fsImplementations
         contentId,
         CONTENT_NAME
       );
+      const h5pMeta = await this.getMetadata(contentId);
       const privateData = await fsExtra.readJSON(privatePath);
-      return {
-        ...content,
-        ...privateData,
-      };
+      return unYankAnswers(content, privateData, h5pMeta.mainLibrary);
     }
   }
 }

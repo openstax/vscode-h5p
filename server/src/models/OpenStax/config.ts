@@ -1,7 +1,17 @@
 import * as H5P from '@lumieducation/h5p-server';
+import {
+  Unyanker,
+  Yanker,
+  blanksYanker,
+  multiChoiceYanker,
+  questionSetYanker,
+  shallowMerge,
+  trueFalseYanker,
+} from './AnswerYankers';
 
 type SupportedLibrary = {
-  privateData: string[];
+  yankAnswers: Yanker;
+  unyankAnswers: Unyanker;
 };
 
 export default class Config {
@@ -15,16 +25,20 @@ export default class Config {
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
       'H5P.Blanks': {
-        privateData: ['questions'],
+        yankAnswers: blanksYanker,
+        unyankAnswers: shallowMerge,
       },
       'H5P.MultiChoice': {
-        privateData: ['answers'],
+        yankAnswers: multiChoiceYanker,
+        unyankAnswers: shallowMerge,
       },
       'H5P.QuestionSet': {
-        privateData: [],
+        yankAnswers: questionSetYanker,
+        unyankAnswers: shallowMerge,
       },
       'H5P.TrueFalse': {
-        privateData: [],
+        yankAnswers: trueFalseYanker,
+        unyankAnswers: shallowMerge,
       },
     };
 
