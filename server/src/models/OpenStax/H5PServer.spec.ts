@@ -1,5 +1,5 @@
 import express from 'express';
-import Config from '../config';
+import Config from './config';
 import OSH5PServer from './H5PServer';
 import request from 'supertest';
 import * as H5P from '@lumieducation/h5p-server';
@@ -20,7 +20,7 @@ describe('OSH5PServer', () => {
 
   it('starts and does stuff', async () => {
     const server: any = new OSH5PServer(jest.fn() as any, jest.fn() as any, '');
-    await server.start(mockEditor, app, config.port);
+    server.start(mockEditor, app, config.port);
     let res = await request(app).get('/does-not-exist-404-please');
     expect(res.status).toBe(404);
     expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(0);

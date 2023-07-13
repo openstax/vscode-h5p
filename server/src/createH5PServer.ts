@@ -7,7 +7,7 @@ import { Cache, caching } from 'cache-manager';
 import * as H5P from '@lumieducation/h5p-server';
 
 import { download, extractArchive, fsRemove } from './utils';
-import Config from './models/config';
+import Config from './models/OpenStax/config';
 import OSH5PEditor from './models/OpenStax/H5PEditor';
 import OSStorage from './models/OpenStax/FileContentStorage';
 import OSH5PServer from './models/OpenStax/H5PServer';
@@ -233,5 +233,10 @@ export async function startH5P(globalConfig: Config) {
   process.env['DEBUG'] = '*';
 
   const server = new OSH5PServer(h5pEditor, h5pPlayer, tempFolderPath);
-  await server.start(globalConfig.port);
+  server.start(globalConfig.port);
+  await extractArchive(
+    `${__dirname}/${Config.librariesArchiveName}`,
+    `${tempFolderPath}/libraries`,
+    false
+  );
 }

@@ -4,7 +4,7 @@ import {
 } from '@lumieducation/h5p-server/build/src/types';
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
-import Config from '../config';
+import Config from './config';
 
 const supportedLibraryNames = Object.keys(Config.supportedLibraries);
 

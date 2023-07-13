@@ -11,9 +11,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 
-import { createH5PRouter, extractArchive, getIps } from '../utils';
+import { createH5PRouter, getIps } from '../utils';
 import User from './H5PUser';
-import Config from './config';
 
 /**
  * Displays links to the server at all available IP addresses.
@@ -40,28 +39,18 @@ export default class H5PServer<
     protected readonly languageOverride: string | 'auto' = 'auto'
   ) {}
 
-  public async start(port: number): Promise<void> {
+  public async start(port: number) {
     const server = express();
     this.configureMiddleware(server, port);
     // For developer convenience we display a list of IPs, the server is running
     // on. You can then simply click on it in the terminal.
     displayIps(port.toString());
-
-    return new Promise((resolve, reject) => {
-      server.listen(port, getIps()[0], async () => {
-        console.log(
-          `... port ${port} with Settings:  ${JSON.stringify(
-            server.settings
-          )} mode`
-        );
-        extractArchive(
-          `${__dirname}/${Config.librariesArchiveName}`,
-          `${this.tempFolderPath}/libraries`,
-          false
-        )
-          .then(resolve)
-          .catch((err) => reject(err));
-      });
+    server.listen(port, getIps()[0], () => {
+      console.log(
+        `... port ${port} with Settings:  ${JSON.stringify(
+          server.settings
+        )} mode`
+      );
     });
   }
 

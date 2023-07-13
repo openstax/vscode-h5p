@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as H5P from '@lumieducation/h5p-server';
-import Config from './src/models/config';
+import Config from './src/models/OpenStax/config';
 import User from './src/models/H5PUser';
 import { createH5PEditor } from './src/createH5PServer';
 import { machineIdSync } from 'node-machine-id';

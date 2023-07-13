@@ -2,7 +2,7 @@ import * as fsExtra from 'fs-extra';
 import OSStorage from './FileContentStorage';
 import mockfs from 'mock-fs';
 import path from 'path';
-import Config from '../config';
+import Config from './config';
 
 const VIRTUAL_ROOT = '/root';
 
