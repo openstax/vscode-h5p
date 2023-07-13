@@ -23,6 +23,9 @@ export default class Config {
       'H5P.QuestionSet': {
         privateData: [],
       },
+      'H5P.TrueFalse': {
+        privateData: [],
+      },
     };
 
   public static readonly h5pConfig: Partial<H5P.IH5PConfig> = {
