@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
-import Config from '../config';
+import Config from './config';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
