@@ -8,6 +8,8 @@ import * as qs from 'qs';
 import fetch from 'node-fetch';
 import fsExtra from 'fs-extra';
 import * as tar from 'tar';
+import { extractArchive } from './src/utils';
+import path from 'path';
 
 const archiveFile = `${__dirname}/out/${Config.librariesArchiveName}`;
 const tempFolderPath = os.tmpdir() + '/h5p_builder';
@@ -37,52 +39,87 @@ const registrationData = {
 const user = new User();
 
 async function main() {
-  const lastBuildTime = fsExtra.existsSync(archiveFile)
-    ? fsExtra.statSync(archiveFile).ctimeMs
-    : 0;
-  const now = Number(new Date());
-  // Only check every 8 hours
-  // Maybe it should check each time when env = production?
-  if (now - lastBuildTime > 8 * 3600000) {
-    // TODO: Get previous version of the libraries and include them in the final tar file
-    console.log('Downloading libraries...');
-    const response = await fetch(config.hubContentTypesEndpoint, {
-      method: 'POST',
-      body: qs.stringify(registrationData),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    const data = (await response.json()).contentTypes;
-    await Promise.all(
-      Object.keys(Config.supportedLibraries)
-        .filter((libraryName) => {
-          const lib = data.find((item) => item.id === libraryName);
-          if (lib == null) {
-            throw new Error(`Could not find "${libraryName}"`);
-          }
-          return Number(new Date(lib.updatedAt)) > lastBuildTime;
-        })
-        .map(async (libraryName) => {
+  console.log('Updating libraries...');
+  const response = await fetch(config.hubContentTypesEndpoint, {
+    method: 'POST',
+    body: qs.stringify(registrationData),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+  const data = (await response.json()).contentTypes;
+  const librariesPath = `${tempFolderPath}/libraries`;
+  // Include existing versions of libraries
+  if (fsExtra.pathExistsSync(archiveFile)) {
+    await extractArchive(archiveFile, librariesPath, false);
+  }
+  const existingLibraries = await Promise.all(
+    fsExtra
+      .readdirSync(librariesPath, { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .map(async (dirent) => ({
+        name: dirent.name,
+        ...(await fsExtra.readJSON(
+          `${librariesPath}/${dirent.name}/library.json`
+        )),
+      }))
+  );
+  const toInstall = Object.keys(Config.supportedLibraries).filter(
+    (libraryName) => {
+      const lib = data.find((item) => item.id === libraryName);
+      if (lib == null) {
+        throw new Error(`Could not find "${libraryName}"`);
+      }
+      // Are there any existing libraries with the exact version?
+      return !existingLibraries
+        .filter((existingLib) => existingLib.name.startsWith(libraryName))
+        .some(
+          (existingLib) =>
+            existingLib.majorVersion === lib.version.major &&
+            existingLib.minorVersion === lib.version.minor &&
+            existingLib.patchVersion === lib.version.patch
+        );
+    }
+  );
+  if (toInstall.length === 0) {
+    console.log('Libraries already up-to-date.');
+    return;
+  }
+  await Promise.all(
+    toInstall.map(async (libraryName) => {
+      for (let tries = 2; tries--; tries > 0) {
+        try {
           console.log(`Installing ${libraryName}`);
           await h5pEditor.installLibraryFromHub(libraryName, user);
-        })
-    );
-    process.chdir(tempFolderPath);
-    await tar.c(
-      {
-        gzip: true,
-        file: archiveFile,
-      },
-      ['libraries']
-    );
-    process.chdir(__dirname);
-    fsExtra.rmSync(tempFolderPath, { recursive: true });
-  } else {
-    console.log('Skipping library download...');
-  }
+          break;
+        } catch (e) {
+          if (tries === 0) {
+            throw e;
+          } else {
+            console.error(`Could not install "${libraryName}". Retrying...`);
+          }
+        }
+      }
+    })
+  );
+  fsExtra.ensureDirSync(path.dirname(archiveFile));
+  // Chdir into temp folder so the archived file paths are relative to that location
+  process.chdir(tempFolderPath);
+  await tar.c(
+    {
+      gzip: true,
+      file: archiveFile,
+    },
+    ['libraries']
+  );
+  process.chdir(__dirname);
 }
 
-main().catch((err) => {
-  throw new Error(err);
-});
+main()
+  .catch((err) => {
+    throw new Error(err);
+  })
+  .finally(() => {
+    console.log('Cleaning up temporary directory...');
+    fsExtra.rmSync(tempFolderPath, { recursive: true, force: true });
+  });
