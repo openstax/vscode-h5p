@@ -4,6 +4,7 @@ import {
   Yanker,
   blanksYanker,
   multiChoiceYanker,
+  questionSetMerge,
   questionSetYanker,
   shallowMerge,
   trueFalseYanker,
@@ -34,7 +35,7 @@ export default class Config {
       },
       'H5P.QuestionSet': {
         yankAnswers: questionSetYanker,
-        unyankAnswers: shallowMerge,
+        unyankAnswers: questionSetMerge,
       },
       'H5P.TrueFalse': {
         yankAnswers: trueFalseYanker,
