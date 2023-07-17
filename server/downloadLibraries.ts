@@ -41,7 +41,7 @@ const registrationData = {
 const user = new User();
 
 async function main() {
-  console.log('Updating libraries...');
+  console.log('Updating H5P libraries...');
   const response = await fetch(config.hubContentTypesEndpoint, {
     method: 'POST',
     body: qs.stringify(registrationData),
@@ -118,7 +118,7 @@ async function main() {
 
 main()
   .catch((err) => {
-    throw new Error(err);
+    throw err;
   })
   .finally(() => {
     console.log('Cleaning up temporary directory...');
