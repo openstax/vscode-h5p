@@ -83,19 +83,10 @@ exports[`File Content Storage saves content as expected 1`] = `
 {
   "interactives": {
     "1": {
-      "metadata.json": "{
-  "extra": "Something extra",
-  "books": [
-    "meta-3"
-  ]
-}
-",
-    },
-    "1234": {
       "content.json": "{}
 ",
       "h5p.json": "{
-  "title": "this should be stored in folder 1234",
+  "title": "this should be stored in folder 1",
   "mainLibrary": "something",
   "language": "U",
   "license": "",
@@ -104,6 +95,13 @@ exports[`File Content Storage saves content as expected 1`] = `
   ],
   "preloadedDependencies": [],
   "defaultLanguage": ""
+}
+",
+      "metadata.json": "{
+  "extra": "Something extra",
+  "books": [
+    "meta-3"
+  ]
 }
 ",
     },

@@ -18,7 +18,7 @@ function yankAnswers(
   return library.yankAnswers(content);
 }
 
-function unYankAnswers(
+function unyankAnswers(
   publicData: unknown,
   privateData: unknown,
   mainLibrary: string
@@ -34,9 +34,15 @@ function isSolutionPublic(osMeta: any): boolean {
   return (osMeta['is-solution-public'] ?? 'true') === 'true';
 }
 
+type ContentTransaction = {
+  metadata: H5P.IContentMetadata;
+  content: any;
+};
+
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
   private privateContentDirectory: string;
+  private pending: Record<string, ContentTransaction> = {};
 
   constructor(config: Config) {
     super(config.contentDirectory);
@@ -68,21 +74,10 @@ export default class OSStorage extends H5P.fsImplementations
     if (id === undefined || id === null) {
       id = await this.createContentId();
     }
-    try {
-      await fsExtra.ensureDir(path.join(this.contentPath, id));
-      await this.writeJSON(path.join(this.contentPath, id, H5P_NAME), metadata);
-      await this.writeJSON(
-        path.join(this.contentPath, id, CONTENT_NAME),
-        content
-      );
-    } catch (error) {
-      /* istanbul ignore next */
-      await fsExtra.remove(path.join(this.contentPath, id));
-      /* istanbul ignore next */
-      throw new H5P.H5pError(
-        'storage-file-implementations:error-creating-content'
-      );
-    }
+    this.pending[id] = {
+      metadata,
+      content,
+    };
     return id;
   }
 
@@ -101,32 +96,46 @@ export default class OSStorage extends H5P.fsImplementations
   }
 
   public async saveOSMeta(contentId: string, osMeta: any) {
-    // check if private
-    const privatePath = path.join(this.privateContentDirectory, contentId);
-    if (!isSolutionPublic(osMeta)) {
-      const contentPath = path.join(this.contentPath, contentId, CONTENT_NAME);
+    try {
+      const privatePath = path.join(this.privateContentDirectory, contentId);
+      let { content, metadata: h5pMeta } = this.pending[contentId] ?? {
+        content: await super.getParameters(contentId),
+        metadata: await super.getMetadata(contentId),
+      };
+      // check if private
+      if (!isSolutionPublic(osMeta)) {
+        const [sanitized, privateData] = yankAnswers(
+          content,
+          h5pMeta.mainLibrary
+        );
 
-      const content = await super.getParameters(contentId);
-      const h5pMeta = await this.getMetadata(contentId);
+        await fsExtra.ensureDir(privatePath);
+        await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
 
-      const [sanitized, privateData] = yankAnswers(
-        content,
-        h5pMeta.mainLibrary
-      );
+        // write sanitized content object to content.json file
+        content = sanitized;
+      } else {
+        await fsExtra.rm(privatePath, { recursive: true, force: true });
+      }
 
-      await fsExtra.ensureDir(privatePath);
-      await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
-
-      // write sanitized content object back to content.json file
-      await this.writeJSON(contentPath, sanitized);
-    } else {
-      await fsExtra.rm(privatePath, { recursive: true, force: true });
+      await fsExtra.ensureDir(path.join(this.contentPath, contentId));
+      await Promise.all([
+        this.writeJSON(
+          path.join(this.contentPath, contentId, CONTENT_NAME),
+          content
+        ),
+        this.writeJSON(
+          path.join(this.contentPath, contentId, H5P_NAME),
+          h5pMeta
+        ),
+        this.writeJSON(path.join(this.contentPath, contentId, METADATA_NAME), {
+          ...(await this.getOSMeta(contentId)),
+          ...osMeta,
+        }),
+      ]);
+    } finally {
+      delete this.pending[contentId];
     }
-
-    await this.writeJSON(
-      path.join(this.contentPath, contentId, METADATA_NAME),
-      { ...(await this.getOSMeta(contentId)), ...osMeta }
-    );
   }
 
   public async getOSMeta(contentId: string) {
@@ -150,7 +159,7 @@ export default class OSStorage extends H5P.fsImplementations
       );
       const h5pMeta = await this.getMetadata(contentId);
       const privateData = await fsExtra.readJSON(privatePath);
-      return unYankAnswers(content, privateData, h5pMeta.mainLibrary);
+      return unyankAnswers(content, privateData, h5pMeta.mainLibrary);
     }
   }
 }

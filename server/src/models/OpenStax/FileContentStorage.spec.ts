@@ -63,6 +63,7 @@ describe('File Content Storage', () => {
         {} as any
       )
     ).toBe('2');
+    await storage.saveOSMeta('2', { books: ['meta-1'] });
     // Make sure it does not overwrite existing directories
     fsExtra.ensureDirSync(path.join(interactivesPath, '3'));
     // And that it finds the next available id
@@ -83,6 +84,7 @@ describe('File Content Storage', () => {
         {} as any
       )
     ).toBe('4');
+    await storage.saveOSMeta('4', { books: ['meta-2'] });
     expect(
       await storage.addContent(
         {
@@ -99,8 +101,22 @@ describe('File Content Storage', () => {
         '1234' // should use this id
       )
     ).toBe('1234');
-    await storage.saveOSMeta('2', { books: ['meta-1'] });
-    await storage.saveOSMeta('4', { books: ['meta-2'] });
+    expect(
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 1',
+          mainLibrary: 'something',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {},
+        {} as any,
+        '1' // should use this id
+      )
+    ).toBe('1');
     await storage.saveOSMeta('1', { books: ['meta-3'] });
     expect(await storage.getOSMeta('2')).toStrictEqual({ books: ['meta-1'] });
     expect(await storage.getOSMeta('3')).toStrictEqual({});
@@ -130,6 +146,7 @@ describe('File Content Storage', () => {
       {} as any,
       id
     );
+    await storage.saveOSMeta('1234', {});
     const loaded = await storage.getMetadata(id);
     expect(typeof loaded.title).toBe('string');
     expect(typeof loaded.mainLibrary).toBe('string');
