@@ -183,27 +183,31 @@ export default class H5PServer<
   }
 
   protected async onEdit(req: EditRequestType, res: any) {
-    // This route merges the render and the /ajax/params routes to avoid a
-    // second request.
-    const editorModel = (await this.h5pEditor.render(
-      req.params.contentId,
-      this.languageOverride === 'auto'
-        ? req.language ?? 'en'
-        : this.languageOverride,
-      req.user
-    )) as H5P.IEditorModel;
-    if (!req.params.contentId || req.params.contentId === 'undefined') {
-      res.send(editorModel);
-    } else {
-      const content = await this.h5pEditor.getContent(req.params.contentId);
-      res.send({
-        ...editorModel,
-        library: content.library,
-        metadata: content.params.metadata,
-        params: content.params.params,
-      });
+    try {
+      // This route merges the render and the /ajax/params routes to avoid a
+      // second request.
+      const editorModel = (await this.h5pEditor.render(
+        req.params.contentId,
+        this.languageOverride === 'auto'
+          ? req.language ?? 'en'
+          : this.languageOverride,
+        req.user
+      )) as H5P.IEditorModel;
+      if (!req.params.contentId || req.params.contentId === 'undefined') {
+        res.send(editorModel);
+      } else {
+        const content = await this.h5pEditor.getContent(req.params.contentId);
+        res.send({
+          ...editorModel,
+          library: content.library,
+          metadata: content.params.metadata,
+          params: content.params.params,
+        });
+      }
+      res.status(200).end();
+    } catch (err) {
+      res.status(500).end((err as Error).message);
     }
-    res.status(200).end();
   }
 
   protected async onNew(req: ContentRequestType, res: any) {
@@ -217,17 +221,21 @@ export default class H5PServer<
       res.status(400).send('Malformed request').end();
       return;
     }
-    const { id: contentId, metadata } =
-      await this.h5pEditor.saveOrUpdateContentReturnMetaData(
-        undefined!,
-        req.body.params.params,
-        req.body.params.metadata,
-        req.body.library,
-        req.user
-      );
+    try {
+      const { id: contentId, metadata } =
+        await this.h5pEditor.saveOrUpdateContentReturnMetaData(
+          undefined!,
+          req.body.params.params,
+          req.body.params.metadata,
+          req.body.library,
+          req.user
+        );
 
-    res.send(JSON.stringify({ contentId, metadata }));
-    res.status(200).end();
+      res.send(JSON.stringify({ contentId, metadata }));
+      res.status(200).end();
+    } catch (err) {
+      res.status(500).end((err as Error).message);
+    }
   }
 
   protected async onSave(req: ContentRequestType, res: any) {
@@ -241,17 +249,21 @@ export default class H5PServer<
       res.status(400).send('Malformed request').end();
       return;
     }
-    const { id: contentId, metadata } =
-      await this.h5pEditor.saveOrUpdateContentReturnMetaData(
-        req.params.contentId.toString(),
-        req.body.params.params,
-        req.body.params.metadata,
-        req.body.library,
-        req.user
-      );
+    try {
+      const { id: contentId, metadata } =
+        await this.h5pEditor.saveOrUpdateContentReturnMetaData(
+          req.params.contentId.toString(),
+          req.body.params.params,
+          req.body.params.metadata,
+          req.body.library,
+          req.user
+        );
 
-    res.send(JSON.stringify({ contentId, metadata }));
-    res.status(200).end();
+      res.send(JSON.stringify({ contentId, metadata }));
+      res.status(200).end();
+    } catch (err) {
+      res.status(500).end((err as Error).message);
+    }
   }
 
   protected async onDelete(req: ContentRequestType, res: any) {
