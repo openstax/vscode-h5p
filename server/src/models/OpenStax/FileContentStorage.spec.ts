@@ -219,8 +219,34 @@ describe('File Content Storage', () => {
     } catch (e) {
       err = (e as Error).message;
     }
-    expect(err).toMatch(
+    expect(err).toEqual(
       'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"'
     );
+  });
+  it('cleans up orphaned files on error', async () => {
+    const storage = new OSStorage(config);
+    storage.getOSMeta = jest.fn().mockRejectedValue(new Error('TEST'));
+    await storage.addContent(
+      {
+        title: '',
+        mainLibrary: 'H5P.Blanks',
+        language: 'U',
+        license: '',
+        embedTypes: ['iframe'],
+        preloadedDependencies: [],
+        defaultLanguage: '',
+      },
+      {},
+      {} as any,
+      '1234'
+    );
+    let err = '';
+    try {
+      await storage.saveOSMeta('1234', {});
+    } catch (e) {
+      err = (e as Error).message;
+    }
+    expect(err).toEqual('TEST');
+    expect(await storage.contentExists('1234')).toBe(false);
   });
 });

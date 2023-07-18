@@ -98,6 +98,7 @@ export default class OSStorage extends H5P.fsImplementations
   public async saveOSMeta(contentId: string, osMeta: any) {
     try {
       const privatePath = path.join(this.privateContentDirectory, contentId);
+      const targetPath = path.join(this.contentPath, contentId);
       let { content, metadata: h5pMeta } = this.pending[contentId] ?? {
         content: await super.getParameters(contentId),
         metadata: await super.getMetadata(contentId),
@@ -118,21 +119,21 @@ export default class OSStorage extends H5P.fsImplementations
         await fsExtra.rm(privatePath, { recursive: true, force: true });
       }
 
-      await fsExtra.ensureDir(path.join(this.contentPath, contentId));
-      await Promise.all([
-        this.writeJSON(
-          path.join(this.contentPath, contentId, CONTENT_NAME),
-          content
-        ),
-        this.writeJSON(
-          path.join(this.contentPath, contentId, H5P_NAME),
-          h5pMeta
-        ),
-        this.writeJSON(path.join(this.contentPath, contentId, METADATA_NAME), {
-          ...(await this.getOSMeta(contentId)),
-          ...osMeta,
-        }),
-      ]);
+      await fsExtra.ensureDir(targetPath);
+
+      try {
+        await Promise.all([
+          this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
+          this.writeJSON(path.join(targetPath, H5P_NAME), h5pMeta),
+          this.writeJSON(path.join(targetPath, METADATA_NAME), {
+            ...(await this.getOSMeta(contentId)),
+            ...osMeta,
+          }),
+        ]);
+      } catch (e) {
+        await fsExtra.rm(targetPath, { recursive: true, force: true });
+        throw e;
+      }
     } finally {
       delete this.pending[contentId];
     }
@@ -147,8 +148,10 @@ export default class OSStorage extends H5P.fsImplementations
     contentId: string,
     user?: H5P.IUser | undefined
   ): Promise<any> {
-    const content = await super.getParameters(contentId, user);
-    const osMeta = await this.getOSMeta(contentId);
+    const [content, osMeta] = await Promise.all([
+      super.getParameters(contentId, user),
+      this.getOSMeta(contentId),
+    ]);
     if (isSolutionPublic(osMeta)) {
       return content;
     } else {
