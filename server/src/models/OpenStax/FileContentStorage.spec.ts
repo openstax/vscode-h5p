@@ -26,6 +26,16 @@ describe('File Content Storage', () => {
       [VIRTUAL_ROOT]: {
         ['interactives']: {
           '1': {
+            'h5p.json': JSON.stringify({
+              title: 'this should be stored in folder 1',
+              mainLibrary: 'something',
+              language: 'U',
+              license: '',
+              embedTypes: ['iframe'],
+              preloadedDependencies: [],
+              defaultLanguage: '',
+            }),
+            'content.json': JSON.stringify({}),
             'metadata.json': JSON.stringify({
               extra: 'Something extra',
               books: ['should-not-appear-in-snapshot'],
@@ -101,22 +111,7 @@ describe('File Content Storage', () => {
         '1234' // should use this id
       )
     ).toBe('1234');
-    expect(
-      await storage.addContent(
-        {
-          title: 'this should be stored in folder 1',
-          mainLibrary: 'something',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
-        {},
-        {} as any,
-        '1' // should use this id
-      )
-    ).toBe('1');
+    // Edge case: Save metadata separately from existing the h5p/content json
     await storage.saveOSMeta('1', { books: ['meta-3'] });
     expect(await storage.getOSMeta('2')).toStrictEqual({ books: ['meta-1'] });
     expect(await storage.getOSMeta('3')).toStrictEqual({});
