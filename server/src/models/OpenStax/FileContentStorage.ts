@@ -7,15 +7,19 @@ const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
 
+function assertLibrary(mainLibrary: string) {
+  const library = Config.supportedLibraries[mainLibrary];
+  if (library != null) {
+    return library;
+  }
+  throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
+}
+
 function yankAnswers(
   content: unknown,
   mainLibrary: string
 ): [unknown, unknown] {
-  const library = Config.supportedLibraries[mainLibrary];
-  if (library == null) {
-    throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
-  }
-  return library.yankAnswers(content);
+  return assertLibrary(mainLibrary).yankAnswers(content);
 }
 
 function unyankAnswers(
@@ -23,11 +27,7 @@ function unyankAnswers(
   privateData: unknown,
   mainLibrary: string
 ): unknown {
-  const library = Config.supportedLibraries[mainLibrary];
-  if (library == null) {
-    throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
-  }
-  return library.unyankAnswers(publicData, privateData);
+  return assertLibrary(mainLibrary).unyankAnswers(publicData, privateData);
 }
 
 function isSolutionPublic(osMeta: any): boolean {
@@ -100,8 +100,8 @@ export default class OSStorage extends H5P.fsImplementations
       const privatePath = path.join(this.privateContentDirectory, contentId);
       const targetPath = path.join(this.contentPath, contentId);
       let { content, metadata: h5pMeta } = this.pending[contentId] ?? {
-        content: await super.getParameters(contentId),
-        metadata: await super.getMetadata(contentId),
+        content: await this.getParameters(contentId),
+        metadata: await this.getMetadata(contentId),
       };
       // check if private
       if (!isSolutionPublic(osMeta)) {
@@ -160,8 +160,10 @@ export default class OSStorage extends H5P.fsImplementations
         contentId,
         CONTENT_NAME
       );
-      const h5pMeta = await this.getMetadata(contentId);
-      const privateData = await fsExtra.readJSON(privatePath);
+      const [h5pMeta, privateData] = await Promise.all([
+        this.getMetadata(contentId),
+        fsExtra.readJSON(privatePath),
+      ]);
       return unyankAnswers(content, privateData, h5pMeta.mainLibrary);
     }
   }
