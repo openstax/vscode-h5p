@@ -32,6 +32,7 @@ export const questionSetYanker: Yanker = (content) => {
         return blanksYanker(q.params);
       case 'H5P.TrueFalse':
         return trueFalseYanker(q.params);
+			/* istanbul ignore next */
       default:
         throw new Error(`Library, "${libraryName}," is unsupported`);
     }

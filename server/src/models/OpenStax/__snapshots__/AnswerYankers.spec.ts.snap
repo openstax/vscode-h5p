@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AnswerYankers questionSetYanker yanks private data by subtype 1`] = `
+{
+  "questions": [
+    {
+      "library": "H5P.TrueFalse 1.16",
+      "params": {
+        "question": "<p>Given point a and point b, what is 1+1?</p>
+",
+      },
+    },
+    {
+      "library": "H5P.MultiChoice 1.16",
+      "params": {
+        "question": "<p>Given point a and point b, what is 2+2?</p>
+",
+      },
+    },
+    {
+      "library": "H5P.Blanks 1.14",
+      "params": {
+        "media": {
+          "disableImageZooming": false,
+        },
+      },
+    },
+  ],
+}
+`;
+
+exports[`AnswerYankers questionSetYanker yanks private data by subtype 2`] = `
+[
+  {
+    "correct": false,
+  },
+  {
+    "answers": [
+      {
+        "correct": false,
+        "text": "<div>3</div>
+",
+        "tipsAndFeedback": {
+          "chosenFeedback": "",
+          "notChosenFeedback": "",
+          "tip": "",
+        },
+      },
+      {
+        "correct": true,
+        "text": "<div>4</div>
+",
+        "tipsAndFeedback": {
+          "chosenFeedback": "",
+          "notChosenFeedback": "",
+          "tip": "",
+        },
+      },
+    ],
+  },
+  {
+    "questions": [
+      "<p>What is *true*?</p>
+",
+    ],
+  },
+]
+`;
