@@ -38,21 +38,44 @@ will open a new VSCode window with the extension running. Clinking on a
 
 ## Adding and removing h5p libraries
 
-- Supported libraries are defined in `server/src/models/OpenStax/config.ts`. To add a new library, add a new record to `supportedLibraries`. The key should be the name of the h5p library (like H5P.Blanks) and the value should be an object of type `SupportedLibrary`.
-- During the build process (`npm run build`), each supported library is downloaded or updated.
-- Libraries are saved in an append-only tar file (`server/out/h5p-libraries.tar.gz`).
+- Supported libraries are defined in `server/src/models/OpenStax/config.ts`. To
+  add a new library, add a new record to `supportedLibraries`. The key should be
+  the name of the h5p library (like H5P.Blanks) and the value should be an
+  object of type `SupportedLibrary`.
+- During the build process (`npm run build`), each supported library is
+  downloaded or updated.
+- Libraries are saved in an append-only tar file
+  (`server/out/h5p-libraries.tar.gz`).
 
 ## H5P Library Licenses
-[H5P.Blanks](https://github.com/h5p/h5p-blanks), [H5P.MultiChoice](https://github.com/h5p/h5p-multi-choice), [H5P.QuestionSet](https://github.com/h5p/h5p-question-set), and [H5P.TrueFalse](https://github.com/h5p/h5p-true-false) are included in the packaged extension and they are provided under the following license:
+
+[H5P.Blanks](https://github.com/h5p/h5p-blanks),
+[H5P.MultiChoice](https://github.com/h5p/h5p-multi-choice),
+[H5P.QuestionSet](https://github.com/h5p/h5p-question-set), and
+[H5P.TrueFalse](https://github.com/h5p/h5p-true-false) are included in the
+packaged extension and they are provided under the following license:
+
 > (The MIT License)
 >
->Copyright (c) 2012-2014 Joubel AS
+> Copyright (c) 2012-2014 Joubel AS
 >
->Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
 >
->The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
 >
->THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
 
 ## TODO
 
