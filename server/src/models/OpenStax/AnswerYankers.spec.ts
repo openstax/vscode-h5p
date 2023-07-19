@@ -95,7 +95,9 @@ describe('AnswerYankers', () => {
       expect(copy).toStrictEqual(fakeContent);
       expect(publicData).toMatchSnapshot();
       expect(privateData).toMatchSnapshot();
-      expect(questionSetMerge(publicData, privateData)).toStrictEqual(fakeContent);
+      expect(questionSetMerge(publicData, privateData)).toStrictEqual(
+        fakeContent
+      );
     });
   });
 });
