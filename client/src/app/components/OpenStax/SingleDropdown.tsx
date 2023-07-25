@@ -1,4 +1,4 @@
-import Select from 'react-select';
+import Select, { GroupBase, StylesConfig } from 'react-select';
 import { DropdownOption } from './types';
 
 export function SingleDropdown<
@@ -7,12 +7,12 @@ export function SingleDropdown<
   options,
   handleInputChange,
   value,
-  otherOptions,
+  styles,
 }: {
   options: Array<OptionType>;
   handleInputChange: (value: string) => void;
   value: string;
-  otherOptions?: Record<string, any>;
+  styles?: StylesConfig<{ label: string; value: string }, false>;
 }) {
   return (
     <Select
@@ -28,7 +28,7 @@ export function SingleDropdown<
         if (v == null) return;
         handleInputChange(v.value);
       }}
-      {...(otherOptions ?? {})}
+      styles={styles}
     />
   );
 }

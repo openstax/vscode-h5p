@@ -148,9 +148,9 @@ describe('OpenstaxMetadataForm', () => {
       'module-id': ['m000001', 'm000002', 'm000003#term-03'].map((id) => {
         const splitValue = id.split('#');
         return {
-          'module-id': `modules/${splitValue[0]}/index.cnxml`,
-          'element-id': splitValue[1] ?? ''
-        }
+          module: `modules/${splitValue[0]}/index.cnxml`,
+          'element-id': splitValue[1] ?? '',
+        };
       }),
     };
     it('decodes form state when loading and encodes when saving', async () => {

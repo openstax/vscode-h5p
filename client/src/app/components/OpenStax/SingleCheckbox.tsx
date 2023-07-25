@@ -5,14 +5,14 @@ export default function SingleCheckbox({
   style,
   handleInputChange,
 }: SingleInputProps & {
-  style?: Record<string, string>;
+  style?: React.CSSProperties;
 }) {
   return (
     <input
       type="checkbox"
       checked={value === 'true'}
       onChange={(event) => handleInputChange(event.target.checked.toString())}
-      style={style ?? {}}
+      style={style}
     />
   );
 }
