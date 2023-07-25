@@ -9,6 +9,7 @@ import React from 'react';
 import { collect, range } from '../utils';
 import AACN from '../AACN';
 import { act } from 'react-dom/test-utils';
+import ModuleID from '../ModuleID';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -197,6 +198,27 @@ describe('Inputs', () => {
             ['invalid', false],
             ['00-00-001', false],
             ['A00-00-02', true],
+          ],
+        ]
+      );
+    });
+  });
+
+  describe('module-id', () => {
+    it('validates values', () => {
+      testInputSetValidation(
+        (state) => <ModuleID {...state} />,
+        [
+          [
+            ['m00123', true],
+            ['invalid', false],
+            ['m00123#fs-12345', true],
+            ['m00123#', false],
+          ],
+          [
+            ['invalid', false],
+            ['2', false],
+            ['m00012', true],
           ],
         ]
       );

@@ -1,6 +1,6 @@
 import { InputSet, InputSetProps } from './InputSet';
 
-const moduleIdPattern = /m\d+$/;
+const moduleIdPattern = /^m\d+(#[\w-]+)?$/i;
 
 export default function ModuleID(props: InputSetProps) {
   const subProps = {
