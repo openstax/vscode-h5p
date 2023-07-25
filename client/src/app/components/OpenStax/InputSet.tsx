@@ -62,10 +62,8 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
                   handleInputChange={(v: string) => {
                     handleInputChange(index, v);
                   }}
-                  otherOptions={{
-                    styles: {
-                      control: (styles) => ({ ...styles, width: '100%' }),
-                    },
+                  styles={{
+                    control: (styles) => ({ ...styles, width: '100%' }),
                   }}
                 />
               )}

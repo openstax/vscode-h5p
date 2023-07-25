@@ -112,15 +112,17 @@ const coders: Partial<
     encoder: (state: InputState) => {
       const splitValue = state.value.split('#');
       return {
-        'module-id': `modules/${splitValue[0]}/index.cnxml`,
-        'element-id': splitValue[1] ?? ''
-      }
+        module: `modules/${splitValue[0]}/index.cnxml`,
+        'element-id': splitValue[1] ?? '',
+      };
     },
     decoder: (value: any) => {
-      const moduleId = assertValue(assertType<string>(value['module-id'], 'string').split('/').at(-2))
-      return value['element-id'] !== '' ? 
-        `${moduleId}#${value['element-id']}`
-        : moduleId
+      const moduleId = assertValue(
+        assertType<string>(value['module'], 'string').split('/').at(-2)
+      );
+      return value['element-id'] !== ''
+        ? `${moduleId}#${value['element-id']}`
+        : moduleId;
     },
   },
 };

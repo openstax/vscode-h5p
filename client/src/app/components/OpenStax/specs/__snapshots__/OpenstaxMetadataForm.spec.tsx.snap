@@ -76,15 +76,15 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "module-id": [
         {
           "element-id": "",
-          "module-id": "modules/m000001/index.cnxml",
+          "module": "modules/m000001/index.cnxml",
         },
         {
           "element-id": "",
-          "module-id": "modules/m000002/index.cnxml",
+          "module": "modules/m000002/index.cnxml",
         },
         {
           "element-id": "term-03",
-          "module-id": "modules/m000003/index.cnxml",
+          "module": "modules/m000003/index.cnxml",
         },
       ],
       "nclex": "",
