@@ -18,7 +18,6 @@ import SciencePractice from './SciencePractice';
 import Accordion from './Accordion';
 import AACN from './AACN';
 import NCLEX from './NCLEX';
-import ElementID from './ElementId';
 
 type SingleInputs = {
   blooms: InputState;
@@ -37,8 +36,7 @@ type SingleInputs = {
 type InputSets = {
   books: InputState[];
   lo: InputState[];
-  moduleId: InputState[];
-  elementId: InputState[];
+  'module-id': InputState[];
   apLo: InputState[];
 };
 
@@ -64,8 +62,7 @@ const metadataKeys: Array<keyof SavedState> = [
   'nickname',
   'books',
   'lo',
-  'moduleId',
-  'elementId',
+  'module-id',
   'apLo',
   'is-solution-public',
   'hts',
@@ -111,10 +108,20 @@ const coders: Partial<
     }
   >
 > = {
-  moduleId: {
-    encoder: (state: InputState) => `modules/${state.value}/index.cnxml`,
-    decoder: (value: unknown) =>
-      assertValue(assertType<string>(value, 'string').split('/').at(-2)),
+  'module-id': {
+    encoder: (state: InputState) => {
+      const splitValue = state.value.split('#');
+      return {
+        'module-id': `modules/${splitValue[0]}/index.cnxml`,
+        'element-id': splitValue[1] ?? ''
+      }
+    },
+    decoder: (value: any) => {
+      const moduleId = assertValue(assertType<string>(value['module-id'], 'string').split('/').at(-2))
+      return value['element-id'] !== '' ? 
+        `${moduleId}#${value['element-id']}`
+        : moduleId
+    },
   },
 };
 
@@ -122,8 +129,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public state: FormState = {
     books: [],
     lo: [],
-    moduleId: [],
-    elementId: [],
+    'module-id': [],
     apLo: [],
     blooms: { ...defaultInputState },
     'assignment-type': { ...defaultInputState },
@@ -346,8 +352,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         make: () => <ReasoningProcess {...inputHandlerProps('rp')} />,
         isActive: this.hasApHistoryBook,
       },
-      { make: () => <ModuleID {...inputSetHandlerProps('moduleId')} /> },
-      { make: () => <ElementID {...inputSetHandlerProps('elementId')} /> },
+      { make: () => <ModuleID {...inputSetHandlerProps('module-id')} /> },
       { make: () => <Blooms {...inputHandlerProps('blooms')} /> },
       {
         make: () => (
