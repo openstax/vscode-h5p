@@ -13,3 +13,5 @@ export type InputState = {
   value: string;
   isValid: boolean;
 };
+
+export type BookInputState = InputState & { book: string };
