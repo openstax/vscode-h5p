@@ -4,7 +4,7 @@ import AssignmentType from './AssignmentType';
 import { Book } from './Book';
 import DokTag from './Dok';
 import { chunk } from './utils';
-import { InputState } from './types';
+import { InputState, BookInputState } from './types';
 import LO from './LO';
 import ModuleID from './ModuleID';
 import APLO from './APLO';
@@ -18,6 +18,13 @@ import SciencePractice from './SciencePractice';
 import Accordion from './Accordion';
 import AACN from './AACN';
 import NCLEX from './NCLEX';
+import {
+  AP_BOOKS,
+  AP_HISTORY_BOOKS,
+  AP_SCIENCE_BOOKS,
+  BOOKS,
+  NURSING_BOOKS,
+} from './constants';
 
 type SingleInputs = {
   blooms: InputState;
@@ -26,21 +33,24 @@ type SingleInputs = {
   time: InputState;
   nickname: InputState;
   'is-solution-public': InputState;
-  hts: InputState;
-  rp: InputState;
-  'science-practice': InputState;
-  aacn: InputState;
-  nclex: InputState;
 };
 
 type InputSets = {
   books: InputState[];
-  lo: InputState[];
   'module-id': InputState[];
-  apLo: InputState[];
 };
 
-type FormState = SingleInputs & InputSets;
+type BookInputs = {
+  lo: BookInputState[];
+  apLo: BookInputState[];
+  hts: BookInputState[];
+  rp: BookInputState[];
+  'science-practice': BookInputState[];
+  aacn: BookInputState[];
+  nclex: BookInputState[];
+};
+
+type FormState = SingleInputs & InputSets & BookInputs;
 
 type FormProps = {
   contentService: IContentService;
@@ -48,7 +58,10 @@ type FormProps = {
   onSaveError: (message: string) => void;
 };
 
-type SavedState = Record<keyof SingleInputs | keyof InputSets, any>;
+type SavedState = Record<
+  keyof SingleInputs | keyof InputSets | keyof BookInputs,
+  any
+>;
 type MetadataEntry = [keyof SavedState, InputState | InputState[]];
 type SavedEntry = [keyof SavedState, string | string[]];
 
@@ -60,11 +73,13 @@ const metadataKeys: Array<keyof SavedState> = [
   'dok-tag',
   'time',
   'nickname',
-  'books',
-  'lo',
   'module-id',
-  'apLo',
   'is-solution-public',
+];
+
+const bookInputKeys: Array<keyof BookInputs> = [
+  'lo',
+  'apLo',
   'hts',
   'rp',
   'science-practice',
@@ -78,6 +93,12 @@ function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
 
 function isSavedEntry(entry: [any, any]): entry is SavedEntry {
   return metadataKeys.includes(entry[0]);
+}
+
+function isBookInputEntry(
+  entry: [any, any]
+): entry is [string, BookInputState[]] {
+  return bookInputKeys.includes(entry[0]);
 }
 
 function assertValue<T>(
@@ -129,21 +150,21 @@ const coders: Partial<
 
 export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public state: FormState = {
-    books: [],
-    lo: [],
     'module-id': [],
-    apLo: [],
     blooms: { ...defaultInputState },
     'assignment-type': { ...defaultInputState },
     'dok-tag': { ...defaultInputState },
     time: { ...defaultInputState },
     nickname: { ...defaultInputState },
-    hts: { ...defaultInputState },
-    rp: { ...defaultInputState },
-    'science-practice': { ...defaultInputState },
     'is-solution-public': { ...defaultInputState, value: 'true' },
-    aacn: { ...defaultInputState },
-    nclex: { ...defaultInputState },
+    books: [],
+    apLo: [],
+    lo: [],
+    rp: [],
+    hts: [],
+    'science-practice': [],
+    aacn: [],
+    nclex: [],
   };
 
   constructor(props: FormProps) {
@@ -190,7 +211,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     // TODO: Remove optional fields that are empty?
     const encodeValue = (key: keyof FormState, state: InputState): any =>
       key in coders ? coders[key]!.encoder(state) : state.value;
-    return Object.fromEntries(
+    const metadata = Object.fromEntries(
       this.metadataEntries.map(([key, oneOrMany]) => [
         key,
         Array.isArray(oneOrMany)
@@ -198,6 +219,30 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           : encodeValue(key, oneOrMany),
       ])
     );
+    const bookMetadataEntries = Object.entries(this.state).filter(
+      isBookInputEntry
+    );
+    const bookMetadata = Object.fromEntries(
+      this.state.books
+        .map((b) => {
+          const book = b.value;
+          return [
+            book,
+            Object.fromEntries(
+              bookMetadataEntries
+                .map(([stateKey, bookStates]) => [
+                  stateKey,
+                  bookStates
+                    .filter((bookState) => bookState.book === book)
+                    .map((bookState) => bookState.value),
+                ])
+                .filter(([_, v]) => v.length > 0)
+            ),
+          ];
+        })
+        .filter(([k, _]) => k !== '')
+    );
+    return { ...metadata, books: bookMetadata };
   }
 
   decodeValues(metadata: any): Partial<FormState> {
@@ -209,7 +254,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         value: decode(key, value),
       };
     };
-    return Object.fromEntries(
+    const exerciseMetadata = Object.fromEntries(
       Object.entries(metadata)
         .filter(isSavedEntry)
         .map(([key, oneOrMany]) => [
@@ -219,6 +264,29 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
             : decodeValue(key, oneOrMany),
         ])
     );
+    const books = Object.entries(metadata['books'] ?? {}) as [string, any];
+    const bookMetadata = {
+      books: books.map(([k, _]) => ({ ...defaultInputState, value: k })),
+      ...Object.fromEntries(
+        bookInputKeys.map((k) => {
+          const value: any[] = []
+          books.forEach(([book, values]) => {
+            const valuesByKey = values[k];
+            if (Array.isArray(valuesByKey)) {
+              valuesByKey.forEach((v) => value.push({
+                ...defaultInputState,
+                value: v,
+                book,
+              }));
+            } else if (valuesByKey !== undefined) {
+              value.push({ ...defaultInputState, value: valuesByKey, book });
+            }
+          });
+          return [k, value];
+        })
+      ),
+    };
+    return { ...exerciseMetadata, ...bookMetadata };
   }
 
   get isInputValid() {
@@ -253,56 +321,17 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     );
   }
 
-  get hasApBook() {
-    return this.state.books.some((b) => b.value.startsWith('stax-ap'));
-  }
-
-  get hasApScienceBook() {
-    return this.state.books.some(
-      (b) => b.value === 'stax-apphys' || b.value === 'stax-apbio'
-    );
-  }
-
-  get hasApHistoryBook() {
-    return this.state.books.some((b) => b.value === 'stax-apush');
-  }
-
-  get hasNursingBook() {
-    const nursingBooks = [
-      'stax-matnewborn',
-      'stax-nursingskills',
-      'stax-psychnursing',
-      'stax-medsurg',
-      'stax-nursingfundamentals',
-      'stax-pharmacology',
-      'stax-nutrition',
-      'stax-pophealth',
-    ];
-    return this.state.books.some((b) => nursingBooks.includes(b.value));
-  }
-
-  private reset(key: keyof SingleInputs | keyof InputSets) {
-    const state = this.state[key];
-    if (Array.isArray(state)) {
-      if (state.length !== 0) {
-        /* istanbul ignore next */
-        this.setState({ [key]: [] });
-      }
-      return;
-    }
-    if (!Object.keys(state).every((k) => state[k] === defaultInputState[k])) {
-      /* istanbul ignore next */
-      this.setState({ [key]: { ...defaultInputState } });
-    }
-  }
-
   render() {
-    const inputSetHandlerProps = (type: keyof InputSets) => {
+    const inputSetHandlerProps = <K extends keyof InputSets | keyof BookInputs>(
+      type: K
+    ) => {
       return {
         inputs: this.state[type],
-        handleAddInput: () => {
+        handleAddInput: (newInput?: InputState | BookInputState) => {
           const inputs = this.state[type];
-          this.setState({ [type]: [...inputs, { ...defaultInputState }] });
+          this.setState({
+            [type]: [...inputs, newInput ?? { ...defaultInputState }],
+          });
         },
         handleRemoveInput: (index) => {
           const inputs = this.state[type];
@@ -317,43 +346,91 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         ) => {
           const inputs = this.state[type];
           const newInputs = [...inputs];
-          newInputs[index] = { value, isValid };
+          newInputs[index] = { ...newInputs[index], value, isValid };
           this.setState({ [type]: newInputs });
         },
       };
     };
 
-    const inputHandlerProps = (type: keyof SingleInputs) => ({
+    const inputHandlerProps = <K extends keyof SingleInputs | keyof BookInputs>(
+      type: K
+    ) => ({
       handleInputChange: (value: string, isValid: boolean = true) =>
         this.setState({ [type]: { value, isValid } }),
       ...this.state[type],
     });
 
-    const inputs = [
+    const bookInputSetHandlerProps = (book: string, type: keyof BookInputs) => {
+      const getIdx = (book: string, idx: number, arr: BookInputState[]) => {
+        let idxByBook = 0;
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].book === book) {
+            if (idxByBook === idx) {
+              return i;
+            }
+            idxByBook++;
+          }
+        }
+      };
+      const baseProps = inputSetHandlerProps(type);
+      return {
+        inputs: baseProps.inputs.filter((bookInput) => bookInput.book === book),
+        handleAddInput: () => {
+          baseProps.handleAddInput({ ...defaultInputState, book });
+        },
+        handleRemoveInput: (index) => {
+          baseProps.handleRemoveInput(
+            assertValue(getIdx(book, index, this.state[type]))
+          );
+        },
+        handleInputChange: (
+          index: number,
+          value: string,
+          isValid: boolean = true
+        ) => {
+          baseProps.handleInputChange(
+            assertValue(getIdx(book, index, this.state[type])),
+            value,
+            isValid
+          );
+        },
+      };
+    };
+
+    const bookInputHandlerProps = (book: string, type: keyof BookInputs) => {
+      const getOrAdd = () => {
+        const existing = this.state[type].find(
+          (bookInput) => bookInput.book === book
+        );
+        if (existing !== undefined) {
+          return existing;
+        } else {
+          // Add new entry. This will be cleaned up in book change handler.
+          const newState = { ...defaultInputState, book };
+          this.setState({ [type]: [...this.state[type], newState] });
+          return newState;
+        }
+      };
+      return {
+        ...getOrAdd(),
+        handleInputChange: (value: string, isValid: boolean = true) => {
+          const idx = this.state[type].findIndex(
+            (bookState) => bookState.book === book
+          );
+          const newInputs = [...this.state[type]];
+          newInputs[idx] = { value, isValid, book };
+          this.setState({
+            [type]: newInputs,
+          });
+        },
+      };
+    };
+
+    const inputs: Array<{
+      make: () => JSX.Element;
+      isActive?: boolean;
+    }> = [
       { make: () => <Nickname {...inputHandlerProps('nickname')} /> },
-      { make: () => <Book {...inputSetHandlerProps('books')} /> },
-      { make: () => <LO {...inputSetHandlerProps('lo')} /> },
-      {
-        make: () => <APLO {...inputSetHandlerProps('apLo')} />,
-        isActive: this.hasApBook,
-      },
-      {
-        make: () => (
-          <SciencePractice
-            {...inputHandlerProps('science-practice')}
-            books={this.state.books.map((b) => b.value)}
-          />
-        ),
-        isActive: this.hasApScienceBook,
-      },
-      {
-        make: () => <HistoricalThinking {...inputHandlerProps('hts')} />,
-        isActive: this.hasApHistoryBook,
-      },
-      {
-        make: () => <ReasoningProcess {...inputHandlerProps('rp')} />,
-        isActive: this.hasApHistoryBook,
-      },
       { make: () => <ModuleID {...inputSetHandlerProps('module-id')} /> },
       { make: () => <Blooms {...inputHandlerProps('blooms')} /> },
       {
@@ -364,33 +441,115 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       { make: () => <DokTag {...inputHandlerProps('dok-tag')} /> },
       { make: () => <Time {...inputHandlerProps('time')} /> },
       {
-        make: () => <AACN {...inputHandlerProps('aacn')} />,
-        isActive: this.hasNursingBook,
-      },
-      {
-        make: () => <NCLEX {...inputHandlerProps('nclex')} />,
-        isActive: this.hasNursingBook,
-      },
-      {
         make: () => (
           <PublicCheckbox {...inputHandlerProps('is-solution-public')} />
         ),
       },
     ];
 
-    if (!this.hasApBook) {
-      this.reset('apLo');
-    }
-    if (!this.hasApHistoryBook) {
-      this.reset('hts');
-      this.reset('rp');
-    }
-    if (!this.hasApScienceBook) {
-      this.reset('science-practice');
-    }
-
     const inputsPerRow = 2;
     const colClass = `col-${Math.ceil(12 / inputsPerRow)}`;
+
+    const bookHandlerProps = inputSetHandlerProps('books');
+    const bookInputs: Array<{
+      isActive: (book: string) => boolean;
+      make: (book: string) => JSX.Element;
+      key: keyof BookInputs;
+    }> = [
+      {
+        isActive: (book: string) => !AP_BOOKS.includes(book),
+        key: 'lo',
+        make(book: string) {
+          return <LO {...bookInputSetHandlerProps(book, this.key)} />;
+        },
+      },
+      {
+        isActive: (book: string) => AP_BOOKS.includes(book),
+        key: 'apLo',
+        make(book: string) {
+          return <APLO {...bookInputSetHandlerProps(book, this.key)} />;
+        },
+      },
+      {
+        isActive: (book: string) => NURSING_BOOKS.includes(book),
+        key: 'aacn',
+        make(book: string) {
+          return <AACN {...bookInputHandlerProps(book, this.key)} />;
+        },
+      },
+      {
+        isActive: (book: string) => NURSING_BOOKS.includes(book),
+        key: 'nclex',
+        make(book: string) {
+          return <NCLEX {...bookInputHandlerProps(book, this.key)} />;
+        },
+      },
+      {
+        isActive: (book: string) => AP_SCIENCE_BOOKS.includes(book),
+        key: 'science-practice',
+        make(book: string) {
+          return (
+            <SciencePractice
+              {...bookInputHandlerProps(book, this.key)}
+              book={book}
+            />
+          );
+        },
+      },
+      {
+        isActive: (book: string) => AP_HISTORY_BOOKS.includes(book),
+        key: 'hts',
+        make(book: string) {
+          return (
+            <HistoricalThinking {...bookInputHandlerProps(book, this.key)} />
+          );
+        },
+      },
+      {
+        isActive: (book: string) => AP_HISTORY_BOOKS.includes(book),
+        key: 'rp',
+        make(book: string) {
+          return (
+            <ReasoningProcess {...bookInputHandlerProps(book, this.key)} />
+          );
+        },
+      },
+    ];
+
+    const handleBookChange = (oldBook: string, newBook?: string) => {
+      const activeInputs =
+        newBook !== undefined
+          ? bookInputs.filter((input) => input.isActive(newBook))
+          : [];
+      const updated = Object.fromEntries(
+        Object.entries(this.state)
+          .filter(isBookInputEntry)
+          .map(([key, value]) => {
+            const isStateActive = activeInputs.some(
+              (input) => input.key === key
+            );
+            const updatedValue = value
+              .map((bookState) => {
+                switch (true) {
+                  // Books do not match: keep same state
+                  case bookState.book !== oldBook:
+                    return bookState;
+                  // State should exist for new book: update referenced book
+                  case isStateActive:
+                    return { ...bookState, book: newBook };
+                  // State should not exist for new book: mark for removal
+                  default:
+                    return null;
+                }
+              })
+              .filter(
+                (bookState): bookState is BookInputState => bookState != null
+              );
+            return [key, updatedValue];
+          })
+      );
+      this.setState(updated);
+    };
 
     return (
       <Accordion
@@ -414,6 +573,49 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                     ))}
                   </div>
                 ))}
+                <div className="row">
+                  <div className="col-12 text-center h3">Books</div>
+                </div>
+                {bookHandlerProps.inputs.map((bookState, idx) => {
+                  const myBook = bookState.value;
+                  // Books selected by this dropdown or not selected by any other
+                  const selectableBooks = BOOKS.filter(
+                    ([value, _]) =>
+                      value === myBook ||
+                      bookHandlerProps.inputs.every((b) => value !== b.value)
+                  );
+
+                  return (
+                    <div key={`book-${idx}`}>
+                      <Book
+                        {...bookState}
+                        books={selectableBooks}
+                        handleInputChange={(value) => {
+                          bookHandlerProps.handleInputChange(idx, value);
+                          handleBookChange(myBook, value);
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          bookHandlerProps.handleRemoveInput(idx);
+                          handleBookChange(myBook);
+                        }}
+                      >
+                        -
+                      </button>
+                      {myBook !== '' ? (
+                        <div>
+                          {bookInputs
+                            .filter((input) => input.isActive(myBook))
+                            .map((input) => input.make(myBook))}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+                <button onClick={() => bookHandlerProps.handleAddInput()}>
+                  Test
+                </button>
               </div>
             ),
           },

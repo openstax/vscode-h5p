@@ -26,15 +26,15 @@ const apBio = [
 ];
 
 export default function SciencePractice(
-  props: SingleInputProps & { books: string[] }
+  props: SingleInputProps & { book: string }
 ) {
   let options: DropdownOption[] = [
     { value: 'argumentation', label: 'Argumentation' },
   ];
-  if (props.books.includes('stax-apphys')) {
+  if (props.book === 'stax-apphys') {
     options.push(...apPhysics);
   }
-  if (props.books.includes('stax-apbio')) {
+  if (props.book === 'stax-apbio') {
     options.push(...apBio);
   }
   return (
