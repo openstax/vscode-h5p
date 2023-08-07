@@ -25,6 +25,7 @@ import {
   BOOKS,
   NURSING_BOOKS,
 } from './constants';
+import { Button } from 'react-bootstrap';
 
 type SingleInputs = {
   blooms: InputState;
@@ -269,15 +270,17 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       books: books.map(([k, _]) => ({ ...defaultInputState, value: k })),
       ...Object.fromEntries(
         bookInputKeys.map((k) => {
-          const value: any[] = []
+          const value: any[] = [];
           books.forEach(([book, values]) => {
             const valuesByKey = values[k];
             if (Array.isArray(valuesByKey)) {
-              valuesByKey.forEach((v) => value.push({
-                ...defaultInputState,
-                value: v,
-                book,
-              }));
+              valuesByKey.forEach((v) =>
+                value.push({
+                  ...defaultInputState,
+                  value: v,
+                  book,
+                })
+              );
             } else if (valuesByKey !== undefined) {
               value.push({ ...defaultInputState, value: valuesByKey, book });
             }
@@ -586,36 +589,72 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   );
 
                   return (
-                    <div key={`book-${idx}`}>
-                      <Book
-                        {...bookState}
-                        books={selectableBooks}
-                        handleInputChange={(value) => {
-                          bookHandlerProps.handleInputChange(idx, value);
-                          handleBookChange(myBook, value);
-                        }}
-                      />
-                      <button
-                        onClick={() => {
-                          bookHandlerProps.handleRemoveInput(idx);
-                          handleBookChange(myBook);
-                        }}
+                    <div
+                      key={`book-${idx}`}
+                      className="p-2 m-1 mb-2 row"
+                      style={{
+                        backgroundColor: idx % 2 === 0 ? '#F8CECC' : '#DAE8FC',
+                      }}
+                    >
+                      <div
+                        className="col-11"
+                        style={{ padding: '0', paddingRight: '8px' }}
                       >
-                        -
-                      </button>
-                      {myBook !== '' ? (
-                        <div>
-                          {bookInputs
-                            .filter((input) => input.isActive(myBook))
-                            .map((input) => input.make(myBook))}
-                        </div>
-                      ) : null}
+                        <Book
+                          {...bookState}
+                          books={selectableBooks}
+                          handleInputChange={(value) => {
+                            bookHandlerProps.handleInputChange(idx, value);
+                            handleBookChange(myBook, value);
+                          }}
+                        />
+                      </div>
+                      <div className="col-1 p-0">
+                        <Button
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            bookHandlerProps.handleRemoveInput(idx);
+                            handleBookChange(myBook);
+                          }}
+                        >
+                          -
+                        </Button>
+                      </div>
+                      {myBook === ''
+                        ? null
+                        : chunk(
+                            bookInputs
+                              .filter((input) => input.isActive(myBook))
+                              .map((input) => input.make(myBook)),
+                            inputsPerRow
+                          ).map((inputsChunk, rowIdx) => (
+                            <div
+                              className="row p-0 mt-4"
+                              key={`book-row-${rowIdx}`}
+                            >
+                              {inputsChunk.map((input, colIdx) => (
+                                <div
+                                  className={colClass}
+                                  key={`book-col-${colIdx}`}
+                                >
+                                  {input}
+                                </div>
+                              ))}
+                            </div>
+                          ))}
                     </div>
                   );
                 })}
-                <button onClick={() => bookHandlerProps.handleAddInput()}>
-                  Test
-                </button>
+                <div className="row">
+                  <div className="col-12 text-center">
+                    <Button
+                      style={{ width: '100px' }}
+                      onClick={() => bookHandlerProps.handleAddInput()}
+                    >
+                      +
+                    </Button>
+                  </div>
+                </div>
               </div>
             ),
           },
