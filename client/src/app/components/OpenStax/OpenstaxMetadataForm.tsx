@@ -397,13 +397,14 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   }
 
   get isInputValid() {
-    const required: Array<keyof SavedState> = [
-      'nickname',
-      'books',
-      'blooms',
-      'lo',
+    const required = [
+      ...exerciseInputs.filter((e) => e.isRequired).map((e) => e.key),
+      ...bookInputs.filter((b) => b.isRequired).map((b) => b.key),
     ];
-    const isInputValid = (key: keyof SavedState, value: InputState) => {
+    const isInputValid = (
+      key: keyof SavedState | keyof BookInputs,
+      value: InputState
+    ) => {
       if (!value.isValid) {
         this.onSaveError(`Value for "${key}" is invalid`);
         return false;
@@ -414,17 +415,38 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       }
       return true;
     };
-    const isArrayValid = (key: keyof SavedState, inputSet: InputState[]) => {
+    const isArrayValid = (
+      key: keyof SavedState | keyof BookInputs,
+      inputSet: InputState[]
+    ) => {
       if (required.includes(key) && inputSet.length === 0) {
         this.onSaveError(`Expected at least one value for ${key}`);
         return false;
       }
       return inputSet.every((inputState) => isInputValid(key, inputState));
     };
-    return this.metadataEntries.every(([key, oneOrMany]) =>
-      Array.isArray(oneOrMany)
-        ? isArrayValid(key, oneOrMany)
-        : isInputValid(key, oneOrMany)
+    const bookInputSets = bookInputs.filter((b) => b.isInputSet);
+    return (
+      this.metadataEntries.every(([key, oneOrMany]) =>
+        Array.isArray(oneOrMany)
+          ? isArrayValid(key, oneOrMany)
+          : isInputValid(key, oneOrMany)
+      ) &&
+      bookInputs
+        .filter((input) => !input.isInputSet)
+        .every((input) =>
+          this.state[input.key].every((state) => isInputValid(input.key, state))
+        ) &&
+      this.state.books.every((b) =>
+        bookInputSets.every(
+          (inputSet) =>
+            !inputSet.isActive(b.value) ||
+            isArrayValid(
+              inputSet.key,
+              this.state[inputSet.key].filter((input) => input.book === b.value)
+            )
+        )
+      )
     );
   }
 
