@@ -3,8 +3,13 @@ import Blooms from './Blooms';
 import AssignmentType from './AssignmentType';
 import { Book } from './Book';
 import DokTag from './Dok';
-import { chunk } from './utils';
-import { InputState, BookInputState } from './types';
+import { assertType, assertValue, chunk } from './utils';
+import {
+  InputState,
+  BookInputState,
+  SingleInputProps,
+  InputSetHandlerProps,
+} from './types';
 import LO from './LO';
 import ModuleID from './ModuleID';
 import APLO from './APLO';
@@ -100,25 +105,6 @@ function isBookInputEntry(
   entry: [any, any]
 ): entry is [string, BookInputState[]] {
   return bookInputKeys.includes(entry[0]);
-}
-
-function assertValue<T>(
-  v: T | null | undefined,
-  message = 'Expected a value but did not get anything'
-) {
-  if (v !== null && v !== undefined) return v;
-  /* istanbul ignore next */
-  throw new Error(`BUG: assertValue. Message: ${message}`);
-}
-
-function assertType<T>(
-  v: unknown,
-  type: string,
-  message = 'Got unexpected type'
-): T {
-  if (typeof v === type) return v as T;
-  /* istanbul ignore next */
-  throw new Error(`BUG: assertType. Message: ${message}`);
 }
 
 const coders: Partial<
