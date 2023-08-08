@@ -374,7 +374,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       books: books.map(([k, _]) => ({ ...defaultInputState, value: k })),
       ...Object.fromEntries(
         bookInputKeys.map((k) => {
-          const value: any[] = [];
+          const value: BookInputState[] = [];
           books.forEach(([book, values]) => {
             const valuesByKey = values[k];
             if (Array.isArray(valuesByKey)) {
