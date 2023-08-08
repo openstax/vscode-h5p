@@ -580,6 +580,8 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                       className="p-2 m-1 mb-2 row"
                       style={{
                         backgroundColor: idx % 2 === 0 ? '#F8CECC' : '#DAE8FC',
+                        borderRadius: '0.25em',
+                        border: '1px solid rgba(0, 0, 0, 0.25)',
                       }}
                     >
                       <div
@@ -602,6 +604,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                             bookHandlerProps.handleRemoveInput(idx);
                             handleBookChange(myBook);
                           }}
+                          data-control-type="remove-book"
                         >
                           -
                         </Button>
@@ -632,7 +635,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   );
                 })}
                 <div className="row">
-                  <div className="col-12 text-center">
+                  <div
+                    className="col-12 text-center"
+                    data-control-type="add-book"
+                  >
                     <Button
                       style={{ width: '100px' }}
                       onClick={() => bookHandlerProps.handleAddInput()}
