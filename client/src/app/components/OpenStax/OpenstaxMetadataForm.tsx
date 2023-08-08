@@ -323,25 +323,29 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     const bookMetadataEntries = Object.entries(this.state).filter(
       isBookInputEntry
     );
+    const bookInputSets = bookInputs
+      .filter((b) => b.isInputSet === true)
+      .map((b) => b.key as string);
     const bookMetadata = Object.fromEntries(
       this.state.books
+        .filter((b) => b.value !== '')
         .map((b) => {
           const book = b.value;
           return [
             book,
             Object.fromEntries(
               bookMetadataEntries
-                .map(([stateKey, bookStates]) => [
+                .map(([stateKey, bookStates]): [string, string[]] => [
                   stateKey,
                   bookStates
                     .filter((bookState) => bookState.book === book)
                     .map((bookState) => bookState.value),
                 ])
                 .filter(([_, v]) => v.length > 0)
+                .map(([k, v]) => [k, bookInputSets.includes(k) ? v : v[0]])
             ),
           ];
         })
-        .filter(([k, _]) => k !== '')
     );
     return { ...metadata, books: bookMetadata };
   }
