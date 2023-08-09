@@ -12,7 +12,7 @@ type AccordionChild = {
 
 type AccordionProps = {
   children: AccordionChild[];
-  style?: Record<string, any>;
+  style?: React.CSSProperties;
 };
 
 export default function Accordion(props: AccordionProps) {
@@ -23,7 +23,7 @@ export default function Accordion(props: AccordionProps) {
   };
 
   return (
-    <div style={props.style ?? {}}>
+    <div style={props.style}>
       {props.children.map((kid, idx) => (
         <div className="accordion-section" key={idx}>
           <div
