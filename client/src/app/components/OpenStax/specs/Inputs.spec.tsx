@@ -10,6 +10,7 @@ import { collect, range } from '../utils';
 import AACN from '../AACN';
 import { act } from 'react-dom/test-utils';
 import ModuleID from '../ModuleID';
+import APLO from '../APLO';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -198,6 +199,60 @@ describe('Inputs', () => {
             ['invalid', false],
             ['00-00-001', false],
             ['A00-00-02', true],
+          ],
+        ]
+      );
+    });
+  });
+
+  describe('ap-lo', () => {
+    it('validates values for stax-apbio', () => {
+      testInputSetValidation(
+        (state) => <APLO {...state} book={'stax-apbio'} />,
+        [
+          [
+            ['ABC-0-A', true],
+            ['invalid', false],
+            ['DEF-01-B', true],
+          ],
+          [
+            ['invalid', false],
+            ['abc.1.a', false],
+            ['ABC.0.F', true],
+          ],
+        ]
+      );
+    });
+    it('validates values for stax-apphys', () => {
+      testInputSetValidation(
+        (state) => <APLO {...state} book={'stax-apphys'} />,
+        [
+          [
+            ['1-A-23-1', true],
+            ['invalid', false],
+            ['1-B-1-2', true],
+          ],
+          [
+            ['invalid', false],
+            ['1-a-23-1', false],
+            ['1.B.1.2', true],
+          ],
+        ]
+      );
+    });
+    it('validates values for other ap books', () => {
+      testInputSetValidation(
+        (state) => <APLO {...state} book={'stax-apdoes-not-exist'} />,
+        [
+          [
+            ['ANYTHING-LIKE-THIS', true],
+            ['invalid', false],
+            ['1-B-1-2', true],
+          ],
+          [
+            ['invalid', false],
+            ['1-a-23-1', false],
+            ['1.B.1.2', true],
           ],
         ]
       );

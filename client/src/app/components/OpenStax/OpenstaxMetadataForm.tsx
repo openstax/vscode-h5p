@@ -100,10 +100,9 @@ const bookInputs: Array<{
     key: 'ap-lo',
     isActive: (book) => AP_BOOKS.includes(book),
     make(book, _, inputSetHandlerFactory) {
-      return <APLO {...inputSetHandlerFactory(book, this.key)} />;
+      return <APLO {...inputSetHandlerFactory(book, this.key)} book={book} />;
     },
     isInputSet: true,
-    isRequired: true,
   },
   {
     key: 'aacn',
