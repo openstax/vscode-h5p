@@ -402,13 +402,13 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     ];
     const isInputValid = (
       key: keyof SavedState | keyof BookInputs,
-      value: InputState
+      state: InputState | undefined
     ) => {
-      if (!value.isValid) {
+      if (state?.isValid === false) {
         this.onSaveError(`Value for "${key}" is invalid`);
         return false;
       }
-      if (required.includes(key) && value.value === '') {
+      if (required.includes(key) && !state?.value) {
         this.onSaveError(`"${key}" cannot be empty.`);
         return false;
       }
@@ -424,26 +424,29 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       }
       return inputSet.every((inputState) => isInputValid(key, inputState));
     };
-    const bookInputSets = bookInputs.filter((b) => b.isInputSet);
     return (
       this.metadataEntries.every(([key, oneOrMany]) =>
         Array.isArray(oneOrMany)
           ? isArrayValid(key, oneOrMany)
           : isInputValid(key, oneOrMany)
       ) &&
-      bookInputs
-        .filter((input) => !input.isInputSet)
-        .every((input) =>
-          this.state[input.key].every((state) => isInputValid(input.key, state))
-        ) &&
       this.state.books.every((b) =>
-        bookInputSets.every(
-          (inputSet) =>
-            !inputSet.isActive(b.value) ||
-            isArrayValid(
-              inputSet.key,
-              this.state[inputSet.key].filter((input) => input.book === b.value)
-            )
+        bookInputs.every(
+          (bookInput) =>
+            !bookInput.isActive(b.value) ||
+            (bookInput.isInputSet
+              ? isArrayValid(
+                  bookInput.key,
+                  this.state[bookInput.key].filter(
+                    (state) => state.book === b.value
+                  )
+                )
+              : isInputValid(
+                  bookInput.key,
+                  this.state[bookInput.key].find(
+                    (state) => state.book === b.value
+                  )
+                ))
         )
       )
     );
@@ -526,27 +529,22 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     };
 
     const bookInputHandlerProps = (book: string, type: keyof BookInputs) => {
-      const getOrAdd = () => {
-        const existing = this.state[type].find(
-          (bookInput) => bookInput.book === book
-        );
-        if (existing !== undefined) {
-          return existing;
-        } else {
-          // Add new entry. This will be cleaned up in book change handler.
-          const newState = { ...defaultInputState, book };
-          this.setState({ [type]: [...this.state[type], newState] });
-          return newState;
-        }
-      };
       return {
-        ...getOrAdd(),
+        ...(this.state[type].find((bookInput) => bookInput.book === book) ?? {
+          ...defaultInputState,
+          book,
+        }),
         handleInputChange: (value: string, isValid: boolean = true) => {
           const idx = this.state[type].findIndex(
             (bookState) => bookState.book === book
           );
           const newInputs = [...this.state[type]];
-          newInputs[idx] = { value, isValid, book };
+          if (idx !== -1) {
+            newInputs[idx] = { value, isValid, book };
+          } else {
+            // Add new entry. This will be cleaned up in book change handler.
+            newInputs.push({ value, isValid, book });
+          }
           this.setState({
             [type]: newInputs,
           });
