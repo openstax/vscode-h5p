@@ -94,7 +94,6 @@ const bookInputs: Array<{
       return <LO {...inputSetHandlerFactory(book, this.key)} />;
     },
     isInputSet: true,
-    isRequired: true,
   },
   {
     key: 'ap-lo',
@@ -225,7 +224,7 @@ const coders: Partial<
     keyof FormState,
     {
       encoder: (state: InputState) => any;
-      decoder: (value: unknown) => string;
+      decoder: (value: any) => string;
     }
   >
 > = {
@@ -237,7 +236,7 @@ const coders: Partial<
         'element-id': splitValue[1] ?? '',
       };
     },
-    decoder: (value: any) => {
+    decoder: (value) => {
       const moduleId = assertValue(
         assertType<string>(value['module'], 'string').split('/').at(-2)
       );
