@@ -121,9 +121,7 @@ describe('OpenstaxMetadataForm', () => {
           formDataOverride: {
             books: {
               'stax-psy': {
-                lo: [
-                  '1-2-3'
-                ]
+                lo: ['1-2-3'],
               },
             },
           },

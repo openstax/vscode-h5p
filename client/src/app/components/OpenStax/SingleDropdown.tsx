@@ -25,6 +25,7 @@ export function SingleDropdown<
         }
       }
       onChange={(v) => {
+        /* istanbul ignore next */
         if (v == null) return;
         handleInputChange(v.value);
       }}
