@@ -417,6 +417,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       key: keyof SavedState | keyof BookInputs,
       inputSet: InputState[]
     ) => {
+      /* istanbul ignore if (not currently utilized) */
       if (required.includes(key) && inputSet.length === 0) {
         this.onSaveError(`Expected at least one value for ${key}`);
         return false;
