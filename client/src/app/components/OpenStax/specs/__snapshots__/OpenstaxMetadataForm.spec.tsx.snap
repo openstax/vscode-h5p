@@ -3,7 +3,7 @@
 exports[`OpenstaxMetadataForm Form validation does not save when information is missing 1`] = `
 [
   [
-    "OpenStax Metadata: Expected at least one value for books",
+    "OpenStax Metadata: "blooms" cannot be empty.",
   ],
 ]
 `;
@@ -18,6 +18,14 @@ exports[`OpenstaxMetadataForm Form validation does not save when information is 
 
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
 {
+  "aacn": [],
+  "ap-lo": [
+    {
+      "book": "stax-apbio",
+      "isValid": true,
+      "value": "ABC.0.F",
+    },
+  ],
   "blooms": {
     "isValid": true,
     "value": "1",
@@ -27,9 +35,15 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "isValid": true,
       "value": "stax-psy",
     },
+    {
+      "isValid": true,
+      "value": "stax-apbio",
+    },
   ],
+  "hts": [],
   "lo": [
     {
+      "book": "stax-psy",
       "isValid": true,
       "value": "00-00-01",
     },
@@ -48,10 +62,19 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "value": "m000003#term-03",
     },
   ],
+  "nclex": [],
   "nickname": {
     "isValid": true,
     "value": "test",
   },
+  "rp": [],
+  "science-practice": [
+    {
+      "book": "stax-apbio",
+      "isValid": true,
+      "value": "concept-explanation",
+    },
+  ],
 }
 `;
 
@@ -60,19 +83,23 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
   [
     undefined,
     {
-      "aacn": "",
-      "apLo": [],
       "assignment-type": "",
       "blooms": "1",
-      "books": [
-        "stax-psy",
-      ],
+      "books": {
+        "stax-apbio": {
+          "ap-lo": [
+            "ABC.0.F",
+          ],
+          "science-practice": "concept-explanation",
+        },
+        "stax-psy": {
+          "lo": [
+            "00-00-01",
+          ],
+        },
+      },
       "dok-tag": "",
-      "hts": "",
       "is-solution-public": "true",
-      "lo": [
-        "00-00-01",
-      ],
       "module-id": [
         {
           "element-id": "",
@@ -87,10 +114,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
           "module": "modules/m000003/index.cnxml",
         },
       ],
-      "nclex": "",
       "nickname": "test",
-      "rp": "",
-      "science-practice": "",
       "time": "",
     },
   ],

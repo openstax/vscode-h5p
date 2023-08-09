@@ -144,6 +144,15 @@ describe('OpenstaxMetadataForm', () => {
           'element-id': splitValue[1] ?? '',
         };
       }),
+      books: {
+        'stax-psy': {
+          lo: ['00-00-01'],
+        },
+        'stax-apbio': {
+          'ap-lo': ['ABC.0.F'],
+          'science-practice': 'concept-explanation',
+        },
+      },
     };
     it('decodes form state when loading and encodes when saving', async () => {
       const controller = await initFormWithMinData({
