@@ -11,6 +11,7 @@ import AACN from '../AACN';
 import { act } from 'react-dom/test-utils';
 import ModuleID from '../ModuleID';
 import APLO from '../APLO';
+import { SingleDropdown } from '../SingleDropdown';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -78,7 +79,7 @@ describe('Inputs', () => {
   afterEach(cleanup);
 
   describe('SingleInput', () => {
-    it('displays the value and styles expected', () => {
+    it('displays the value and styles as expected', () => {
       let value = 'some invalid value';
       let input;
       const isValid = false;
@@ -107,6 +108,37 @@ describe('Inputs', () => {
       expect(input?.value).toBe(value);
       fireEvent.change(input!, { target: { value: 'test' } });
       expect(value).toBe('test');
+    });
+  });
+
+  describe('SingleDropdown', () => {
+    it('displays and changes values', () => {
+      const mockChange = jest.fn();
+      const options: DropdownOption[] = [
+        { value: 'a', label: 'a' },
+        { value: 'b', label: 'b' },
+        { value: 'c', label: 'c' },
+      ];
+
+      const props: SingleInputProps = {
+        value: '',
+        isValid: true,
+        handleInputChange: mockChange,
+      };
+
+      const { container } = render(
+        <SingleDropdown options={options} {...props} />
+      );
+
+      const input = container.querySelector('input[role="combobox"]');
+
+      // Type the letter 'a' and then press Enter
+      act(() => {
+        fireEvent.change(input!, { target: { value: 'b' } });
+        fireEvent.keyDown(input!, { keyCode: 13 });
+      });
+      // Should cause a change to be triggered
+      expect(mockChange).toHaveBeenCalledWith('b');
     });
   });
 
@@ -157,14 +189,15 @@ describe('Inputs', () => {
         expect(inputsState.length).toBe(expectedCount);
       });
     });
-    it('displays a list of select boxes when options are given', () => {
+    it('displays select boxes when options are given and supports changes', () => {
+      const mockChange = jest.fn();
       const state: InputSetProps = {
         inputs: [
           { value: '', isValid: true },
           { value: '', isValid: true },
           { value: '', isValid: true },
         ],
-        handleInputChange: () => {},
+        handleInputChange: mockChange,
         handleRemoveInput: () => {},
         handleAddInput: () => {},
       };
@@ -174,14 +207,20 @@ describe('Inputs', () => {
         { value: 'c', label: 'c' },
       ];
 
-      const { container, baseElement } = render(
+      const { container } = render(
         <InputSet title="Test" options={options} {...state} />
       );
 
-      const inputs = Array.from(container.querySelectorAll('*')).filter((el) =>
-        el.id.match(/react-select-\d+?-live-region/)
-      );
+      const inputs = container.querySelectorAll('input[role="combobox"]');
       expect(inputs.length).toBe(3);
+
+      // Type 'a' and hit Enter
+      act(() => {
+        fireEvent.change(inputs[0]!, { target: { value: 'a' } });
+        fireEvent.keyDown(inputs[0]!, { keyCode: 13 });
+      });
+      // Should cause a change to be triggered
+      expect(mockChange).toHaveBeenCalledWith(0, 'a');
     });
   });
 
