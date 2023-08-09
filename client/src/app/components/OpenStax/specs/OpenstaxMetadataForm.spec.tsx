@@ -4,6 +4,12 @@ import React from 'react';
 
 import OpenstaxMetadataForm from '../OpenstaxMetadataForm';
 import { IContentService } from '../../../services/ContentService';
+import {
+  AP_BOOKS,
+  AP_HISTORY_BOOKS,
+  AP_SCIENCE_BOOKS,
+  NURSING_BOOKS,
+} from '../constants';
 
 describe('OpenstaxMetadataForm', () => {
   const defaultMockContentService = {
@@ -19,9 +25,7 @@ describe('OpenstaxMetadataForm', () => {
 
   const minFormData = {
     nickname: 'test',
-    books: ['stax-psy'],
     blooms: 1,
-    lo: ['00-00-01'],
   };
 
   const createForm = async (formProps) => {
@@ -92,9 +96,10 @@ describe('OpenstaxMetadataForm', () => {
     [-1, 1].forEach((inc) => {
       const isAdd = inc > 0;
       it(`can ${isAdd ? 'add' : 'remove'} inputs in a set`, async () => {
-        const books = ['one'];
         const { container } = await initFormWithMinData({
-          formDataOverride: { books },
+          formDataOverride: {
+            'module-id': [{ module: 'a/b/c', 'element-id': '' }],
+          },
         });
         const inputCountBefore = container.querySelectorAll('input').length;
         const expectedCount = inputCountBefore + inc;
@@ -102,7 +107,7 @@ describe('OpenstaxMetadataForm', () => {
           ? '[data-control-type="input-set-add"]'
           : '[data-control-type="input-set-subtract"]';
         const button = container.querySelector(selector)?.firstElementChild;
-        expect(button).not.toBe(null);
+        expect(button).not.toBeFalsy();
         act(() => {
           fireEvent.click(button!, { button: 1 });
         });
@@ -111,31 +116,18 @@ describe('OpenstaxMetadataForm', () => {
     });
   });
   describe('Conditional Input Set', () => {
-    const apScienceBooks = ['stax-apphys', 'stax-apbio'];
-    const apHistoryBooks = ['stax-apush'];
-    const apAll = apScienceBooks.concat(apHistoryBooks);
-    const nursingBooks = [
-      'stax-matnewborn',
-      'stax-nursingskills',
-      'stax-psychnursing',
-      'stax-medsurg',
-      'stax-nursingfundamentals',
-      'stax-pharmacology',
-      'stax-nutrition',
-      'stax-pophealth',
-    ];
     const tests: Array<[string, string, string[]]> = [
-      ['AP LO', 'AP LO', apAll],
-      ['Science Practice', 'Science Practice', apScienceBooks],
-      ['Historical Thinking', 'Historical Thinking', apHistoryBooks],
-      ['AACN', 'AACN', nursingBooks],
-      ['NCLEX', 'NCLEX', nursingBooks],
+      ['AP LO', 'AP LO', AP_BOOKS],
+      ['Science Practice', 'Science Practice', AP_SCIENCE_BOOKS],
+      ['Historical Thinking', 'Historical Thinking', AP_HISTORY_BOOKS],
+      ['AACN', 'AACN', NURSING_BOOKS],
+      ['NCLEX', 'NCLEX', NURSING_BOOKS],
     ];
     tests.forEach(([name, text, books]) => {
       books.forEach((book) => {
         it(`shows "${name}" when "${book}" is selected`, async () => {
           const { getByText } = await initFormWithMinData({
-            formDataOverride: { books: [book] },
+            formDataOverride: { books: { [book]: {} } },
           });
           expect(await getByText(text)).toBeTruthy();
         });

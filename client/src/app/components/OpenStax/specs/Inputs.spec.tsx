@@ -29,7 +29,7 @@ function testSingleInputValidation(
 
   const { container } = render(factory(state));
   const input = container.querySelector('input');
-  expect(input).not.toBe(null);
+  expect(input).not.toBeFalsy();
   valuesToTest.forEach(([v, i]) => {
     fireEvent.change(input!, { target: { value: v } });
     expect(value).toBe(v);
@@ -150,7 +150,7 @@ describe('Inputs', () => {
         const button = container.querySelector(selector)?.firstElementChild;
         const countBefore = inputsState.length;
         const expectedCount = countBefore + inc;
-        expect(button).not.toBe(null);
+        expect(button).not.toBeFalsy();
         act(() => {
           fireEvent.click(button!, { button: 1 });
         });
