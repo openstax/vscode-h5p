@@ -636,6 +636,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                         borderRadius: '0.25em',
                         border: '1px solid rgba(0, 0, 0, 0.25)',
                       }}
+                      data-control-type="book"
                     >
                       <div
                         className="col-11"
@@ -650,14 +651,16 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                           }}
                         />
                       </div>
-                      <div className="col-1 p-0">
+                      <div
+                        className="col-1 p-0"
+                        data-control-type="remove-book"
+                      >
                         <Button
                           style={{ width: '100%' }}
                           onClick={() => {
                             bookHandlerProps.handleRemoveInput(idx);
                             handleBookChange(myBook);
                           }}
-                          data-control-type="remove-book"
                         >
                           -
                         </Button>

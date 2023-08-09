@@ -114,6 +114,36 @@ describe('OpenstaxMetadataForm', () => {
         expect(container.querySelectorAll('input').length).toBe(expectedCount);
       });
     });
+    [-1, 1].forEach((inc) => {
+      const isAdd = inc > 0;
+      it(`can ${isAdd ? 'add' : 'remove'} books`, async () => {
+        const { container } = await initFormWithMinData({
+          formDataOverride: {
+            books: {
+              'stax-psy': {
+                lo: [
+                  '1-2-3'
+                ]
+              },
+            },
+          },
+        });
+        const bookSelector = '[data-control-type="book"]';
+        const bookCountBefore = container.querySelectorAll(bookSelector).length;
+        const expectedCount = bookCountBefore + inc;
+        const selector = isAdd
+          ? '[data-control-type="add-book"]'
+          : '[data-control-type="remove-book"]';
+        const button = container.querySelector(selector)?.firstElementChild;
+        expect(button).toBeTruthy();
+        act(() => {
+          fireEvent.click(button!, { button: 1 });
+        });
+        expect(container.querySelectorAll(bookSelector).length).toBe(
+          expectedCount
+        );
+      });
+    });
   });
   describe('Conditional Input Set', () => {
     const tests: Array<[string, string, string[]]> = [
