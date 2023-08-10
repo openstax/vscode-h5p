@@ -75,6 +75,20 @@ function testInputSetValidation(
   }
 }
 
+function selectOption(container: HTMLElement, idx: number, value: string) {
+  const input = [...container.querySelectorAll('input[role="combobox"]')].find(
+    (el, i) => el.id.match(/^react-select-\d+-input$/) && i === idx
+  );
+  if (input === undefined) {
+    throw new Error('Failed to find input for select box');
+  }
+  act(() => {
+    // Type the value then press Enter
+    fireEvent.change(input, { target: { value } });
+    fireEvent.keyDown(input, { keyCode: 13 });
+  });
+}
+
 describe('Inputs', () => {
   afterEach(cleanup);
 
@@ -130,14 +144,8 @@ describe('Inputs', () => {
         <SingleDropdown options={options} {...props} />
       );
 
-      const input = container.querySelector('input[role="combobox"]');
-
-      // Type the letter 'a' and then press Enter
-      act(() => {
-        fireEvent.change(input!, { target: { value: 'b' } });
-        fireEvent.keyDown(input!, { keyCode: 13 });
-      });
       // Should cause a change to be triggered
+      selectOption(container, 0, 'b');
       expect(mockChange).toHaveBeenCalledWith('b');
     });
   });
