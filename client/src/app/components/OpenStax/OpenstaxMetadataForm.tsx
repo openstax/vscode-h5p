@@ -636,7 +636,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                       key={`book-${idx}`}
                       className="p-2 m-1 mb-2 row"
                       style={{
-                        backgroundColor: idx % 2 === 0 ? '#F8CECC' : '#DAE8FC',
+                        backgroundColor:
+                          idx % 2 === 0
+                            ? 'rgba(128, 128, 128, 0.5)'
+                            : 'rgba(128, 128, 128, 0.1)',
                         borderRadius: '0.25em',
                         border: '1px solid rgba(0, 0, 0, 0.25)',
                       }}
