@@ -3,7 +3,7 @@
   "displayName": "H5P Viewer",
   "publisher": "openstax",
   "description": "Visualize H5P files in VS Code",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "author": "OpenStax",
   "license": "MIT",
   "homepage": "https://openstax.org/",
