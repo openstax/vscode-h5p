@@ -336,7 +336,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                 .map(([stateKey, bookStates]): [string, string[]] => [
                   stateKey,
                   bookStates
-                    .filter((bookState) => bookState.book === book)
+                    .filter(
+                      (bookState) =>
+                        bookState.book === book && bookState.value !== ''
+                    )
                     .map((bookState) => bookState.value),
                 ])
                 .filter(([_, v]) => v.length > 0)
