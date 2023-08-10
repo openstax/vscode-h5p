@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  getByText,
+  getByDisplayValue,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
 
@@ -8,8 +14,12 @@ import {
   AP_BOOKS,
   AP_HISTORY_BOOKS,
   AP_SCIENCE_BOOKS,
+  BOOKS,
   NURSING_BOOKS,
 } from '../constants';
+
+const SEL_INPUT_SET_ADD = '[data-control-type="input-set-add"]';
+const SEL_INPUT_SET_REM = '[data-control-type="input-set-subtract"]';
 
 describe('OpenstaxMetadataForm', () => {
   const defaultMockContentService = {
@@ -71,6 +81,20 @@ describe('OpenstaxMetadataForm', () => {
     );
   };
 
+  const selectOption = (container: HTMLElement, idx: number, value: string) => {
+    const input = [
+      ...container.querySelectorAll('input[role="combobox"]'),
+    ].find((el, i) => el.id.match(/^react-select-\d+-input$/) && i === idx);
+    if (input === undefined) {
+      throw new Error('Failed to find input for select box');
+    }
+    act(() => {
+      // Type the value then press Enter
+      fireEvent.change(input, { target: { value } });
+      fireEvent.keyDown(input, { keyCode: 13 });
+    });
+  };
+
   afterEach(cleanup);
 
   beforeEach(() => jest.resetAllMocks());
@@ -103,9 +127,7 @@ describe('OpenstaxMetadataForm', () => {
         });
         const inputCountBefore = container.querySelectorAll('input').length;
         const expectedCount = inputCountBefore + inc;
-        const selector = isAdd
-          ? '[data-control-type="input-set-add"]'
-          : '[data-control-type="input-set-subtract"]';
+        const selector = isAdd ? SEL_INPUT_SET_ADD : SEL_INPUT_SET_REM;
         const button = container.querySelector(selector)?.firstElementChild;
         expect(button).not.toBeFalsy();
         act(() => {
@@ -114,6 +136,38 @@ describe('OpenstaxMetadataForm', () => {
         expect(container.querySelectorAll('input').length).toBe(expectedCount);
       });
     });
+  });
+  describe('Conditional Input Set', () => {
+    const tests: Array<[string, string, string[]]> = [
+      ['AP LO', 'AP Learning Objectives', AP_BOOKS],
+      ['Science Practice', 'Science Practice', AP_SCIENCE_BOOKS],
+      ['Historical Thinking', 'Historical Thinking', AP_HISTORY_BOOKS],
+      ['AACN', 'AACN', NURSING_BOOKS],
+      ['NCLEX', 'NCLEX', NURSING_BOOKS],
+    ];
+    tests.forEach(([name, text, books]) => {
+      books.forEach((book) => {
+        it(`shows "${name}" when "${book}" is selected`, async () => {
+          const { getByText } = await initFormWithMinData({
+            formDataOverride: { books: { [book]: {} } },
+          });
+          expect(await getByText(text)).toBeTruthy();
+        });
+      });
+    });
+  });
+  describe('Book inputs', () => {
+    const getBookInput = (
+      container: HTMLElement,
+      bookIdx: number,
+      name: string
+    ): Element | undefined => {
+      return Array.from(
+        Array.from(container.querySelectorAll('[data-control-type="book"]'))[
+          bookIdx
+        ]?.querySelectorAll('.container') ?? []
+      ).find((el) => el.querySelector('h3')?.textContent === name);
+    };
     [-1, 1].forEach((inc) => {
       const isAdd = inc > 0;
       it(`can ${isAdd ? 'add' : 'remove'} books`, async () => {
@@ -142,23 +196,115 @@ describe('OpenstaxMetadataForm', () => {
         );
       });
     });
-  });
-  describe('Conditional Input Set', () => {
-    const tests: Array<[string, string, string[]]> = [
-      ['AP LO', 'AP LO', AP_BOOKS],
-      ['Science Practice', 'Science Practice', AP_SCIENCE_BOOKS],
-      ['Historical Thinking', 'Historical Thinking', AP_HISTORY_BOOKS],
-      ['AACN', 'AACN', NURSING_BOOKS],
-      ['NCLEX', 'NCLEX', NURSING_BOOKS],
-    ];
-    tests.forEach(([name, text, books]) => {
-      books.forEach((book) => {
-        it(`shows "${name}" when "${book}" is selected`, async () => {
-          const { getByText } = await initFormWithMinData({
-            formDataOverride: { books: { [book]: {} } },
-          });
-          expect(await getByText(text)).toBeTruthy();
+    it('correctly adds and removes inputs in a set', async () => {
+      const { container } = await initFormWithMinData({
+        formDataOverride: {
+          books: {
+            'stax-psy': {
+              lo: ['1-2-3'],
+            },
+          },
+        },
+      });
+      const bookEl = getBookInput(container, 0, 'Learning Objectives');
+      const addButton =
+        bookEl!.querySelector(SEL_INPUT_SET_ADD)?.firstElementChild;
+      const remButton =
+        bookEl!.querySelector(SEL_INPUT_SET_REM)?.firstElementChild;
+
+      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
+
+      act(() => {
+        fireEvent.click(addButton!, { button: 1 });
+      });
+      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(2);
+
+      act(() => {
+        fireEvent.click(remButton!, { button: 1 });
+      });
+      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
+    });
+    it('correctly modifies inputs in a set', async () => {
+      let count = 0;
+      const getValue = () => {
+        return `not-modified-${count++}`;
+      };
+      const oldValue = getValue();
+      const newValue = 'stax-psy.lo[1]';
+      const { container, openstaxForm } = await initFormWithMinData({
+        formDataOverride: {
+          books: {
+            'stax-something-else': {
+              lo: [getValue()],
+            },
+            'stax-psy': {
+              lo: [getValue(), oldValue, getValue()],
+            },
+            'stax-anything': {
+              lo: [getValue()],
+            },
+          },
+        },
+      });
+      const bookInput = getBookInput(
+        container,
+        1,
+        'Learning Objectives'
+      ) as HTMLElement;
+      act(() => {
+        fireEvent.change(getByDisplayValue(bookInput, oldValue)!, {
+          target: { value: newValue },
         });
+      });
+      expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
+    });
+    it('correctly modifies inputs', async () => {
+      let count = 0;
+      const getValue = () => {
+        return `not-modified-${count++}`;
+      };
+      const oldValue = '';
+      const newValue = 'modified';
+      const { container, openstaxForm } = await initFormWithMinData({
+        formDataOverride: {
+          books: {
+            'stax-nutrition': {
+              aacn: getValue(),
+            },
+            'stax-pharmacology': {
+              // Empty to test adding state for inputs
+            },
+            'stax-pophealth': {
+              aacn: getValue(),
+            },
+          },
+        },
+      });
+      const bookInput = getBookInput(container, 1, 'AACN') as HTMLElement;
+      act(() => {
+        fireEvent.change(getByDisplayValue(bookInput, oldValue)!, {
+          target: { value: newValue },
+        });
+      });
+      expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
+    });
+    describe('handleBookChange', () => {
+      it('keeps input values when they exist on the new book', async () => {
+        const { container, openstaxForm } = await initFormWithMinData({
+          formDataOverride: {
+            books: {
+              'stax-amfg': {
+                lo: ['test-carry-state-to-stax-usgovt'],
+              },
+              'stax-psy': {
+                lo: ['test-keep-state-on-stax-psy'],
+              },
+            },
+          },
+        });
+        const bookEl = container.querySelector('[data-control-type="book"]');
+        selectOption(bookEl, 0, 'stax-usgovt');
+        expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
       });
     });
   });

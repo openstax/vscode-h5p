@@ -1,5 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
+{
+  "assignment-type": "",
+  "blooms": "1",
+  "books": {
+    "stax-nutrition": {
+      "aacn": "not-modified-0",
+    },
+    "stax-pharmacology": {
+      "aacn": "modified",
+    },
+    "stax-pophealth": {
+      "aacn": "not-modified-1",
+    },
+  },
+  "dok-tag": "",
+  "is-solution-public": "true",
+  "module-id": [],
+  "nickname": "test",
+  "time": "",
+}
+`;
+
+exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`] = `
+{
+  "assignment-type": "",
+  "blooms": "1",
+  "books": {
+    "stax-anything": {
+      "lo": [
+        "not-modified-4",
+      ],
+    },
+    "stax-psy": {
+      "lo": [
+        "not-modified-2",
+        "stax-psy.lo[1]",
+        "not-modified-3",
+      ],
+    },
+    "stax-something-else": {
+      "lo": [
+        "not-modified-1",
+      ],
+    },
+  },
+  "dok-tag": "",
+  "is-solution-public": "true",
+  "module-id": [],
+  "nickname": "test",
+  "time": "",
+}
+`;
+
+exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values when they exist on the new book 1`] = `
+{
+  "assignment-type": "",
+  "blooms": "1",
+  "books": {
+    "stax-psy": {
+      "lo": [
+        "test-keep-state-on-stax-psy",
+      ],
+    },
+    "stax-usgovt": {
+      "lo": [
+        "test-carry-state-to-stax-usgovt",
+      ],
+    },
+  },
+  "dok-tag": "",
+  "is-solution-public": "true",
+  "module-id": [],
+  "nickname": "test",
+  "time": "",
+}
+`;
+
 exports[`OpenstaxMetadataForm Form validation does not save when information is missing 1`] = `
 [
   [
