@@ -11,5 +11,11 @@ export default function LO(props: InputSetProps) {
     },
   };
 
-  return <InputSet title={'LO'} {...subProps} placeholder={placeholder} />;
+  return (
+    <InputSet
+      title={'Learning Objectives'}
+      {...subProps}
+      placeholder={placeholder}
+    />
+  );
 }

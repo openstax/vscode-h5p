@@ -10,7 +10,7 @@ const options = collect(range(1, 5))
 export default function DokTag(props: SingleInputProps) {
   return (
     <BasicFormComponent
-      title={'DOK'}
+      title={'Depth of Knowledge'}
       content={<SingleDropdown options={options} {...props} />}
     />
   );
