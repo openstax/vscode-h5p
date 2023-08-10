@@ -9,7 +9,7 @@ const PATTERNS = {
     pattern: /^\d[-.][A-Z][-.]\d{1,2}[-.]\d$/,
     placeholder: '#.[A-Z].#{1,2}.#',
   },
-  // TODO: stax-apush ?
+  // TODO: stax-apush (Probably not an issue, book in limbo)
 };
 
 export default function APLO(props: InputSetProps & { book: string }) {
@@ -24,5 +24,11 @@ export default function APLO(props: InputSetProps & { book: string }) {
     },
   };
 
-  return <InputSet title={'AP LO'} {...subProps} placeholder={placeholder} />;
+  return (
+    <InputSet
+      title={'AP Learning Objectives'}
+      {...subProps}
+      placeholder={placeholder}
+    />
+  );
 }
