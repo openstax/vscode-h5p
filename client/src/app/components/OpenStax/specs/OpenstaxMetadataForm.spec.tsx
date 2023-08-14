@@ -2,7 +2,6 @@ import {
   cleanup,
   fireEvent,
   render,
-  getByText,
   getByDisplayValue,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -14,12 +13,15 @@ import {
   AP_BOOKS,
   AP_HISTORY_BOOKS,
   AP_SCIENCE_BOOKS,
-  BOOKS,
   NURSING_BOOKS,
 } from '../constants';
 
 const SEL_INPUT_SET_ADD = '[data-control-type="input-set-add"]';
 const SEL_INPUT_SET_REM = '[data-control-type="input-set-subtract"]';
+
+const SEL_BOOK = '[data-control-type="book"]';
+const SEL_BOOK_REM = '[data-control-type="remove-book"]';
+const SEL_BOOK_ADD = '[data-control-type="add-book"]';
 
 describe('OpenstaxMetadataForm', () => {
   const defaultMockContentService = {
@@ -88,9 +90,11 @@ describe('OpenstaxMetadataForm', () => {
     if (input === undefined) {
       throw new Error('Failed to find input for select box');
     }
+    // Type the value then press Enter
     act(() => {
-      // Type the value then press Enter
       fireEvent.change(input, { target: { value } });
+    });
+    act(() => {
       fireEvent.keyDown(input, { keyCode: 13 });
     });
   };
@@ -157,16 +161,24 @@ describe('OpenstaxMetadataForm', () => {
     });
   });
   describe('Book inputs', () => {
+    const getBook = (
+      container: HTMLElement,
+      idx: number
+    ): HTMLElement | undefined => {
+      const el = container.querySelectorAll(SEL_BOOK)[idx];
+      return el === undefined ? undefined : (el as HTMLElement);
+    };
     const getBookInput = (
       container: HTMLElement,
       bookIdx: number,
       name: string
-    ): Element | undefined => {
-      return Array.from(
-        Array.from(container.querySelectorAll('[data-control-type="book"]'))[
+    ): HTMLElement | undefined => {
+      const el = Array.from(
+        Array.from(container.querySelectorAll(SEL_BOOK))[
           bookIdx
         ]?.querySelectorAll('.container') ?? []
       ).find((el) => el.querySelector('h3')?.textContent === name);
+      return el === undefined ? undefined : (el as HTMLElement);
     };
     [-1, 1].forEach((inc) => {
       const isAdd = inc > 0;
@@ -180,20 +192,15 @@ describe('OpenstaxMetadataForm', () => {
             },
           },
         });
-        const bookSelector = '[data-control-type="book"]';
-        const bookCountBefore = container.querySelectorAll(bookSelector).length;
+        const bookCountBefore = container.querySelectorAll(SEL_BOOK).length;
         const expectedCount = bookCountBefore + inc;
-        const selector = isAdd
-          ? '[data-control-type="add-book"]'
-          : '[data-control-type="remove-book"]';
+        const selector = isAdd ? SEL_BOOK_ADD : SEL_BOOK_REM;
         const button = container.querySelector(selector)?.firstElementChild;
         expect(button).toBeTruthy();
         act(() => {
           fireEvent.click(button!, { button: 1 });
         });
-        expect(container.querySelectorAll(bookSelector).length).toBe(
-          expectedCount
-        );
+        expect(container.querySelectorAll(SEL_BOOK).length).toBe(expectedCount);
       });
     });
     it('correctly adds and removes inputs in a set', async () => {
@@ -206,23 +213,23 @@ describe('OpenstaxMetadataForm', () => {
           },
         },
       });
-      const bookEl = getBookInput(container, 0, 'Learning Objectives');
+      const bookInput = getBookInput(container, 0, 'Learning Objectives')!;
       const addButton =
-        bookEl!.querySelector(SEL_INPUT_SET_ADD)?.firstElementChild;
+        bookInput.querySelector(SEL_INPUT_SET_ADD)?.firstElementChild;
       const remButton =
-        bookEl!.querySelector(SEL_INPUT_SET_REM)?.firstElementChild;
+        bookInput.querySelector(SEL_INPUT_SET_REM)?.firstElementChild;
 
-      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
+      expect(bookInput.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
 
       act(() => {
         fireEvent.click(addButton!, { button: 1 });
       });
-      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(2);
+      expect(bookInput.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(2);
 
       act(() => {
         fireEvent.click(remButton!, { button: 1 });
       });
-      expect(bookEl!.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
+      expect(bookInput.querySelectorAll(SEL_INPUT_SET_REM).length).toBe(1);
     });
     it('correctly modifies inputs in a set', async () => {
       let count = 0;
@@ -234,7 +241,7 @@ describe('OpenstaxMetadataForm', () => {
       const { container, openstaxForm } = await initFormWithMinData({
         formDataOverride: {
           books: {
-            'stax-something-else': {
+            'stax-should-be-removed': {
               lo: [getValue()],
             },
             'stax-psy': {
@@ -246,16 +253,33 @@ describe('OpenstaxMetadataForm', () => {
           },
         },
       });
-      const bookInput = getBookInput(
-        container,
-        1,
-        'Learning Objectives'
-      ) as HTMLElement;
       act(() => {
-        fireEvent.change(getByDisplayValue(bookInput, oldValue)!, {
-          target: { value: newValue },
-        });
+        fireEvent.change(
+          getByDisplayValue(
+            getBookInput(container, 1, 'Learning Objectives')!,
+            oldValue
+          )!,
+          {
+            target: { value: newValue },
+          }
+        );
       });
+      // Remove a book
+      act(() => {
+        fireEvent.click(
+          container.querySelector(SEL_BOOK_REM)!.firstElementChild,
+          { button: 1 }
+        );
+      });
+      // Add a book
+      act(() => {
+        fireEvent.click(
+          container.querySelector(SEL_BOOK_ADD)!.firstElementChild,
+          { button: 1 }
+        );
+      });
+      // Add another option
+      selectOption(getBook(container, 2)!, 0, 'stax-amfg');
       expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
     });
     it('correctly modifies inputs', async () => {
@@ -280,11 +304,13 @@ describe('OpenstaxMetadataForm', () => {
           },
         },
       });
-      const bookInput = getBookInput(container, 1, 'AACN') as HTMLElement;
       act(() => {
-        fireEvent.change(getByDisplayValue(bookInput, oldValue)!, {
-          target: { value: newValue },
-        });
+        fireEvent.change(
+          getByDisplayValue(getBookInput(container, 1, 'AACN')!, oldValue)!,
+          {
+            target: { value: newValue },
+          }
+        );
       });
       expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
     });
@@ -302,8 +328,7 @@ describe('OpenstaxMetadataForm', () => {
             },
           },
         });
-        const bookEl = container.querySelector('[data-control-type="book"]');
-        selectOption(bookEl, 0, 'stax-usgovt');
+        selectOption(getBook(container, 0)!, 0, 'stax-usgovt');
         expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
       });
     });
