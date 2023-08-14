@@ -28,6 +28,7 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
   "assignment-type": "",
   "blooms": "1",
   "books": {
+    "stax-amfg": {},
     "stax-anything": {
       "lo": [
         "not-modified-4",
@@ -38,11 +39,6 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
         "not-modified-2",
         "stax-psy.lo[1]",
         "not-modified-3",
-      ],
-    },
-    "stax-something-else": {
-      "lo": [
-        "not-modified-1",
       ],
     },
   },
