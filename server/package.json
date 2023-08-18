@@ -48,6 +48,7 @@
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@types/unzip-stream": "0.3.1",
+    "@wiris/mathtype-ckeditor4": "^8.5.0",
     "jest": "^29.5.0",
     "mock-fs": "^5.2.0",
     "prettier": "^2.7.1",
@@ -58,9 +59,9 @@
   },
   "scripts": {
     "build": "esbuild ./src/server.ts --bundle --outfile=out/server.js --external:vscode --format=cjs --platform=node --minify",
-    "build:h5p-libs": "npx ts-node --swc ./downloadLibraries.ts",
+    "build:h5p-archive": "npx ts-node --swc ./scripts/downloadLibraries.ts",
     "build:copy-extras": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out && cp -r static out",
-    "postbuild": "npm run build:copy-extras && npm run build:h5p-libs",
+    "postbuild": "npm run build:copy-extras && npm run build:h5p-archive",
     "build:ts": "tsc -b",
     "test": "npx jest --updateSnapshot"
   }

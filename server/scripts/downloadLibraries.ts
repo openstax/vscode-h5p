@@ -1,18 +1,20 @@
 import * as os from 'os';
 import * as H5P from '@lumieducation/h5p-server';
-import Config from './src/models/OpenStax/config';
-import User from './src/models/H5PUser';
-import { createH5PEditor } from './src/createH5PServer';
+import Config from '../src/models/OpenStax/config';
+import User from '../src/models/H5PUser';
+import { createH5PEditor } from '../src/createH5PServer';
 import { machineIdSync } from 'node-machine-id';
 import * as qs from 'qs';
 import fetch from 'node-fetch';
 import fsExtra from 'fs-extra';
 import * as tar from 'tar';
-import { extractArchive } from './src/utils';
+import { extractArchive } from '../src/utils';
 import path from 'path';
+import { exec } from 'child_process';
 
+const SERVER_ROOT = `${__dirname}/..`;
 const archiveFile = path.resolve(
-  process.argv[2] ?? `${__dirname}/out/${Config.librariesArchiveName}`
+  process.argv[2] ?? `${SERVER_ROOT}/out/${Config.h5pServerArchiveName}`
 );
 const tempFolderPath = os.tmpdir() + '/h5p_builder';
 const config = new H5P.H5PConfig(undefined, Config.h5pConfig);
@@ -40,7 +42,19 @@ const registrationData = {
 
 const user = new User();
 
-async function main() {
+function sh(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve({ error, stdout, stderr });
+      }
+    });
+  });
+}
+
+async function downloadH5PLibs() {
   console.log('Updating H5P libraries...');
   const response = await fetch(config.hubContentTypesEndpoint, {
     method: 'POST',
@@ -53,7 +67,10 @@ async function main() {
   const librariesPath = `${tempFolderPath}/libraries`;
   // Include existing versions of libraries
   if (fsExtra.pathExistsSync(archiveFile)) {
-    await extractArchive(archiveFile, librariesPath, false);
+    fsExtra.ensureDirSync(librariesPath);
+    await extractArchive(archiveFile, tempFolderPath, false, undefined, {
+      strip: 0,
+    });
   }
   const existingLibraries = await Promise.all(
     fsExtra
@@ -103,6 +120,21 @@ async function main() {
       }
     })
   );
+}
+
+async function includePatchedMathtype() {
+  const ckeditorPlugins = `${tempFolderPath}/editor/ckeditor/plugins`;
+  const mathTypePlugin = `${ckeditorPlugins}/ckeditor_wiris`;
+  const nodeModules = `${SERVER_ROOT}/node_modules`;
+  const patchFile = `${__dirname}/mathtype-plugin-js.patch`;
+
+  console.log('Patching and including ckeditor_wiris plugin...');
+  fsExtra.ensureDirSync(ckeditorPlugins);
+  fsExtra.copySync(`${nodeModules}/@wiris/mathtype-ckeditor4/`, mathTypePlugin);
+  await sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
+}
+
+async function createArchive(files) {
   fsExtra.ensureDirSync(path.dirname(archiveFile));
   // Chdir into temp folder so the archived file paths are relative to that location
   process.chdir(tempFolderPath);
@@ -111,9 +143,15 @@ async function main() {
       gzip: true,
       file: archiveFile,
     },
-    ['libraries']
+    files
   );
   process.chdir(__dirname);
+}
+
+async function main() {
+  await downloadH5PLibs();
+  await includePatchedMathtype();
+  await createArchive(['libraries', 'editor']);
 }
 
 main()
