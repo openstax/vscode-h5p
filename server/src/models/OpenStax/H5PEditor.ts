@@ -1,6 +1,7 @@
 import {
   IH5PEditorOptions,
   IHubInfo,
+  ISemanticsEntry,
 } from '@lumieducation/h5p-server/build/src/types';
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
@@ -29,7 +30,49 @@ export default class OSH5PEditor extends H5P.H5PEditor {
       temporaryStorage,
       translationCallback,
       urlGenerator,
-      options,
+      {
+        ...options,
+        customization: {
+          ...options?.customization,
+          alterLibrarySemantics(library, semantics) {
+            const addMathTag = (semantics: ISemanticsEntry[]) => {
+              for (let field of semantics) {
+                while (field.type === 'list') {
+                  field = field.field!;
+                }
+                if (field.type === 'group') {
+                  addMathTag(field.fields!);
+                  continue;
+                }
+                if (field.type === 'text' && field.widget === 'html') {
+                  field.tags = (field.tags ?? []).concat(['math']);
+                }
+              }
+            };
+            const semanticMods =
+              Config.supportedLibraries[library.machineName]?.semantics;
+            const clone: ISemanticsEntry[] = semantics.map((obj) => ({
+              ...obj,
+            }));
+            if (semanticMods?.supportsMath === true) {
+              addMathTag(clone);
+            }
+            const overrides = semanticMods?.behaviourOverrides;
+            if (overrides !== undefined) {
+              const behaviorSettings = clone.find(
+                (s) => s.name === 'behaviour'
+              );
+              if (behaviorSettings?.fields !== undefined) {
+                behaviorSettings.fields = behaviorSettings.fields.map((f) => ({
+                  ...f,
+                  ...overrides[f.name],
+                }));
+              }
+            }
+            return clone;
+          },
+        },
+      },
       contentUserDataStorage
     );
   }

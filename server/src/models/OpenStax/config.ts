@@ -13,6 +13,10 @@ import {
 type SupportedLibrary = {
   yankAnswers: Yanker;
   unyankAnswers: Unyanker;
+  semantics?: {
+    supportsMath?: boolean;
+    behaviourOverrides?: Record<string, Record<string, any>>;
+  };
 };
 
 export default class Config {
@@ -28,6 +32,17 @@ export default class Config {
       'H5P.Blanks': {
         yankAnswers: blanksYanker,
         unyankAnswers: shallowMerge,
+        semantics: {
+          supportsMath: true,
+          behaviourOverrides: {
+            enableRetry: {
+              default: false,
+            },
+            enableSolutionsButton: {
+              default: false,
+            },
+          },
+        },
       },
       'H5P.MultiChoice': {
         yankAnswers: multiChoiceYanker,
