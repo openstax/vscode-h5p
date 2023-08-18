@@ -59,7 +59,8 @@
   "scripts": {
     "build": "esbuild ./src/server.ts --bundle --outfile=out/server.js --external:vscode --format=cjs --platform=node --minify",
     "build:h5p-libs": "npx ts-node --swc ./downloadLibraries.ts",
-    "postbuild": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out && npm run build:h5p-libs",
+    "build:copy-extras": "cp -r ./node_modules/@lumieducation/h5p-server/build/src/schemas out && cp -r static out",
+    "postbuild": "npm run build:copy-extras && npm run build:h5p-libs",
     "build:ts": "tsc -b",
     "test": "npx jest --updateSnapshot"
   }

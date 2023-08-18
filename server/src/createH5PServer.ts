@@ -82,14 +82,6 @@ export async function prepareEnvironment(globalConfig: Config) {
   }
 }
 
-function buildServerURL(port: number): string {
-  if (process.env['GITPOD_WORKSPACE_ID']) {
-    return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
-  } else {
-    return `http://localhost:${port}`;
-  }
-}
-
 export function createH5PEditor(
   config: H5P.IH5PConfig,
   localLibraryPath: string,
@@ -156,7 +148,6 @@ export function createH5PEditor(
 export async function startH5P(globalConfig: Config) {
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
-  const server_url = buildServerURL(globalConfig.port);
   // Load the configuration file from the local file system
   fs.readFile(`${tempFolderPath}/config.json`, (err, data) => {
     if (err) throw err;
@@ -175,7 +166,7 @@ export async function startH5P(globalConfig: Config) {
     protectContentUserData: false,
     protectSetFinished: false,
   });
-  urlGenerator.baseUrl = () => `${server_url}/h5p`;
+  urlGenerator.baseUrl = () => `${Config.serverUrl}/h5p`;
   // The H5PEditor object is central to all operations of h5p-nodejs-library
   // if you want to user the editor component.
   //
@@ -233,10 +224,12 @@ export async function startH5P(globalConfig: Config) {
   process.env['DEBUG'] = '*';
 
   const server = new OSH5PServer(h5pEditor, h5pPlayer, tempFolderPath);
-  server.start(globalConfig.port);
+  server.start(Config.port);
   await extractArchive(
-    `${__dirname}/${Config.librariesArchiveName}`,
-    `${tempFolderPath}/libraries`,
-    false
+    `${__dirname}/${Config.h5pServerArchiveName}`,
+    `${tempFolderPath}`,
+    false,
+    undefined,
+    { strip: 0 }
   );
 }

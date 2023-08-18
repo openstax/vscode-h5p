@@ -34,6 +34,11 @@ export default class OSH5PEditor extends H5P.H5PEditor {
         ...options,
         customization: {
           ...options?.customization,
+          global: {
+            scripts: [
+              `${Config.serverUrl}/static/ckeditor-plugins/mathtype.js`,
+            ],
+          },
           alterLibrarySemantics(library, semantics) {
             const addMathTag = (semantics: ISemanticsEntry[]) => {
               for (let field of semantics) {

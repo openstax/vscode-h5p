@@ -23,9 +23,13 @@ export default class Config {
   constructor(
     public workspaceRoot: string,
     public contentPath: string = 'interactives',
-    public privatePath: string = 'private',
-    public port: number = Number(process.env.PORT) || 27149
+    public privatePath: string = 'private'
   ) {}
+
+  public static readonly port: number = Number(process.env.PORT) || 27149;
+  public static readonly serverUrl: string = process.env['GITPOD_WORKSPACE_ID']
+    ? `https://${Config.port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
+    : `http://localhost:${Config.port}`;
 
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
@@ -80,7 +84,7 @@ export default class Config {
     },
   };
 
-  public static readonly librariesArchiveName = `h5p-libraries.tar.gz`;
+  public static readonly h5pServerArchiveName = `h5p-server.tar.gz`;
 
   public get contentDirectory() {
     return `${this.workspaceRoot}/${this.contentPath}`;
