@@ -90,11 +90,12 @@ export async function extractArchive(
   path: string,
   destinationFolder: string,
   deleteArchive: boolean,
-  filesToExtract?: string[]
+  filesToExtract?: string[],
+  opt: decompress.DecompressOptions = { strip: 1 }
 ): Promise<void> {
   console.log(`Extracting file ${path}`);
   try {
-    const files = await decompress(path, destinationFolder, { strip: 1 });
+    const files = await decompress(path, destinationFolder, opt);
     console.log('Files extracted');
     if (filesToExtract) {
       files
