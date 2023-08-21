@@ -9,6 +9,73 @@ import Config from './config';
 
 const supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
+const mathTags = [
+  'math',
+  'maction',
+  'annotation',
+  'annotation-xml',
+  'menclose',
+  'merror',
+  'mfenced',
+  'mfrac',
+  'mi',
+  'mmultiscripts',
+  'mn',
+  'mo',
+  'mover',
+  'mpadded',
+  'mphantom',
+  'mprescripts',
+  'mroot',
+  'mrow',
+  'ms',
+  'semantics',
+  'mspace',
+  'msqrt',
+  'mstyle',
+  'msub',
+  'msup',
+  'msubsup',
+  'mtable',
+  'mtd',
+  'mtext',
+  'mtr',
+  'munder',
+  'munderover',
+  'math',
+  'mi',
+  'mn',
+  'mo',
+  'ms',
+  'mspace',
+  'mtext',
+  'menclose',
+  'merror',
+  'mfenced',
+  'mfrac',
+  'mpadded',
+  'mphantom',
+  'mroot',
+  'mrow',
+  'msqrt',
+  'mstyle',
+  'mmultiscripts',
+  'mover',
+  'mprescripts',
+  'msub',
+  'msubsup',
+  'msup',
+  'munder',
+  'munderover',
+  'mtable',
+  'mtd',
+  'mtr',
+  'maction',
+  'annotation',
+  'annotation-xml',
+  'semantics',
+];
+
 export default class OSH5PEditor extends H5P.H5PEditor {
   constructor(
     cache: H5P.IKeyValueStorage,
@@ -40,17 +107,18 @@ export default class OSH5PEditor extends H5P.H5PEditor {
             ],
           },
           alterLibrarySemantics(library, semantics) {
-            const addMathTag = (semantics: ISemanticsEntry[]) => {
+            const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
+              // Based on https://h5p.org/adding-text-editor-buttons#highlighter_482820
               for (let field of semantics) {
                 while (field.type === 'list') {
                   field = field.field!;
                 }
                 if (field.type === 'group') {
-                  addMathTag(field.fields!);
+                  addTags(field.fields!, tags);
                   continue;
                 }
                 if (field.type === 'text' && field.widget === 'html') {
-                  field.tags = (field.tags ?? []).concat(['math']);
+                  field.tags = (field.tags ?? []).concat(tags);
                 }
               }
             };
@@ -60,7 +128,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
               ...obj,
             }));
             if (semanticMods?.supportsMath === true) {
-              addMathTag(clone);
+              addTags(clone, mathTags);
             }
             const overrides = semanticMods?.behaviourOverrides;
             if (overrides !== undefined) {
