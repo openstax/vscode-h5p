@@ -56,7 +56,7 @@ export default class OSStorage extends H5P.fsImplementations
       .filter((d) => d.isDirectory())
       .map((d) => parseInt(d.name))
       .filter((n) => !isNaN(n))
-      .sort();
+      .sort((a, b) => a - b);
     const i = numbered.findIndex((v, idx) => v - idxOffset !== idx);
     return ((i === -1 ? numbered.length : i) + idxOffset).toString();
   }

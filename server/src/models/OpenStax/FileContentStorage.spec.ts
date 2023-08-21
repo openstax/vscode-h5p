@@ -54,6 +54,17 @@ describe('File Content Storage', () => {
     expect(
       await storage.addContent(
         {
+          title: 'this should be stored in folder 100',
+        } as any,
+        {},
+        {} as any,
+        '100'
+      )
+    ).toBe('100');
+    await storage.saveOSMeta('100', { books: ['meta-1'] });
+    expect(
+      await storage.addContent(
+        {
           title: 'this should be stored in folder 2',
           mainLibrary: 'something',
           language: 'U',

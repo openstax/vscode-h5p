@@ -109,6 +109,20 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
     },
+    "100": {
+      "content.json": "{}
+",
+      "h5p.json": "{
+  "title": "this should be stored in folder 100"
+}
+",
+      "metadata.json": "{
+  "books": [
+    "meta-1"
+  ]
+}
+",
+    },
     "2": {
       "content.json": "{
   "this": "could",
