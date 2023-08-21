@@ -1,14 +1,12 @@
-0a1,13
+0a1,11
 > const ORIGINAL_STRING_INDEX_OF = String.prototype.indexOf;
 > String.prototype.indexOf = function (searchString, position) {
->   if (
->     searchString === 'http' &&
->     position === undefined &&
->     this.startsWith('vscode-webview://')
->   ) {
->     String.prototype.indexOf = ORIGINAL_STRING_INDEX_OF;
->     return 0;
->   }
->   return ORIGINAL_STRING_INDEX_OF.call(this, searchString, position);
+>   return ORIGINAL_STRING_INDEX_OF.call(
+>     searchString === 'http' && this.startsWith('vscode-webview')
+>       ? this.replace('vscode-webview', 'http')
+>       : this,
+>     searchString,
+>     position
+>   );
 > };
 > window.alert = console.log;
