@@ -28,7 +28,7 @@ export default class OSH5PServer extends H5PServer<OSH5PEditor> {
     }
   }
 
-  protected get metadataRouter() {
+  protected createMetadataRouter() {
     const router = express.Router();
     router.get('/:contentId/openstax-metadata/', (req: any, res) =>
       this.getMetadata(req, res)
@@ -39,15 +39,18 @@ export default class OSH5PServer extends H5PServer<OSH5PEditor> {
     return router;
   }
 
-  protected get staticRouter() {
+  protected createStaticRouter(staticPath) {
     const router = express.Router();
-    router.use(express.static(path.join(__dirname, 'static')));
+    router.use(express.static(staticPath));
     return router;
   }
 
   protected configureMiddleware(server: express.Express, port: number): void {
     super.configureMiddleware(server, port);
-    server.use(this.h5pEditor.config.baseUrl, this.metadataRouter);
-    server.use('/static', this.staticRouter);
+    server.use(this.h5pEditor.config.baseUrl, this.createMetadataRouter());
+    server.use(
+      '/static',
+      this.createStaticRouter(path.join(__dirname, 'static'))
+    );
   }
 }
