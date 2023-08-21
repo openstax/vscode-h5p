@@ -51,6 +51,9 @@ export default class Config {
       'H5P.MultiChoice': {
         yankAnswers: multiChoiceYanker,
         unyankAnswers: shallowMerge,
+        semantics: {
+          supportsMath: true,
+        },
       },
       'H5P.QuestionSet': {
         yankAnswers: questionSetYanker,
