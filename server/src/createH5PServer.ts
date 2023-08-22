@@ -214,6 +214,11 @@ export async function startH5P(globalConfig: Config) {
           H5P.Permission.View,
         ];
       },
+      customization: {
+        global: {
+          scripts: [`${Config.serverUrl}/static/player-plugins/mathjax.js`],
+        },
+      },
     }
   );
 
