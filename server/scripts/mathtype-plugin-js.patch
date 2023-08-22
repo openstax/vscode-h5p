@@ -1,4 +1,4 @@
-0a1,11
+0a1,73
 > const ORIGINAL_STRING_INDEX_OF = String.prototype.indexOf;
 > String.prototype.indexOf = function (searchString, position) {
 >   return ORIGINAL_STRING_INDEX_OF.call(
@@ -10,3 +10,65 @@
 >   );
 > };
 > window.alert = console.log;
+> window.open = function(_url, name, features) {
+>   const htmlWin = document.createElement("div");
+>   const html = document.createElement("div");
+>   const body = document.createElement("div");
+>   const featureDef = Object.fromEntries(
+>     features.split(",").map((f) => f.trim().split("="))
+>   );
+>   const parentDialog = document.getElementById("wrs_modal_wrapper[0]");
+>   const rect = parentDialog?.getBoundingClientRect();
+>   const width = featureDef.width?.concat("px") || "400px";
+>   const height = featureDef.height?.concat("px") || "400px";
+> 
+>   htmlWin.id = name;
+>   htmlWin.style.minWidth = width;
+>   htmlWin.style.minHeight = height;
+>   html.style.minWidth = width;
+>   html.style.minHeight = height;
+>   body.style.minWidth = width;
+>   body.style.minHeight = height;
+> 
+>   htmlWin.style.padding = "10px";
+>   htmlWin.style.backgroundColor = "white";
+>   htmlWin.style.border = "1px solid gray";
+>   htmlWin.style.position = "absolute";
+> 
+>   if (rect) {
+>     htmlWin.style.top = rect.top + "px";
+>   }
+> 
+>   document.body.appendChild(htmlWin);
+>   htmlWin.appendChild(html);
+>   html.appendChild(body);
+> 
+>   const ret = {
+>     document: {
+>       createElement(...args) {
+>         return document.createElement(...args);
+>       },
+>       body,
+>     },
+>     onresize: null,
+>     _onload: null,
+>     get onload() {
+>       return this._onload;
+>     },
+>     set onload(value) {
+>       this._onload = value;
+>       // wiris editor calls the window's onload method manually immediately
+>       // after setting up the onload. Do not call it twice.
+>       // value();
+>     },
+>     close() {
+>       if (!this.closed) {
+>         document.body.removeChild(htmlWin);
+>       }
+>     },
+>     get closed() {
+>       return !document.getElementById(name);
+>     },
+>   };
+>   return ret;
+> };
