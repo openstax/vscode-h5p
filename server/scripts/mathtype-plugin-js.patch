@@ -1,4 +1,4 @@
-0a1,73
+0a1,86
 > const ORIGINAL_STRING_INDEX_OF = String.prototype.indexOf;
 > String.prototype.indexOf = function (searchString, position) {
 >   return ORIGINAL_STRING_INDEX_OF.call(
@@ -10,36 +10,48 @@
 >   );
 > };
 > window.alert = console.log;
-> window.open = function(_url, name, features) {
+> window.open = function(url, name, features) {
 >   const htmlWin = document.createElement("div");
 >   const html = document.createElement("div");
 >   const body = document.createElement("div");
+>   const titleBar = document.createElement("div");
+>   const titleEl = document.createElement("div");
+>   const closeButton = document.createElement("button");
 >   const featureDef = Object.fromEntries(
 >     features.split(",").map((f) => f.trim().split("="))
 >   );
->   const parentDialog = document.getElementById("wrs_modal_wrapper[0]");
->   const rect = parentDialog?.getBoundingClientRect();
 >   const width = featureDef.width?.concat("px") || "400px";
 >   const height = featureDef.height?.concat("px") || "400px";
 > 
+>   [htmlWin, html, body].forEach((el) => {
+>     el.style.minWidth = width;
+>     el.style.minHeight = height;
+>   });
+>   
 >   htmlWin.id = name;
->   htmlWin.style.minWidth = width;
->   htmlWin.style.minHeight = height;
->   html.style.minWidth = width;
->   html.style.minHeight = height;
->   body.style.minWidth = width;
->   body.style.minHeight = height;
-> 
 >   htmlWin.style.padding = "10px";
 >   htmlWin.style.backgroundColor = "white";
 >   htmlWin.style.border = "1px solid gray";
 >   htmlWin.style.position = "absolute";
+>   
+>   titleBar.style.display = "flex";
+>   titleEl.style.boxSizing = "border-box";
+>   titleEl.style.width = "calc(100% - 25px)";
+>   titleEl.style.marginLeft = "5px";
+>   titleEl.style.userSelect = "none";
+>   titleEl.textContent = url;
 > 
->   if (rect) {
->     htmlWin.style.top = rect.top + "px";
->   }
+>   closeButton.textContent = "X";
+>   closeButton.style.color = "white";
+>   closeButton.style.backgroundColor = "red";
+>   closeButton.style.border = "none";
+>   closeButton.style.width = "25px";
+>   closeButton.style.display = "block";
 > 
 >   document.body.appendChild(htmlWin);
+>   htmlWin.appendChild(titleBar);
+>   titleBar.appendChild(titleEl);
+>   titleBar.appendChild(closeButton);
 >   htmlWin.appendChild(html);
 >   html.appendChild(body);
 > 
@@ -70,5 +82,6 @@
 >       return !document.getElementById(name);
 >     },
 >   };
+>   closeButton.addEventListener("click", () => ret.close());
 >   return ret;
 > };
