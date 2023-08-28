@@ -7,7 +7,6 @@ import * as H5P from '@lumieducation/h5p-server';
 jest.mock('../H5PServer');
 
 describe('OSH5PServer', () => {
-  const config = new Config('', '');
   const h5pConfig = new H5P.H5PConfig();
   const app = express();
   const mockEditor = {
@@ -20,7 +19,7 @@ describe('OSH5PServer', () => {
 
   it('starts and does stuff', async () => {
     const server: any = new OSH5PServer(jest.fn() as any, jest.fn() as any, '');
-    server.start(mockEditor, app, config.port);
+    server.start(mockEditor, app, Config.port);
     let res = await request(app).get('/does-not-exist-404-please');
     expect(res.status).toBe(404);
     expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(0);
