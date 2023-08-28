@@ -27,6 +27,7 @@ export default class Config {
   ) {}
 
   public static readonly port: number = Number(process.env.PORT) || 27149;
+  /* istanbul ignore next */
   public static readonly serverUrl: string = process.env['GITPOD_WORKSPACE_ID']
     ? `https://${Config.port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
     : `http://localhost:${Config.port}`;
