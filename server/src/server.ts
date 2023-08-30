@@ -9,9 +9,12 @@ import {
   InitializeResult,
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
+import * as fsExtra from 'fs-extra';
 
 import { prepareEnvironment, startH5P } from './createH5PServer';
 import Config from './models/OpenStax/config';
+import path from 'path';
+import { parseBooksXML } from './utils';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -20,6 +23,14 @@ const connection = createConnection(ProposedFeatures.all);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+function createRepoConfig(workspaceRoot: string): Config {
+  const booksXmlPath = path.join(workspaceRoot, 'META-INF', 'books.xml');
+  const { publicRoot, privateRoot } = fsExtra.pathExistsSync(booksXmlPath)
+    ? parseBooksXML(booksXmlPath)
+    : { publicRoot: 'interactives', privateRoot: 'private' };
+  return new Config(workspaceRoot, publicRoot, privateRoot);
+}
 
 connection.onInitialize((params: InitializeParams) => {
   connection.console.log('Initializing server');
@@ -58,7 +69,7 @@ connection.onInitialized(() => {
     if (currentWorkspaces.length > 0) {
       // TODO: workspace switching
       const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
-      const config = new Config(workspaceRoot);
+      const config = createRepoConfig(workspaceRoot);
 
       console.log('Preparing environment for server');
       await prepareEnvironment(config);

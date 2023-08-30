@@ -20,11 +20,18 @@ type SupportedLibrary = {
 };
 
 export default class Config {
+  public readonly contentPath: string;
+  public readonly privatePath: string;
+
   constructor(
     public workspaceRoot: string,
-    public contentPath: string = 'interactives',
-    public privatePath: string = 'private'
-  ) {}
+    contentPath: string,
+    privatePath: string
+  ) {
+    const trimPat = /^[/ ]+|[/ ]+$/g;
+    this.contentPath = contentPath?.replace(trimPat, '');
+    this.privatePath = privatePath?.replace(trimPat, '');
+  }
 
   public static readonly port: number = Number(process.env.PORT) || 27149;
   /* istanbul ignore next */
