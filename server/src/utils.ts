@@ -5,6 +5,8 @@ import fetch from 'node-fetch';
 import express from 'express';
 import * as H5P from '@lumieducation/h5p-server';
 import User from './models/H5PUser';
+import { DOMParser } from '@xmldom/xmldom';
+import * as xpath from 'xpath-ts';
 
 /* istanbul ignore next (pure function that depends solely on express) */
 export function createH5PRouter<EditRequestType, ContentRequestType>(
@@ -112,4 +114,67 @@ export async function extractArchive(
     /* istanbul ignore next */
     console.error(e);
   }
+}
+
+export class ParseError extends Error {}
+
+export function parseXML(xmlString) {
+  const locator = { lineNumber: 0, columnNumber: 0 };
+  /* istanbul ignore next */
+  const cb = () => {
+    const pos = {
+      line: locator.lineNumber - 1,
+      character: locator.columnNumber - 1,
+    };
+    throw new ParseError(`ParseError: ${JSON.stringify(pos)}`);
+  };
+  const p = new DOMParser({
+    locator,
+    errorHandler: {
+      warning: console.warn,
+      error: cb,
+      fatalError: cb,
+    },
+  });
+  const doc = p.parseFromString(xmlString);
+  return doc;
+}
+
+export function unwrap<T>(optional: T | null | undefined): T {
+  if (optional != null) return optional;
+  /* istanbul ignore next */
+  throw new Error('BUG: unwrap optional without value.');
+}
+
+export function parseBooksXML(booksXmlPath: string): {
+  booksRoot: string;
+  pagesRoot: string;
+  mediaRoot: string;
+  privateRoot: string;
+  publicRoot: string;
+} {
+  // const booksXmlPath = path.join(workspaceRoot, "META-INF", "books.xml");
+  const doc = parseXML(fs.readFileSync(booksXmlPath, 'utf-8'));
+  const select = xpath.useNamespaces({
+    bk: 'https://openstax.org/namespaces/book-container',
+  });
+  const bookVars: Record<string, string> = Object.fromEntries(
+    (select('//bk:var', doc) as Element[]).map((n) =>
+      [n.getAttribute('name'), n.getAttribute('value')].map(unwrap).map((i) => {
+        const trimmed = i.trim();
+        if (trimmed.length === 0) {
+          /* istanbul ignore next */
+          throw new Error('Found empty var in books.xml');
+        }
+        return trimmed;
+      })
+    )
+  );
+  return {
+    booksRoot: bookVars['BOOKS_ROOT'] ?? '/collections',
+    pagesRoot: bookVars['PAGES_ROOT'] ?? '/modules',
+    mediaRoot: bookVars['MEDIA_ROOT'] ?? '/media',
+    privateRoot: bookVars['PRIVATE_ROOT'] ?? '/private',
+    publicRoot: bookVars['PUBLIC_ROOT'] ?? '/interactives',
+  };
 }

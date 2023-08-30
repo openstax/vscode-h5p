@@ -48,3 +48,13 @@ exports[`Utility functions extractArchive extracts selected files 1`] = `
   "a.txt": "",
 }
 `;
+
+exports[`Utility functions parseBooksXML gets values and sets defaults 1`] = `
+{
+  "booksRoot": "/collections",
+  "mediaRoot": "/media",
+  "pagesRoot": "/modules",
+  "privateRoot": "/private",
+  "publicRoot": "test",
+}
+`;
