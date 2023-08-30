@@ -1,5 +1,11 @@
 import mockfs from 'mock-fs';
-import { download, downloadLibraries, extractArchive, getIps } from './utils';
+import {
+  download,
+  downloadLibraries,
+  extractArchive,
+  getIps,
+  parseBooksXML,
+} from './utils';
 import fsExtra from 'fs-extra';
 import path from 'path';
 import fetch from 'node-fetch';
@@ -152,6 +158,25 @@ describe('Utility functions', () => {
       mockfs.restore();
       expect(mockFetch).toBeCalledWith(testUrl);
       expect(result).toMatchSnapshot();
+    });
+  });
+  describe('parseBooksXML', () => {
+    beforeEach(() => {
+      setupMockfs({
+        'books.xml': `\
+<container xmlns="https://openstax.org/namespaces/book-container" version="2"> 
+  <book slug="a" collection-id="??" style="dummy" href="goes/to/someplace"/>
+
+  <var name="PUBLIC_ROOT" value="test" />
+</container>`,
+      });
+    });
+    afterEach(() => {
+      mockfs.restore();
+    });
+    it('gets values and sets defaults', () => {
+      const booksXml = parseBooksXML('books.xml');
+      expect(booksXml).toMatchSnapshot();
     });
   });
 });

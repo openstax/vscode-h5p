@@ -22,6 +22,7 @@
     "@lumieducation/h5p-express": "^9.1.2",
     "@lumieducation/h5p-react": "^9.1.2",
     "@lumieducation/h5p-server": "^9.1.2",
+    "@xmldom/xmldom": "^0.8.10",
     "bootstrap": "5.2.3",
     "cors": "2.8.5",
     "csurf": "1.11.0",
@@ -35,7 +36,8 @@
     "uuid": "9.0.0",
     "vscode-languageserver": "^8.1.0",
     "vscode-languageserver-textdocument": "^1.0.8",
-    "vscode-uri": "^3.0.7"
+    "vscode-uri": "^3.0.7",
+    "xpath-ts": "^1.3.13"
   },
   "devDependencies": {
     "@types/csurf": "1.11.2",
