@@ -13,6 +13,7 @@ import {
 type SupportedLibrary = {
   yankAnswers: Yanker;
   unyankAnswers: Unyanker;
+  // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     supportsMath?: boolean;
     behaviourOverrides?: Record<string, Record<string, any>>;
