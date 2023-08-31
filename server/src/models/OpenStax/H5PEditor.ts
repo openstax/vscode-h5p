@@ -6,6 +6,7 @@ import {
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
 import Config from './config';
+import { unwrap } from '../../utils';
 
 const supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
@@ -82,39 +83,42 @@ export const alterLibrarySemantics = (
   config = Config
 ) => {
   const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
-    // Based on https://h5p.org/adding-text-editor-buttons#highlighter_482820
-    for (let field of semantics) {
-      while (field.type === 'list') {
-        field = field.field!;
+    return semantics.map((s) => {
+      const copy = { ...s };
+      let ptr = copy;
+      while (ptr.type === 'list') {
+        ptr.field = { ...unwrap(ptr.field) };
+        ptr = ptr.field;
       }
-      if (field.type === 'group') {
-        addTags(field.fields!, tags);
-        continue;
+      if (ptr.type === 'group') {
+        ptr.fields = addTags(unwrap(ptr.fields), tags);
+      } else if (ptr.type === 'text' && ptr.widget === 'html') {
+        ptr.tags = (ptr.tags ?? []).concat(tags);
       }
-      if (field.type === 'text' && field.widget === 'html') {
-        field.tags = (field.tags ?? []).concat(tags);
-      }
-    }
+      return copy;
+    });
   };
+  let semanticsCopy = [...semantics];
   const semanticMods =
     config.supportedLibraries[library.machineName]?.semantics;
-  const clone: ISemanticsEntry[] = semantics.map((obj) => ({
-    ...obj,
-  }));
   if (semanticMods?.supportsMath === true) {
-    addTags(clone, mathTags);
+    semanticsCopy = addTags(semanticsCopy, mathTags);
   }
-  const overrides = semanticMods?.behaviourOverrides;
-  if (overrides !== undefined) {
-    const behaviorSettings = clone.find((s) => s.name === 'behaviour');
-    if (behaviorSettings?.fields !== undefined) {
-      behaviorSettings.fields = behaviorSettings.fields.map((f) => ({
-        ...f,
-        ...overrides[f.name],
-      }));
+  const behaviourOverrides = semanticMods?.behaviourOverrides;
+  if (behaviourOverrides !== undefined) {
+    const behaviourIdx = semanticsCopy.findIndex((s) => s.name === 'behaviour');
+    if (behaviourIdx !== -1) {
+      const original = semanticsCopy[behaviourIdx];
+      semanticsCopy[behaviourIdx] = {
+        ...original,
+        fields: original.fields?.map((f) => ({
+          ...f,
+          ...behaviourOverrides[f.name],
+        })),
+      };
     }
   }
-  return clone;
+  return semanticsCopy;
 };
 
 export default class OSH5PEditor extends H5P.H5PEditor {

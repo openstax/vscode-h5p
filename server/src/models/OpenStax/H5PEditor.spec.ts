@@ -57,7 +57,7 @@ describe('alterLibrarySemantics', () => {
     } as unknown as typeof Config;
     const serialized = JSON.stringify(fakeSemantics);
     const altered = alterLibrarySemantics(fakeLib, fakeSemantics, fakeConfig);
-		expect(altered).toMatchSnapshot();
+    expect(altered).toMatchSnapshot();
     // Does not modify the original
     expect(JSON.stringify(fakeSemantics)).toBe(serialized);
     // Does modify the clone
