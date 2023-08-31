@@ -153,7 +153,6 @@ export function parseBooksXML(booksXmlPath: string): {
   privateRoot: string;
   publicRoot: string;
 } {
-  // const booksXmlPath = path.join(workspaceRoot, "META-INF", "books.xml");
   const doc = parseXML(fs.readFileSync(booksXmlPath, 'utf-8'));
   const select = xpath.useNamespaces({
     bk: 'https://openstax.org/namespaces/book-container',

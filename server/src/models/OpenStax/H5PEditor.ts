@@ -76,6 +76,47 @@ const mathTags = [
   'semantics',
 ];
 
+export const alterLibrarySemantics = (
+  library: H5P.LibraryName,
+  semantics: ISemanticsEntry[],
+  config = Config
+) => {
+  const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
+    // Based on https://h5p.org/adding-text-editor-buttons#highlighter_482820
+    for (let field of semantics) {
+      while (field.type === 'list') {
+        field = field.field!;
+      }
+      if (field.type === 'group') {
+        addTags(field.fields!, tags);
+        continue;
+      }
+      if (field.type === 'text' && field.widget === 'html') {
+        field.tags = (field.tags ?? []).concat(tags);
+      }
+    }
+  };
+  const semanticMods =
+    config.supportedLibraries[library.machineName]?.semantics;
+  const clone: ISemanticsEntry[] = semantics.map((obj) => ({
+    ...obj,
+  }));
+  if (semanticMods?.supportsMath === true) {
+    addTags(clone, mathTags);
+  }
+  const overrides = semanticMods?.behaviourOverrides;
+  if (overrides !== undefined) {
+    const behaviorSettings = clone.find((s) => s.name === 'behaviour');
+    if (behaviorSettings?.fields !== undefined) {
+      behaviorSettings.fields = behaviorSettings.fields.map((f) => ({
+        ...f,
+        ...overrides[f.name],
+      }));
+    }
+  }
+  return clone;
+};
+
 export default class OSH5PEditor extends H5P.H5PEditor {
   constructor(
     cache: H5P.IKeyValueStorage,
@@ -106,44 +147,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
               `${Config.serverUrl}/static/ckeditor-plugins/mathtype.js`,
             ],
           },
-          alterLibrarySemantics(library, semantics) {
-            const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
-              // Based on https://h5p.org/adding-text-editor-buttons#highlighter_482820
-              for (let field of semantics) {
-                while (field.type === 'list') {
-                  field = field.field!;
-                }
-                if (field.type === 'group') {
-                  addTags(field.fields!, tags);
-                  continue;
-                }
-                if (field.type === 'text' && field.widget === 'html') {
-                  field.tags = (field.tags ?? []).concat(tags);
-                }
-              }
-            };
-            const semanticMods =
-              Config.supportedLibraries[library.machineName]?.semantics;
-            const clone: ISemanticsEntry[] = semantics.map((obj) => ({
-              ...obj,
-            }));
-            if (semanticMods?.supportsMath === true) {
-              addTags(clone, mathTags);
-            }
-            const overrides = semanticMods?.behaviourOverrides;
-            if (overrides !== undefined) {
-              const behaviorSettings = clone.find(
-                (s) => s.name === 'behaviour'
-              );
-              if (behaviorSettings?.fields !== undefined) {
-                behaviorSettings.fields = behaviorSettings.fields.map((f) => ({
-                  ...f,
-                  ...overrides[f.name],
-                }));
-              }
-            }
-            return clone;
-          },
+          alterLibrarySemantics,
         },
       },
       contentUserDataStorage
