@@ -27,6 +27,17 @@ export interface IContentService {
   saveOSMeta(contentId: string, metadata: any): Promise<void>;
 }
 
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  // If a detailed error message was sent from the server, throw & display that
+  function (e) {
+    const errorText = e.response?.data;
+    return Promise.reject(errorText ? new Error(errorText) : e);
+  }
+);
+
 export class ContentService implements IContentService {
   /**
    *

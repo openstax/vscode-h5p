@@ -13,6 +13,7 @@ import fileUpload from 'express-fileupload';
 
 import { createH5PRouter, getIps } from '../utils';
 import User from './H5PUser';
+import { CustomBaseError } from './OpenStax/errors';
 
 /**
  * Displays links to the server at all available IP addresses.
@@ -157,6 +158,10 @@ export default class H5PServer<
       `${this.h5pEditor.config.baseUrl}/content-type-cache`,
       contentTypeCacheExpressRouter(this.h5pEditor.contentTypeCache)
     );
+
+    // TODO: figure out why error middleware is not working
+    // It would be better if the logic for handling CustomBaseError could be
+    // done inside a middleware
   }
 
   protected async onPlay(req: any, res: any) {
@@ -262,7 +267,11 @@ export default class H5PServer<
       res.send(JSON.stringify({ contentId, metadata }));
       res.status(200).end();
     } catch (err) {
-      res.status(500).end((err as Error).message);
+      if (err instanceof CustomBaseError) {
+        res.status(500).send((err as Error).message);
+      } else {
+        res.status(500).end();
+      }
     }
   }
 
