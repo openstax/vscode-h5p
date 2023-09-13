@@ -52,7 +52,7 @@ describe('OpenstaxMetadataForm', () => {
   const revealForm = async ({ getByText }) => {
     const formTitle = await getByText('OpenStax Metadata');
     const formParent = formTitle.parentElement;
-    if (formParent.getAttribute("data-is-item-open") === 'true') {
+    if (formParent.getAttribute('data-is-item-open') === 'true') {
       return;
     }
     expect(formTitle).toBeTruthy();
