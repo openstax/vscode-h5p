@@ -2,7 +2,7 @@ import BasicFormComponent from './BasicFormComponent';
 import SingleInput from './SingleInput';
 import { SingleInputProps } from './types';
 
-const pattern = /^\w+$/;
+const pattern = /^[\w-]+$/;
 
 export default function Nickname(props: SingleInputProps) {
   const subProps = {
@@ -14,6 +14,7 @@ export default function Nickname(props: SingleInputProps) {
 
   return (
     <BasicFormComponent
+      {...props}
       title={'Nickname'}
       content={
         <div className="col-12">

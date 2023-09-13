@@ -14,6 +14,7 @@ export default function AACN(props: SingleInputProps) {
 
   return (
     <BasicFormComponent
+      {...props}
       title={'AACN'}
       content={
         <div className="col-12">

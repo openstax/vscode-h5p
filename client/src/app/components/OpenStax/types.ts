@@ -7,6 +7,7 @@ export type SingleInputProps = {
   value: string;
   isValid: boolean;
   handleInputChange: (value: string, isValid?: boolean) => void;
+  required?: boolean;
 };
 
 export type InputSetHandlerProps<T> = {
@@ -14,6 +15,7 @@ export type InputSetHandlerProps<T> = {
   handleAddInput: () => void;
   handleRemoveInput: (index: any) => void;
   handleInputChange: (index: number, value: string, isValid?: boolean) => void;
+  required?: boolean;
 };
 
 export type InputState = {

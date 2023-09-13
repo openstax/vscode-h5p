@@ -91,7 +91,12 @@ const bookInputs: Array<{
     key: 'lo',
     isActive: (book) => !AP_BOOKS.includes(book),
     make(book, _, inputSetHandlerFactory) {
-      return <LO {...inputSetHandlerFactory(book, this.key)} />;
+      return (
+        <LO
+          {...inputSetHandlerFactory(book, this.key)}
+          required={this.isRequired}
+        />
+      );
     },
     isInputSet: true,
   },
@@ -99,7 +104,13 @@ const bookInputs: Array<{
     key: 'ap-lo',
     isActive: (book) => AP_BOOKS.includes(book),
     make(book, _, inputSetHandlerFactory) {
-      return <APLO {...inputSetHandlerFactory(book, this.key)} book={book} />;
+      return (
+        <APLO
+          {...inputSetHandlerFactory(book, this.key)}
+          book={book}
+          required={this.isRequired}
+        />
+      );
     },
     isInputSet: true,
   },
@@ -107,14 +118,24 @@ const bookInputs: Array<{
     key: 'aacn',
     isActive: (book) => NURSING_BOOKS.includes(book),
     make(book, inputHandlerFactory, _) {
-      return <AACN {...inputHandlerFactory(book, this.key)} />;
+      return (
+        <AACN
+          {...inputHandlerFactory(book, this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
   {
     key: 'nclex',
     isActive: (book) => NURSING_BOOKS.includes(book),
     make(book, inputHandlerFactory, _) {
-      return <NCLEX {...inputHandlerFactory(book, this.key)} />;
+      return (
+        <NCLEX
+          {...inputHandlerFactory(book, this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
   {
@@ -122,7 +143,11 @@ const bookInputs: Array<{
     isActive: (book) => AP_SCIENCE_BOOKS.includes(book),
     make(book, inputHandlerFactory, _) {
       return (
-        <SciencePractice {...inputHandlerFactory(book, this.key)} book={book} />
+        <SciencePractice
+          {...inputHandlerFactory(book, this.key)}
+          book={book}
+          required={this.isRequired}
+        />
       );
     },
   },
@@ -130,14 +155,24 @@ const bookInputs: Array<{
     key: 'hts',
     isActive: (book) => AP_HISTORY_BOOKS.includes(book),
     make(book, inputHandlerFactory, _) {
-      return <HistoricalThinking {...inputHandlerFactory(book, this.key)} />;
+      return (
+        <HistoricalThinking
+          {...inputHandlerFactory(book, this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
   {
     key: 'rp',
     isActive: (book) => AP_HISTORY_BOOKS.includes(book),
     make(book, inputHandlerFactory, _) {
-      return <ReasoningProcess {...inputHandlerFactory(book, this.key)} />;
+      return (
+        <ReasoningProcess
+          {...inputHandlerFactory(book, this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
 ];
@@ -158,46 +193,72 @@ const exerciseInputs: Array<
   {
     key: 'nickname',
     make(inputHandlerFactory, _) {
-      return <Nickname {...inputHandlerFactory(this.key)} />;
+      return (
+        <Nickname
+          {...inputHandlerFactory(this.key)}
+          required={this.isRequired}
+        />
+      );
     },
     isRequired: true,
   },
   {
     key: 'module-id',
     make(_, inputSetHandlerFactory) {
-      return <ModuleID {...inputSetHandlerFactory(this.key)} />;
+      return (
+        <ModuleID
+          {...inputSetHandlerFactory(this.key)}
+          required={this.isRequired}
+        />
+      );
     },
     isInputSet: true,
   },
   {
     key: 'blooms',
     make(inputHandlerFactory, _) {
-      return <Blooms {...inputHandlerFactory(this.key)} />;
+      return (
+        <Blooms {...inputHandlerFactory(this.key)} required={this.isRequired} />
+      );
     },
     isRequired: true,
   },
   {
     key: 'assignment-type',
     make(inputHandlerFactory, _) {
-      return <AssignmentType {...inputHandlerFactory(this.key)} />;
+      return (
+        <AssignmentType
+          {...inputHandlerFactory(this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
   {
     key: 'dok-tag',
     make(inputHandlerFactory, _) {
-      return <DokTag {...inputHandlerFactory(this.key)} />;
+      return (
+        <DokTag {...inputHandlerFactory(this.key)} required={this.isRequired} />
+      );
     },
   },
   {
     key: 'time',
     make(inputHandlerFactory, _) {
-      return <Time {...inputHandlerFactory(this.key)} />;
+      return (
+        <Time {...inputHandlerFactory(this.key)} required={this.isRequired} />
+      );
     },
   },
   {
     key: 'is-solution-public',
     make(inputHandlerFactory, _) {
-      return <PublicCheckbox {...inputHandlerFactory(this.key)} />;
+      return (
+        <PublicCheckbox
+          {...inputHandlerFactory(this.key)}
+          required={this.isRequired}
+        />
+      );
     },
   },
 ];

@@ -16,6 +16,7 @@ export type InputSetProps<OptionType extends DropdownOption = DropdownOption> =
     ) => void;
     options?: Array<OptionType>;
     placeholder?: string;
+    required?: boolean;
   };
 
 export function InputSet<OptionType extends DropdownOption = DropdownOption>({
@@ -26,13 +27,17 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
   handleInputChange,
   options,
   placeholder,
+  required = false,
 }: InputSetProps<OptionType> & { title: string }) {
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-11">
-            <h3>{title}</h3>
+            <h3>
+              {title}{' '}
+              <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+            </h3>
           </div>
           <div className="col-1 pt-2" data-control-type={'input-set-add'}>
             <FontAwesomeIcon

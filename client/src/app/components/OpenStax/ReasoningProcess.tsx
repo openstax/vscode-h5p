@@ -10,6 +10,7 @@ const options = collect(range(1, 4))
 export default function ReasoningProcess(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'Reasoning Process'}
       content={<SingleDropdown options={options} {...props} />}
     />
