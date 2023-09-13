@@ -24,7 +24,7 @@ export default function Accordion(props: AccordionProps) {
   };
 
   return (
-    <div style={props.style}>
+    <div style={props.style} data-control-type="accordion">
       {props.children.map((kid, idx) => (
         <div className="accordion-section" key={idx}>
           <div
@@ -34,6 +34,7 @@ export default function Accordion(props: AccordionProps) {
           >
             <div
               className="row"
+              data-is-item-open={openIdx === idx}
               style={{ padding: '10px', background: 'lightgray' }}
             >
               <div className="col-11" style={{ fontWeight: 'bold' }}>
