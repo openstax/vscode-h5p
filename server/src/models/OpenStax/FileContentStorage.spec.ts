@@ -255,4 +255,28 @@ describe('File Content Storage', () => {
     expect(err).toEqual('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
   });
+  it('does not allow duplicate titles', async () => {
+    const storage = new OSStorage(config);
+    let err = '';
+    try {
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 1',
+          mainLibrary: 'H5P.Blanks',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {},
+        {} as any,
+        '12345'
+      );
+    } catch (e) {
+      err = (e as Error).message;
+    }
+    expect(err).toContain('title');
+    expect(await storage.contentExists('1234')).toBe(false);
+  });
 });

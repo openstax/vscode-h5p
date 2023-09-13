@@ -2,6 +2,7 @@ import H5PServer from '../H5PServer';
 import express from 'express';
 import OSH5PEditor from './H5PEditor';
 import path from 'path';
+import { CustomBaseError } from './errors';
 
 export default class OSH5PServer extends H5PServer<OSH5PEditor> {
   protected async getMetadata(req, res) {
@@ -21,10 +22,14 @@ export default class OSH5PServer extends H5PServer<OSH5PEditor> {
     const metadata = req.body;
     try {
       await this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
-      res.status(200).end();
+      res.status(200).send(null);
     } catch (e) {
       console.error(e);
-      res.status(500).end();
+      if (e instanceof CustomBaseError) {
+        res.status(500).send((e as Error).message);
+      } else {
+        res.status(500).end();
+      }
     }
   }
 

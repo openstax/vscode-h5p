@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
+import { CustomBaseError } from './errors';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
@@ -49,6 +50,15 @@ export default class OSStorage extends H5P.fsImplementations
     this.privateContentDirectory = config.privateContentDirectory;
   }
 
+  protected get allH5PMetadata(): Array<H5P.IContentMetadata> {
+    return fsExtra
+      .readdirSync(this.contentPath, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => path.join(this.contentPath, d.name, 'h5p.json'))
+      .filter((f) => fsExtra.existsSync(f))
+      .map((f) => fsExtra.readJSONSync(f));
+  }
+
   protected async createContentId() {
     const idxOffset = 1;
     const numbered = fsExtra
@@ -71,6 +81,10 @@ export default class OSStorage extends H5P.fsImplementations
     user: H5P.IUser,
     id?: string | undefined
   ): Promise<string> {
+    const existingTitles = this.allH5PMetadata.map((h5pMeta) => h5pMeta.title);
+    if (existingTitles.includes(metadata.title)) {
+      throw new CustomBaseError('Duplicate title');
+    }
     if (id === undefined || id === null) {
       id = await this.createContentId();
     }
