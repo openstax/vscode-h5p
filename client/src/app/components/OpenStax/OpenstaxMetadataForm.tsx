@@ -658,6 +658,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
 
     return (
       <Accordion
+        initiallyOpenedIdx={0}
         style={{ maxWidth: '960px', margin: '10px 0' }}
         children={[
           {
