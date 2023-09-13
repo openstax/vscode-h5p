@@ -13,10 +13,11 @@ type AccordionChild = {
 type AccordionProps = {
   children: AccordionChild[];
   style?: React.CSSProperties;
+  initiallyOpenedIdx?: number;
 };
 
 export default function Accordion(props: AccordionProps) {
-  const [openIdx, setOpenIdx] = useState(null);
+  const [openIdx, setOpenIdx] = useState(props.initiallyOpenedIdx ?? null);
 
   const handleSectionClick = (idx) => {
     setOpenIdx(idx === openIdx ? null : idx);
