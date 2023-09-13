@@ -52,6 +52,9 @@ describe('OpenstaxMetadataForm', () => {
   const revealForm = async ({ getByText }) => {
     const formTitle = await getByText('OpenStax Metadata');
     const formParent = formTitle.parentElement;
+    if (formParent.getAttribute("data-is-item-open") === 'true') {
+      return;
+    }
     expect(formTitle).toBeTruthy();
     expect(formParent).toBeTruthy();
     // Open the Accordion so that its children render
@@ -177,7 +180,7 @@ describe('OpenstaxMetadataForm', () => {
         Array.from(container.querySelectorAll(SEL_BOOK))[
           bookIdx
         ]?.querySelectorAll('.container') ?? []
-      ).find((el) => el.querySelector('h3')?.textContent === name);
+      ).find((el) => el.querySelector('h3')?.textContent?.indexOf(name) === 0);
       return el === undefined ? undefined : (el as HTMLElement);
     };
     [-1, 1].forEach((inc) => {
