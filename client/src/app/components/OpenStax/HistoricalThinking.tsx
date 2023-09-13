@@ -10,6 +10,7 @@ const options = collect(range(1, 7))
 export default function HistoricalThinking(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'Historical Thinking'}
       content={<SingleDropdown options={options} {...props} />}
     />

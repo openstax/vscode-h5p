@@ -39,6 +39,7 @@ export default function SciencePractice(
   }
   return (
     <BasicFormComponent
+      {...props}
       title={'Science Practice'}
       content={<SingleDropdown options={options} {...props} />}
     />

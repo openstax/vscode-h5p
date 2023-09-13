@@ -10,6 +10,7 @@ const options: DropdownOption[] = [
 export default function NCLEX(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'NCLEX'}
       content={<SingleDropdown options={options} {...props} />}
     />

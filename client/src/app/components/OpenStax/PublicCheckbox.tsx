@@ -5,6 +5,7 @@ import { SingleInputProps } from './types';
 export default function PublicCheckbox(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'Solution is public'}
       content={
         <div className="col-12">

@@ -11,6 +11,7 @@ const options: DropdownOption[] = [
 export default function Time(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'Time'}
       content={<SingleDropdown options={options} {...props} />}
     />

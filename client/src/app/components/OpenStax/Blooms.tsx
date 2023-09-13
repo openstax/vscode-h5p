@@ -10,6 +10,7 @@ const options = collect(range(1, 7))
 export default function Blooms(props: SingleInputProps) {
   return (
     <BasicFormComponent
+      {...props}
       title={'Blooms'}
       content={<SingleDropdown options={options} {...props} />}
     />
