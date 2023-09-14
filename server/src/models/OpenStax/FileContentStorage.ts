@@ -50,13 +50,22 @@ export default class OSStorage extends H5P.fsImplementations
     this.privateContentDirectory = config.privateContentDirectory;
   }
 
-  protected get allH5PMetadata(): Array<H5P.IContentMetadata> {
+  protected get allH5PMetadata(): Array<{
+    contentId: string;
+    h5pMeta: H5P.IContentMetadata;
+  }> {
     return fsExtra
       .readdirSync(this.contentPath, { withFileTypes: true })
       .filter((d) => d.isDirectory())
-      .map((d) => path.join(this.contentPath, d.name, 'h5p.json'))
-      .filter((f) => fsExtra.existsSync(f))
-      .map((f) => fsExtra.readJSONSync(f));
+      .map((dirent) => ({
+        contentId: dirent.name,
+        h5pPath: path.join(this.contentPath, dirent.name, 'h5p.json'),
+      }))
+      .filter(({ h5pPath }) => fsExtra.existsSync(h5pPath))
+      .map(({ contentId, h5pPath }) => ({
+        contentId,
+        h5pMeta: fsExtra.readJSONSync(h5pPath),
+      }));
   }
 
   protected async createContentId() {
@@ -81,8 +90,12 @@ export default class OSStorage extends H5P.fsImplementations
     user: H5P.IUser,
     id?: string | undefined
   ): Promise<string> {
-    const existingTitles = this.allH5PMetadata.map((h5pMeta) => h5pMeta.title);
-    if (existingTitles.includes(metadata.title)) {
+    if (
+      this.allH5PMetadata.some(
+        ({ contentId, h5pMeta }) =>
+          h5pMeta.title === metadata.title && contentId !== id
+      )
+    ) {
       throw new CustomBaseError('Duplicate title');
     }
     if (id === undefined || id === null) {
