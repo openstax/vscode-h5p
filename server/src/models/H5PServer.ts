@@ -13,7 +13,6 @@ import fileUpload from 'express-fileupload';
 
 import { createH5PRouter, getIps } from '../utils';
 import User from './H5PUser';
-import { CustomBaseError } from './OpenStax/errors';
 
 /**
  * Displays links to the server at all available IP addresses.
@@ -53,6 +52,15 @@ export default class H5PServer<
         )} mode`
       );
     });
+  }
+
+  protected handleError(res: express.Response) {
+    return (err) => {
+      console.error(err);
+      if (!res.headersSent) {
+        res.status(500).send((err as Error).message);
+      }
+    };
   }
 
   protected configureMiddleware(server: express.Express, port: number) {
@@ -137,12 +145,17 @@ export default class H5PServer<
     server.use(
       this.h5pEditor.config.baseUrl,
       createH5PRouter(
-        (req, res) => this.onPlay(req, res),
-        (req: EditRequestType, res) => this.onEdit(req, res),
-        (req: ContentRequestType, res) => this.onNew(req, res),
-        (req: ContentRequestType, res) => this.onSave(req, res),
-        (req: ContentRequestType, res) => this.onDelete(req, res),
-        (req: ContentRequestType, res) => this.onFetch(req, res)
+        (req, res) => this.onPlay(req, res).catch(this.handleError(res)),
+        (req: EditRequestType, res) =>
+          this.onEdit(req, res).catch(this.handleError(res)),
+        (req: ContentRequestType, res) =>
+          this.onNew(req, res).catch(this.handleError(res)),
+        (req: ContentRequestType, res) =>
+          this.onSave(req, res).catch(this.handleError(res)),
+        (req: ContentRequestType, res) =>
+          this.onDelete(req, res).catch(this.handleError(res)),
+        (req: ContentRequestType, res) =>
+          this.onFetch(req, res).catch(this.handleError(res))
       )
     );
     // The LibraryAdministrationExpress routes are REST endpoints that offer
@@ -158,61 +171,49 @@ export default class H5PServer<
       `${this.h5pEditor.config.baseUrl}/content-type-cache`,
       contentTypeCacheExpressRouter(this.h5pEditor.contentTypeCache)
     );
-
-    // TODO: figure out why error middleware is not working
-    // It would be better if the logic for handling CustomBaseError could be
-    // done inside a middleware
   }
 
   protected async onPlay(req: any, res: any) {
-    try {
-      const h5pPage = await this.h5pPlayer.render(
-        req.params.contentId,
-        req.user,
-        this.languageOverride === 'auto'
-          ? req.language ?? 'en'
-          : this.languageOverride,
-        {
-          showCopyButton: true,
-          showDownloadButton: true,
-          showFrame: true,
-          showH5PIcon: true,
-          showLicenseButton: true,
-        }
-      );
-      res.send(h5pPage);
-      res.status(200).end();
-    } catch (error: any) {
-      res.status(500).end(error.message);
-    }
+    const h5pPage = await this.h5pPlayer.render(
+      req.params.contentId,
+      req.user,
+      this.languageOverride === 'auto'
+        ? req.language ?? 'en'
+        : this.languageOverride,
+      {
+        showCopyButton: true,
+        showDownloadButton: true,
+        showFrame: true,
+        showH5PIcon: true,
+        showLicenseButton: true,
+      }
+    );
+    res.send(h5pPage);
+    res.status(200).end();
   }
 
   protected async onEdit(req: EditRequestType, res: any) {
-    try {
-      // This route merges the render and the /ajax/params routes to avoid a
-      // second request.
-      const editorModel = (await this.h5pEditor.render(
-        req.params.contentId,
-        this.languageOverride === 'auto'
-          ? req.language ?? 'en'
-          : this.languageOverride,
-        req.user
-      )) as H5P.IEditorModel;
-      if (!req.params.contentId || req.params.contentId === 'undefined') {
-        res.send(editorModel);
-      } else {
-        const content = await this.h5pEditor.getContent(req.params.contentId);
-        res.send({
-          ...editorModel,
-          library: content.library,
-          metadata: content.params.metadata,
-          params: content.params.params,
-        });
-      }
-      res.status(200).end();
-    } catch (err) {
-      res.status(500).end((err as Error).message);
+    // This route merges the render and the /ajax/params routes to avoid a
+    // second request.
+    const editorModel = (await this.h5pEditor.render(
+      req.params.contentId,
+      this.languageOverride === 'auto'
+        ? req.language ?? 'en'
+        : this.languageOverride,
+      req.user
+    )) as H5P.IEditorModel;
+    if (!req.params.contentId || req.params.contentId === 'undefined') {
+      res.send(editorModel);
+    } else {
+      const content = await this.h5pEditor.getContent(req.params.contentId);
+      res.send({
+        ...editorModel,
+        library: content.library,
+        metadata: content.params.metadata,
+        params: content.params.params,
+      });
     }
+    res.status(200).end();
   }
 
   protected async onNew(req: ContentRequestType, res: any) {
@@ -226,21 +227,16 @@ export default class H5PServer<
       res.status(400).send('Malformed request').end();
       return;
     }
-    try {
-      const { id: contentId, metadata } =
-        await this.h5pEditor.saveOrUpdateContentReturnMetaData(
-          undefined!,
-          req.body.params.params,
-          req.body.params.metadata,
-          req.body.library,
-          req.user
-        );
-
-      res.send(JSON.stringify({ contentId, metadata }));
-      res.status(200).end();
-    } catch (err) {
-      res.status(500).end((err as Error).message);
-    }
+    const { id: contentId, metadata } =
+      await this.h5pEditor.saveOrUpdateContentReturnMetaData(
+        undefined!,
+        req.body.params.params,
+        req.body.params.metadata,
+        req.body.library,
+        req.user
+      );
+    res.send(JSON.stringify({ contentId, metadata }));
+    res.status(200).end();
   }
 
   protected async onSave(req: ContentRequestType, res: any) {
@@ -254,38 +250,20 @@ export default class H5PServer<
       res.status(400).send('Malformed request').end();
       return;
     }
-    try {
-      const { id: contentId, metadata } =
-        await this.h5pEditor.saveOrUpdateContentReturnMetaData(
-          req.params.contentId.toString(),
-          req.body.params.params,
-          req.body.params.metadata,
-          req.body.library,
-          req.user
-        );
-
-      res.send(JSON.stringify({ contentId, metadata }));
-      res.status(200).end();
-    } catch (err) {
-      if (err instanceof CustomBaseError) {
-        res.status(500).send((err as Error).message);
-      } else {
-        res.status(500).end();
-      }
-    }
+    const { id: contentId, metadata } =
+      await this.h5pEditor.saveOrUpdateContentReturnMetaData(
+        req.params.contentId.toString(),
+        req.body.params.params,
+        req.body.params.metadata,
+        req.body.library,
+        req.user
+      );
+    res.send(JSON.stringify({ contentId, metadata }));
+    res.status(200).end();
   }
 
   protected async onDelete(req: ContentRequestType, res: any) {
-    try {
-      await this.h5pEditor.deleteContent(req.params.contentId, req.user);
-    } catch (error: any) {
-      res.send(
-        `Error deleting content with id ${req.params.contentId}: ${error.message}`
-      );
-      res.status(500).end();
-      return;
-    }
-
+    await this.h5pEditor.deleteContent(req.params.contentId, req.user);
     res.send(`Content ${req.params.contentId} successfully deleted.`);
     res.status(200).end();
   }

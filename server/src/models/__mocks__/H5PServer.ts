@@ -5,6 +5,7 @@ export default class H5PServer {
   public onSave = jest.fn().mockResolvedValue(null);
   public onDelete = jest.fn().mockResolvedValue(null);
   public onFetch = jest.fn().mockResolvedValue([{}]);
+  public handleError = jest.fn();
 
   public h5pEditor;
   protected configureMiddleware(server, port) {}

@@ -19,6 +19,9 @@ describe('OSH5PServer', () => {
 
   it('starts and does stuff', async () => {
     const server: any = new OSH5PServer(jest.fn() as any, jest.fn() as any, '');
+    server.handleError.mockImplementation(
+      (res) => (_) => res.status(500).end()
+    );
     server.start(mockEditor, app, Config.port);
     let res = await request(app).get('/does-not-exist-404-please');
     expect(res.status).toBe(404);
