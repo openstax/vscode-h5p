@@ -46,9 +46,11 @@ describe('alterLibrarySemantics', () => {
         [fakeLib.machineName]: {
           semantics: {
             supportsMath: true,
-            behaviourOverrides: {
-              enableRetry: {
-                default: false,
+            overrides: {
+              behaviour: {
+                enableRetry: {
+                  default: false,
+                },
               },
             },
           },

@@ -104,19 +104,28 @@ export const alterLibrarySemantics = (
   if (semanticMods?.supportsMath === true) {
     semanticsCopy = addTags(semanticsCopy, mathTags);
   }
-  const behaviourOverrides = semanticMods?.behaviourOverrides;
-  if (behaviourOverrides !== undefined) {
-    const behaviourIdx = semanticsCopy.findIndex((s) => s.name === 'behaviour');
-    if (behaviourIdx !== -1) {
-      const original = semanticsCopy[behaviourIdx];
-      semanticsCopy[behaviourIdx] = {
-        ...original,
-        fields: original.fields?.map((f) => ({
-          ...f,
-          ...behaviourOverrides[f.name],
-        })),
-      };
-    }
+  const overridesForLib = semanticMods?.overrides;
+  if (overridesForLib !== undefined) {
+    Object.entries(overridesForLib).forEach(([key, overrides]) => {
+      const propertyIdx = semanticsCopy.findIndex((s) => s.name === key);
+      if (propertyIdx !== -1) {
+        const original = semanticsCopy[propertyIdx];
+        if (original.fields) {
+          semanticsCopy[propertyIdx] = {
+            ...original,
+            fields: original.fields.map((f) => ({
+              ...f,
+              ...overrides[f.name],
+            })),
+          };
+        } else {
+          semanticsCopy[propertyIdx] = {
+            ...original,
+            ...overrides,
+          };
+        }
+      }
+    });
   }
   return semanticsCopy;
 };
