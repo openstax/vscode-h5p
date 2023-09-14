@@ -16,7 +16,7 @@ type SupportedLibrary = {
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     supportsMath?: boolean;
-    behaviourOverrides?: Record<string, Record<string, any>>;
+    overrides?: Record<string, Record<string, any>>;
   };
 };
 
@@ -47,12 +47,11 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsMath: true,
-          behaviourOverrides: {
-            enableRetry: {
-              default: false,
-            },
-            enableSolutionsButton: {
-              default: false,
+          overrides: {
+            behaviour: {
+              caseSensitive: {
+                default: false,
+              },
             },
           },
         },
@@ -62,11 +61,25 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsMath: true,
+          overrides: {
+            behaviour: {
+              randomAnswers: {
+                default: false,
+              },
+            },
+          },
         },
       },
       'H5P.QuestionSet': {
         yankAnswers: questionSetYanker,
         unyankAnswers: questionSetMerge,
+        semantics: {
+          overrides: {
+            randomQuestions: {
+              default: false,
+            },
+          },
+        },
       },
       'H5P.TrueFalse': {
         yankAnswers: trueFalseYanker,
