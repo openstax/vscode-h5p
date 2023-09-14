@@ -2,44 +2,28 @@ import H5PServer from '../H5PServer';
 import express from 'express';
 import OSH5PEditor from './H5PEditor';
 import path from 'path';
-import { CustomBaseError } from './errors';
 
 export default class OSH5PServer extends H5PServer<OSH5PEditor> {
   protected async getMetadata(req, res) {
     const id = req.params.contentId;
-    try {
-      const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);
-      res.send(metadata);
-      res.status(200).end();
-    } catch (e) {
-      console.error(e);
-      res.status(500).end();
-    }
+    const metadata = await this.h5pEditor.contentStorage.getOSMeta(id);
+    res.status(200).send(metadata);
   }
 
   protected async saveMetadata(req, res) {
     const id = req.params.contentId;
     const metadata = req.body;
-    try {
-      await this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
-      res.status(200).send(null);
-    } catch (e) {
-      console.error(e);
-      if (e instanceof CustomBaseError) {
-        res.status(500).send((e as Error).message);
-      } else {
-        res.status(500).end();
-      }
-    }
+    await this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
+    res.status(200).end();
   }
 
   protected createMetadataRouter() {
     const router = express.Router();
     router.get('/:contentId/openstax-metadata/', (req: any, res) =>
-      this.getMetadata(req, res)
+      this.getMetadata(req, res).catch(this.handleError(res))
     );
     router.post('/:contentId/openstax-metadata/', (req: any, res) =>
-      this.saveMetadata(req, res)
+      this.saveMetadata(req, res).catch(this.handleError(res))
     );
     return router;
   }
