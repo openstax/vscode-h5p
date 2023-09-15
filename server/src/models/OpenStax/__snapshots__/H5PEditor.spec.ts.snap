@@ -5,13 +5,28 @@ exports[`alterLibrarySemantics does not mutate semantics 1`] = `
   {
     "fields": [
       {
-        "default": false,
+        "default": "This value should appear in the snapshot for enableRetry",
         "name": "enableRetry",
+        "type": "text",
+      },
+      {
+        "default": "default",
+        "name": "notEdited",
+        "type": "text",
+      },
+      {
+        "default": "This value should appear in the snapshot for otherValueThatIsEdited",
+        "name": "otherValueThatIsEdited",
         "type": "text",
       },
     ],
     "name": "behaviour",
     "type": "group",
+  },
+  {
+    "default": "This value should appear in the snapshot for rootLevelProperty",
+    "name": "rootLevelProperty",
+    "type": "text",
   },
   {
     "fields": [

@@ -20,9 +20,24 @@ describe('alterLibrarySemantics', () => {
           {
             type: 'text',
             name: 'enableRetry',
-            default: 'true',
+            default: 'default',
+          },
+          {
+            type: 'text',
+            name: 'notEdited',
+            default: 'default',
+          },
+          {
+            type: 'text',
+            name: 'otherValueThatIsEdited',
+            default: 'default',
           },
         ],
+      },
+      {
+        type: 'text',
+        name: 'rootLevelProperty',
+        default: 'default',
       },
       {
         name: '',
@@ -49,8 +64,17 @@ describe('alterLibrarySemantics', () => {
             overrides: {
               behaviour: {
                 enableRetry: {
-                  default: false,
+                  default:
+                    'This value should appear in the snapshot for enableRetry',
                 },
+                otherValueThatIsEdited: {
+                  default:
+                    'This value should appear in the snapshot for otherValueThatIsEdited',
+                },
+              },
+              rootLevelProperty: {
+                default:
+                  'This value should appear in the snapshot for rootLevelProperty',
               },
             },
           },
