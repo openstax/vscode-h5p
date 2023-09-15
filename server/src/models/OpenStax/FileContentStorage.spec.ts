@@ -264,7 +264,7 @@ describe('File Content Storage', () => {
         {} as any,
         '12345'
       );
-    }).rejects.toThrowError(/.*duplicate.*/i)
+    }).rejects.toThrowError(/.*duplicate.*/i);
     expect(await storage.contentExists('1234')).toBe(false);
   });
 });
