@@ -217,15 +217,11 @@ describe('File Content Storage', () => {
       {} as any,
       '1234'
     );
-    let err = '';
-    try {
+    await expect(async () => {
       await storage.saveOSMeta('1234', {
         'is-solution-public': 'false',
       });
-    } catch (e) {
-      err = (e as Error).message;
-    }
-    expect(err).toEqual(
+    }).rejects.toThrowError(
       'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"'
     );
   });
@@ -246,19 +242,14 @@ describe('File Content Storage', () => {
       {} as any,
       '1234'
     );
-    let err = '';
-    try {
+    await expect(async () => {
       await storage.saveOSMeta('1234', {});
-    } catch (e) {
-      err = (e as Error).message;
-    }
-    expect(err).toEqual('TEST');
+    }).rejects.toThrowError('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
   });
   it('does not allow duplicate titles', async () => {
     const storage = new OSStorage(config);
-    let err = '';
-    try {
+    await expect(async () => {
       await storage.addContent(
         {
           title: 'this should be stored in folder 1',
@@ -273,10 +264,7 @@ describe('File Content Storage', () => {
         {} as any,
         '12345'
       );
-    } catch (e) {
-      err = (e as Error).message;
-    }
-    expect(err).toContain('title');
+    }).rejects.toThrowError(/.*duplicate.*/i)
     expect(await storage.contentExists('1234')).toBe(false);
   });
 });
