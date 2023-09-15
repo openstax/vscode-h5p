@@ -316,7 +316,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     'dok-tag': { ...defaultInputState },
     time: { ...defaultInputState },
     nickname: { ...defaultInputState },
-    'is-solution-public': { ...defaultInputState, value: 'true' },
+    'is-solution-public': { ...defaultInputState, value: 'false' },
     books: [],
     'ap-lo': [],
     lo: [],

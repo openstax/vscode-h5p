@@ -49,10 +49,10 @@ describe('OpenstaxMetadataForm', () => {
     return { openstaxForm, ...all };
   };
 
-  const revealForm = async ({ getByText }) => {
+  const toggleAccordion = async ({ getByText }, state = true) => {
     const formTitle = await getByText('OpenStax Metadata');
     const formParent = formTitle.parentElement;
-    if (formParent.getAttribute('data-is-item-open') === 'true') {
+    if (state && formParent.getAttribute('data-is-item-open') === 'true') {
       return;
     }
     expect(formTitle).toBeTruthy();
@@ -71,7 +71,7 @@ describe('OpenstaxMetadataForm', () => {
       ...formPropsOverride,
     };
     const controller = await createForm(formProps);
-    await revealForm(controller);
+    await toggleAccordion(controller);
     return controller;
   };
 
@@ -107,11 +107,18 @@ describe('OpenstaxMetadataForm', () => {
   beforeEach(() => jest.resetAllMocks());
 
   describe('Default Input Set', () => {
-    it('is rendered', async () => {
+    it('is rendered and allows users to toggle accordion', async () => {
       const controller = await createForm(defaultFormProps);
       const { getByText } = controller;
-      await revealForm(controller);
+      // Open the accordion and ensure it is open by checking for books element
+      await toggleAccordion(controller);
       expect(await getByText('Books')).toBeTruthy();
+
+      // Close it and make sure books element is no longer visible
+      await toggleAccordion(controller, false);
+      await expect(async () => {
+        await getByText('Books');
+      }).rejects.toThrow();
     });
     it('renders when there is an error in getOSMeta', async () => {
       const { getByText } = await initFormWithMinData({
