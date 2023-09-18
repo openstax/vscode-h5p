@@ -51,6 +51,10 @@ describe('File Content Storage', () => {
 
   it('saves content as expected', async () => {
     const storage = new OSStorage(config);
+    const osMeta2 = {
+      nickname: 'my-nickname',
+      books: ['something']
+    }
     expect(
       await storage.addContent(
         {
@@ -84,7 +88,7 @@ describe('File Content Storage', () => {
         {} as any
       )
     ).toBe('2');
-    await storage.saveOSMeta('2', { books: ['meta-1'] });
+    await storage.saveOSMeta('2', osMeta2);
     // Make sure it does not overwrite existing directories
     fsExtra.ensureDirSync(path.join(interactivesPath, '3'));
     // And that it finds the next available id
@@ -93,7 +97,7 @@ describe('File Content Storage', () => {
     expect(
       await storage.addContent(
         {
-          title: 'this should be stored in folder 3',
+          title: 'this should be stored in folder 4',
           mainLibrary: 'something',
           language: 'U',
           license: '',
@@ -124,10 +128,19 @@ describe('File Content Storage', () => {
     ).toBe('1234');
     // Edge case: Save metadata separately from existing the h5p/content json
     await storage.saveOSMeta('1', { books: ['meta-3'] });
-    expect(await storage.getOSMeta('2')).toStrictEqual({ books: ['meta-1'] });
+    // When the nickname is given, that should be used
+    expect(await storage.getOSMeta('2')).toStrictEqual({
+      nickname: osMeta2.nickname,
+      books: osMeta2.books,
+    });
     expect(await storage.getOSMeta('3')).toStrictEqual({});
-    expect(await storage.getOSMeta('4')).toStrictEqual({ books: ['meta-2'] });
+    // When the nickname is not given, the h5p title is used
+    expect(await storage.getOSMeta('4')).toStrictEqual({
+      nickname: 'this should be stored in folder 4',
+      books: ['meta-2'],
+    });
     expect(await storage.getOSMeta('1')).toStrictEqual({
+      nickname: 'this should be stored in folder 1',
       books: ['meta-3'],
       extra: 'Something extra',
     });

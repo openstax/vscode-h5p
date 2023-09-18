@@ -74,22 +74,6 @@ exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values wh
 }
 `;
 
-exports[`OpenstaxMetadataForm Form validation does not save when information is missing 1`] = `
-[
-  [
-    "OpenStax Metadata: "blooms" cannot be empty.",
-  ],
-]
-`;
-
-exports[`OpenstaxMetadataForm Form validation does not save when information is missing 2`] = `
-[
-  [
-    "OpenStax Metadata: "nickname" cannot be empty.",
-  ],
-]
-`;
-
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
 {
   "aacn": [],
