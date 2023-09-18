@@ -62,6 +62,7 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
                 />
               ) : (
                 <SingleDropdown
+                  required={required}
                   value={input.value}
                   options={options}
                   handleInputChange={(v: string) => {
