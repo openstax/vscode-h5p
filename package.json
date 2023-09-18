@@ -32,10 +32,18 @@
     "commands": [
       {
         "command": "h5p.web.showEditor",
-        "title": "Show Editor",
+        "title": "H5P Editor",
         "category": "H5P Editor"
       }
     ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "h5p.web.showEditor",
+          "group": "navigation"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {
