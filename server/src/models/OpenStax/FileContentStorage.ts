@@ -130,6 +130,9 @@ export default class OSStorage extends H5P.fsImplementations
         content: await this.getParameters(contentId),
         metadata: await this.getMetadata(contentId),
       };
+      if (!osMeta.nickname) {
+        osMeta.nickname = h5pMeta.title;
+      }
       // check if private
       if (!isSolutionPublic(osMeta)) {
         const [sanitized, privateData] = yankAnswers(

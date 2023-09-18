@@ -442,24 +442,25 @@ describe('OpenstaxMetadataForm', () => {
       );
       expect(defaultFormProps.contentService.saveOSMeta).not.toBeCalled();
     });
-    it('does not save when information is missing', async () => {
-      const formProps = { ...defaultFormProps };
-      const { openstaxForm } = await createForm(formProps);
-      await openstaxForm.current!.save('new');
-      expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
-      expect(formProps.contentService.saveOSMeta).not.toBeCalled();
+    // No required fields right now (leaving this in incase this changes)
+    // it('does not save when information is missing', async () => {
+    //   const formProps = { ...defaultFormProps };
+    //   const { openstaxForm } = await createForm(formProps);
+    //   await openstaxForm.current!.save('new');
+    //   expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
+    //   expect(formProps.contentService.saveOSMeta).not.toBeCalled();
 
-      (formProps.contentService.saveOSMeta as jest.Mock).mockReset();
-      formProps.onSaveError.mockReset();
-      cleanup();
+    //   (formProps.contentService.saveOSMeta as jest.Mock).mockReset();
+    //   formProps.onSaveError.mockReset();
+    //   cleanup();
 
-      const { openstaxForm: openstaxFormNoNick } = await initFormWithMinData({
-        formDataOverride: { nickname: '' },
-      });
-      await openstaxFormNoNick.current!.save('new');
-      expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
-      expect(formProps.contentService.saveOSMeta).not.toBeCalled();
-    });
+    //   const { openstaxForm: openstaxFormNoNick } = await initFormWithMinData({
+    //     formDataOverride: { nickname: '' },
+    //   });
+    //   await openstaxFormNoNick.current!.save('new');
+    //   expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
+    //   expect(formProps.contentService.saveOSMeta).not.toBeCalled();
+    // });
     it('does save when all required fields are present', async () => {
       const formProps = {
         ...defaultFormProps,

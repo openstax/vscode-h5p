@@ -200,7 +200,6 @@ const exerciseInputs: Array<
         />
       );
     },
-    isRequired: true,
   },
   {
     key: 'module-id',
@@ -221,7 +220,6 @@ const exerciseInputs: Array<
         <Blooms {...inputHandlerFactory(this.key)} required={this.isRequired} />
       );
     },
-    isRequired: true,
   },
   {
     key: 'assignment-type',
@@ -471,6 +469,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         this.onSaveError(`Value for "${key}" is invalid`);
         return false;
       }
+      /* istanbul ignore if (not currently utilized) */
       if (required.includes(key) && !state?.value) {
         this.onSaveError(`"${key}" cannot be empty.`);
         return false;
