@@ -50,34 +50,38 @@ export default class OSStorage extends H5P.fsImplementations
     this.privateContentDirectory = config.privateContentDirectory;
   }
 
+  protected get h5pPaths(): Array<{
+    contentId: string;
+    h5pPath: string;
+  }> {
+    return !fsExtra.existsSync(this.contentPath)
+      ? []
+      : fsExtra
+          .readdirSync(this.contentPath, { withFileTypes: true })
+          .filter((d) => d.isDirectory())
+          .map((dirent) => ({
+            contentId: dirent.name,
+            h5pPath: path.join(this.contentPath, dirent.name, H5P_NAME),
+          }))
+          .filter(({ h5pPath }) => fsExtra.existsSync(h5pPath));
+  }
+
   protected get allH5PMetadata(): Array<{
     contentId: string;
     h5pMeta: H5P.IContentMetadata;
   }> {
-    return fsExtra
-      .readdirSync(this.contentPath, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
-      .map((dirent) => ({
-        contentId: dirent.name,
-        h5pPath: path.join(this.contentPath, dirent.name, 'h5p.json'),
-      }))
-      .filter(({ h5pPath }) => fsExtra.existsSync(h5pPath))
-      .map(({ contentId, h5pPath }) => ({
-        contentId,
-        h5pMeta: fsExtra.readJSONSync(h5pPath),
-      }));
+    return this.h5pPaths.map(({ contentId, h5pPath }) => ({
+      contentId,
+      h5pMeta: fsExtra.readJSONSync(h5pPath),
+    }));
   }
 
   protected async createContentId() {
-    const idxOffset = 1;
-    const numbered = fsExtra
-      .readdirSync(this.contentPath, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
-      .map((d) => parseInt(d.name))
+    const numbered = this.h5pPaths
+      .map(({ contentId }) => parseInt(contentId))
       .filter((n) => !isNaN(n))
       .sort((a, b) => a - b);
-    const i = numbered.findIndex((v, idx) => v - idxOffset !== idx);
-    return ((i === -1 ? numbered.length : i) + idxOffset).toString();
+    return ((numbered[numbered.length - 1] ?? 0) + 1).toString();
   }
 
   protected async writeJSON(path: string, obj: any) {
