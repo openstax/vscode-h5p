@@ -112,6 +112,14 @@ export default class OSStorage extends H5P.fsImplementations
     return id;
   }
 
+  public async deleteContent(contentId: string, user?: H5P.IUser) {
+    const privatePath = path.join(this.privateContentDirectory, contentId);
+    await Promise.all([
+      super.deleteContent(contentId, user),
+      fsExtra.rmSync(privatePath, { recursive: true })
+    ]);
+  }
+
   public async getMetadata(
     contentId: string,
     user?: H5P.IUser
