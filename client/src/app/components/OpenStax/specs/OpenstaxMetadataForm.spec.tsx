@@ -3,6 +3,7 @@ import {
   fireEvent,
   render,
   getByDisplayValue,
+  screen,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
@@ -379,23 +380,25 @@ describe('OpenstaxMetadataForm', () => {
   });
   describe('Form validation', () => {
     it('stores information about field validity', async () => {
-      const nicknameInitialValue = 'supercoolnickname';
-      const errorValue = nicknameInitialValue + '+';
+      const moduleIdInitialValue = 'a/m00001/index.cnxml';
+      const errorValue = moduleIdInitialValue + '+';
       const { openstaxForm, getByDisplayValue } = await initFormWithMinData({
-        formDataOverride: { nickname: nicknameInitialValue },
+        formDataOverride: {
+          'module-id': [{ module: moduleIdInitialValue, 'element-id': '' }],
+        },
       });
-      const nickInput = await getByDisplayValue(nicknameInitialValue);
-      expect(nickInput).toBeTruthy();
+      const moduleIdInput = await getByDisplayValue('m00001');
+      expect(moduleIdInput).toBeTruthy();
       // Validity checks happen in handleInputChange
       act(() => {
-        fireEvent.change(nickInput, { target: { value: errorValue } });
+        fireEvent.change(moduleIdInput, { target: { value: errorValue } });
       });
       await openstaxForm.current!.save();
       expect(defaultMockContentService.saveOSMeta).not.toHaveBeenCalled();
-      expect(nickInput.value).toBe(errorValue);
+      expect(moduleIdInput.value).toBe(errorValue);
       expect(openstaxForm.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
-        'OpenStax Metadata: Value for "nickname" is invalid'
+        'OpenStax Metadata: Value for "module-id" is invalid'
       );
     });
     it('rejects invalid book input set values', async () => {
