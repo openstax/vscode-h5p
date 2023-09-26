@@ -112,22 +112,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
     },
-    "100": {
-      "content.json": "{}
-",
-      "h5p.json": "{
-  "title": "this should be stored in folder 100"
-}
-",
-      "metadata.json": "{
-  "books": [
-    "meta-1"
-  ],
-  "nickname": "this should be stored in folder 100"
-}
-",
-    },
-    "2": {
+    "101": {
       "content.json": "{
   "this": "could",
   "literally": "be",
@@ -138,7 +123,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
       "h5p.json": "{
-  "title": "this should be stored in folder 2",
+  "title": "this should be stored in folder 101",
   "mainLibrary": "something",
   "language": "U",
   "license": "",
@@ -150,19 +135,18 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
       "metadata.json": "{
-  "nickname": "my-nickname",
+  "nickname": "this should be stored in folder 101",
   "books": [
     "something"
   ]
 }
 ",
     },
-    "3": {},
-    "4": {
+    "102": {
       "content.json": "{}
 ",
       "h5p.json": "{
-  "title": "this should be stored in folder 4",
+  "title": "this should be stored in folder 102",
   "mainLibrary": "something",
   "language": "U",
   "license": "",
@@ -177,11 +161,25 @@ exports[`File Content Storage saves content as expected 1`] = `
   "books": [
     "meta-2"
   ],
-  "nickname": "this should be stored in folder 4"
+  "nickname": "this should be stored in folder 102"
 }
 ",
     },
-    "5": {},
+    "2": {
+      "content.json": "{}
+",
+      "h5p.json": "{
+  "title": "this should be stored in folder 2"
+}
+",
+      "metadata.json": "{
+  "books": [
+    "meta-1"
+  ],
+  "nickname": "this should be stored in folder 2"
+}
+",
+    },
   },
 }
 `;

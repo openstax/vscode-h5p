@@ -18,8 +18,17 @@ function dirToObj(base: string) {
 }
 
 describe('File Content Storage', () => {
-  const interactivesPath = `${VIRTUAL_ROOT}/interactives`;
   const config = new Config(VIRTUAL_ROOT, 'interactives', 'private');
+  const interactivesPath = config.contentDirectory;
+  const privatePath = config.privateContentDirectory;
+  const fakeH5PBase = {
+    mainLibrary: 'something',
+    language: 'U',
+    license: '',
+    embedTypes: ['iframe'],
+    preloadedDependencies: [],
+    defaultLanguage: '',
+  };
 
   beforeEach(() => {
     mockfs({
@@ -28,12 +37,7 @@ describe('File Content Storage', () => {
           '1': {
             'h5p.json': JSON.stringify({
               title: 'this should be stored in folder 1',
-              mainLibrary: 'something',
-              language: 'U',
-              license: '',
-              embedTypes: ['iframe'],
-              preloadedDependencies: [],
-              defaultLanguage: '',
+              ...fakeH5PBase,
             }),
             'content.json': JSON.stringify({}),
             'metadata.json': JSON.stringify({
@@ -51,32 +55,25 @@ describe('File Content Storage', () => {
 
   it('saves content as expected', async () => {
     const storage = new OSStorage(config);
-    const osMeta2 = {
-      nickname: 'my-nickname',
-      books: ['something']
-    }
-    expect(
-      await storage.addContent(
-        {
-          title: 'this should be stored in folder 100',
-        } as any,
-        {},
-        {} as any,
-        '100'
-      )
-    ).toBe('100');
-    await storage.saveOSMeta('100', { books: ['meta-1'] });
+
+    // It shoould use this directory since it does not have an h5p file in it
+    fsExtra.ensureDirSync(`${interactivesPath}/2`);
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 2',
-          mainLibrary: 'something',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+        } as any,
+        {},
+        {} as any
+      )
+    ).toBe('2');
+    await storage.saveOSMeta('2', { books: ['meta-1'] });
+    expect(
+      await storage.addContent(
+        {
+          title: 'this should be stored in folder 101',
+          ...fakeH5PBase,
+        } as any,
         {
           this: 'could',
           literally: 'be',
@@ -85,60 +82,51 @@ describe('File Content Storage', () => {
           very: 'loosely',
           defined: true,
         },
-        {} as any
+        {} as any,
+        '101'
       )
-    ).toBe('2');
-    await storage.saveOSMeta('2', osMeta2);
-    // Make sure it does not overwrite existing directories
-    fsExtra.ensureDirSync(path.join(interactivesPath, '3'));
-    // And that it finds the next available id
-    fsExtra.ensureDirSync(path.join(interactivesPath, '5'));
-    // Since 2 exists, 3 should be next
+    ).toBe('101');
+    const osMeta2 = {
+      nickname: 'my-nickname',
+      books: ['something'],
+    };
+    await storage.saveOSMeta('101', { ...osMeta2 });
     expect(
       await storage.addContent(
         {
-          title: 'this should be stored in folder 4',
-          mainLibrary: 'something',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+          title: 'this should be stored in folder 102',
+          ...fakeH5PBase,
+        } as any,
         {},
         {} as any
       )
-    ).toBe('4');
-    await storage.saveOSMeta('4', { books: ['meta-2'] });
+    ).toBe('102');
+    await storage.saveOSMeta('102', { books: ['meta-2'] });
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 1234',
-          mainLibrary: 'something',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+          ...fakeH5PBase,
+        } as any,
         {},
         {} as any,
         '1234' // should use this id
       )
     ).toBe('1234');
-    // Edge case: Save metadata separately from existing the h5p/content json
-    await storage.saveOSMeta('1', { books: ['meta-3'] });
     // When the nickname is given, that should be used
-    expect(await storage.getOSMeta('2')).toStrictEqual({
-      nickname: osMeta2.nickname,
+    // title always overwrites nickname
+    expect(await storage.getOSMeta('101')).toStrictEqual({
+      nickname: 'this should be stored in folder 101',
       books: osMeta2.books,
     });
     expect(await storage.getOSMeta('3')).toStrictEqual({});
     // When the nickname is not given, the h5p title is used
-    expect(await storage.getOSMeta('4')).toStrictEqual({
-      nickname: 'this should be stored in folder 4',
+    expect(await storage.getOSMeta('102')).toStrictEqual({
+      nickname: 'this should be stored in folder 102',
       books: ['meta-2'],
     });
+    // Edge case: Save metadata separately from existing the h5p/content json
+    await storage.saveOSMeta('1', { books: ['meta-3'] });
     expect(await storage.getOSMeta('1')).toStrictEqual({
       nickname: 'this should be stored in folder 1',
       books: ['meta-3'],
@@ -279,5 +267,61 @@ describe('File Content Storage', () => {
       );
     }).rejects.toThrowError(/.*duplicate.*/i);
     expect(await storage.contentExists('1234')).toBe(false);
+  });
+  it('deletes private data when content is deleted', async () => {
+    const storage = new OSStorage(config);
+    const id = '12345';
+    const h5pContent = {
+      fake: 'to make sure it is saved too',
+      questions: ['<p>Anything</p>'],
+    };
+    await storage.addContent(
+      {
+        title: 'this should be stored in folder 123456',
+        mainLibrary: 'H5P.Blanks',
+        language: 'U',
+        license: '',
+        embedTypes: ['iframe'],
+        preloadedDependencies: [],
+        defaultLanguage: '',
+      },
+      h5pContent,
+      {} as any,
+      id
+    );
+    await storage.saveOSMeta(id, {
+      'is-solution-public': 'false',
+    });
+
+    expect(await storage.contentExists(id)).toBe(true);
+    expect(fsExtra.existsSync(`${privatePath}/12345`)).toBe(true);
+
+    await storage.deleteContent(id);
+    expect(await storage.contentExists(id)).toBe(false);
+    expect(fsExtra.existsSync(`${privatePath}/12345`)).toBe(false);
+  });
+
+  it('still works when the contentPath does not exist', async () => {
+    mockfs({
+      [VIRTUAL_ROOT]: {},
+    });
+    const storage = new OSStorage(config);
+    const expectedId = '1';
+    expect(
+      await storage.addContent(
+        {
+          title: `this should be stored in folder ${expectedId}`,
+          mainLibrary: 'H5P.Blanks',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {},
+        {} as any
+      )
+    ).toBe('1');
+    await storage.saveOSMeta(expectedId, {});
   });
 });
