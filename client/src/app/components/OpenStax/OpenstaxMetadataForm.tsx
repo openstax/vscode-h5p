@@ -14,7 +14,6 @@ import LO from './LO';
 import ModuleID from './ModuleID';
 import APLO from './APLO';
 import Time from './Time';
-import Nickname from './Nickname';
 import { IContentService } from '../../services/ContentService';
 import PublicCheckbox from './PublicCheckbox';
 import HistoricalThinking from './HistoricalThinking';
@@ -37,7 +36,6 @@ type SingleInputs = {
   'assignment-type': InputState;
   'dok-tag': InputState;
   time: InputState;
-  nickname: InputState;
   'is-solution-public': InputState;
 };
 
@@ -191,17 +189,6 @@ const exerciseInputs: Array<
   } & ({ key: keyof InputSets } | { key: keyof SingleInputs })
 > = [
   {
-    key: 'nickname',
-    make(inputHandlerFactory, _) {
-      return (
-        <Nickname
-          {...inputHandlerFactory(this.key)}
-          required={this.isRequired}
-        />
-      );
-    },
-  },
-  {
     key: 'module-id',
     make(_, inputSetHandlerFactory) {
       return (
@@ -313,7 +300,6 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     'assignment-type': { ...defaultInputState },
     'dok-tag': { ...defaultInputState },
     time: { ...defaultInputState },
-    nickname: { ...defaultInputState },
     'is-solution-public': { ...defaultInputState, value: 'false' },
     books: [],
     'ap-lo': [],

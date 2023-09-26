@@ -18,7 +18,6 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
   "dok-tag": "",
   "is-solution-public": "false",
   "module-id": [],
-  "nickname": "test",
   "time": "",
 }
 `;
@@ -45,7 +44,6 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
   "dok-tag": "",
   "is-solution-public": "false",
   "module-id": [],
-  "nickname": "test",
   "time": "",
 }
 `;
@@ -69,7 +67,6 @@ exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values wh
   "dok-tag": "",
   "is-solution-public": "false",
   "module-id": [],
-  "nickname": "test",
   "time": "",
 }
 `;
@@ -121,10 +118,6 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
     },
   ],
   "nclex": [],
-  "nickname": {
-    "isValid": true,
-    "value": "test",
-  },
   "rp": [],
   "science-practice": [
     {
@@ -172,7 +165,6 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
           "module": "modules/m000003/index.cnxml",
         },
       ],
-      "nickname": "test",
       "time": "",
     },
   ],

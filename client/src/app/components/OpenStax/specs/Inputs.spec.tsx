@@ -4,7 +4,6 @@ import SingleInput from '../SingleInput';
 import { DropdownOption, SingleInputProps } from '../types';
 import { InputSet, InputSetProps } from '../InputSet';
 import LO from '../LO';
-import Nickname from '../Nickname';
 import React from 'react';
 import { collect, range } from '../utils';
 import AACN from '../AACN';
@@ -322,19 +321,6 @@ describe('Inputs', () => {
             ['2', false],
             ['m00012', true],
           ],
-        ]
-      );
-    });
-  });
-
-  describe('nickname', () => {
-    it('validates values', () => {
-      testSingleInputValidation(
-        (state) => <Nickname {...state} />,
-        [
-          ['Anything', true],
-          [' ', false],
-          ['Anything_else', true],
         ]
       );
     });
