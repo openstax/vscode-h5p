@@ -116,7 +116,7 @@ export default class OSStorage extends H5P.fsImplementations
     const privatePath = path.join(this.privateContentDirectory, contentId);
     await Promise.all([
       super.deleteContent(contentId, user),
-      fsExtra.rmSync(privatePath, { recursive: true })
+      fsExtra.rmSync(privatePath, { recursive: true }),
     ]);
   }
 

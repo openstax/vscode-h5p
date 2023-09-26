@@ -8,26 +8,24 @@ export function SingleDropdown<
   handleInputChange,
   value,
   styles,
-  required = false
+  required = false,
 }: {
   options: Array<OptionType>;
   handleInputChange: (value: string) => void;
   value: string;
   styles?: StylesConfig<{ label: string; value: string }, false>;
-  required?: boolean
+  required?: boolean;
 }) {
   const defaultValue = {
     label: 'Select an option...',
     value: '',
-  }
+  };
   return (
     <Select
       options={options}
       isSearchable={true}
       isClearable={!required}
-      value={
-        options.find((o) => o.value === value) ?? defaultValue
-      }
+      value={options.find((o) => o.value === value) ?? defaultValue}
       onChange={(v) => {
         handleInputChange((v ?? defaultValue).value);
       }}
