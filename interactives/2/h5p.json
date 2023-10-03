@@ -4,18 +4,13 @@
   ],
   "language": "en",
   "license": "U",
-  "extraTitle": "SomeTitle",
-  "title": "SomeTitle",
-  "mainLibrary": "H5P.Blanks",
+  "extraTitle": "AnotherTitle",
+  "title": "AnotherTitle",
+  "mainLibrary": "H5P.MultiChoice",
   "preloadedDependencies": [
     {
       "machineName": "FontAwesome",
       "majorVersion": 4,
-      "minorVersion": 5
-    },
-    {
-      "machineName": "H5P.Question",
-      "majorVersion": 1,
       "minorVersion": 5
     },
     {
@@ -34,14 +29,14 @@
       "minorVersion": 0
     },
     {
-      "machineName": "H5P.TextUtilities",
+      "machineName": "H5P.Question",
       "majorVersion": 1,
-      "minorVersion": 3
+      "minorVersion": 5
     },
     {
-      "machineName": "H5P.Blanks",
+      "machineName": "H5P.MultiChoice",
       "majorVersion": 1,
-      "minorVersion": 14
+      "minorVersion": 16
     }
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "answers": [
+    {
+      "correct": true,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<div>A</div>\n"
+    },
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<div>B</div>\n"
+    }
+  ]
+}
