@@ -608,7 +608,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
 
     const handleBookChange = (oldBook: string, newBook?: string) => {
       const activeInputs =
-        newBook !== undefined
+        newBook !== undefined && newBook !== ''
           ? bookInputs.filter((input) => input.isActive(newBook))
           : [];
       const updated = Object.fromEntries(
