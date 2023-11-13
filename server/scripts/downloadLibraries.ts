@@ -21,7 +21,7 @@ const config = new H5P.H5PConfig(undefined, Config.h5pConfig);
 const h5pEditor = createH5PEditor(
   config,
   `${tempFolderPath}/libraries`,
-  new Config(tempFolderPath),
+  new Config(tempFolderPath, '', ''),
   `${tempFolderPath}/temporary-storage`,
   `${tempFolderPath}/user-data`,
   undefined,
