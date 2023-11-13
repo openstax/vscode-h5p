@@ -58,13 +58,21 @@ export default class ContentList extends React.Component<{
               content.title.toLocaleLowerCase().includes(s);
         }
       });
-    return (
-      filters.length !== 0
-        ? this.state.contentList.filter((content) =>
-            filters.every((filter) => filter(content))
-          )
-        : this.state.contentList
-    ).sort((a, b) => parseInt(a.contentId) - parseInt(b.contentId));
+    let newContent: IContentListEntry | undefined;
+    const filtered: IContentListEntry[] = [];
+    for (const content of this.state.contentList) {
+      if (content.contentId === 'new') {
+        newContent = content;
+      } else if (filters.every((filter) => filter(content))) {
+        filtered.push(content);
+      }
+    }
+    filtered.sort((a, b) => a.contentId.localeCompare(b.contentId));
+    // If there is new content being created, we want it to appear first
+    if (newContent !== undefined) {
+      filtered.unshift(newContent);
+    }
+    return filtered;
   }
 
   public render(): React.ReactNode {
@@ -154,6 +162,7 @@ export default class ContentList extends React.Component<{
 
   protected new() {
     this.setState({
+      page: 1,
       contentList: [
         {
           contentId: 'new',
