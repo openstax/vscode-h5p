@@ -12,7 +12,6 @@ describe('OSH5PServer', () => {
   const mockEditor = {
     config: h5pConfig,
     contentStorage: {
-      saveOSMeta: jest.fn(),
       getOSMeta: jest.fn(),
     },
   };
@@ -25,7 +24,6 @@ describe('OSH5PServer', () => {
     server.start(mockEditor, app, Config.port);
     let res = await request(app).get('/does-not-exist-404-please');
     expect(res.status).toBe(404);
-    expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(0);
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(0);
 
     // fetch non-existing
@@ -36,11 +34,6 @@ describe('OSH5PServer', () => {
     expect(res.body).toStrictEqual({});
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(1);
 
-    // save
-    res = await request(app).post(`${h5pConfig.baseUrl}/1/openstax-metadata/`);
-    expect(res.status).toBe(200);
-    expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(1);
-
     // fetch error
     mockEditor.contentStorage.getOSMeta = jest
       .fn()
@@ -50,15 +43,5 @@ describe('OSH5PServer', () => {
     );
     expect(res.status).toBe(500);
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(1);
-
-    // save error
-    mockEditor.contentStorage.saveOSMeta = jest
-      .fn()
-      .mockRejectedValue('Save Error');
-    res = res = await request(app).post(
-      `${h5pConfig.baseUrl}/1/openstax-metadata/`
-    );
-    expect(res.status).toBe(500);
-    expect(mockEditor.contentStorage.saveOSMeta).toBeCalledTimes(1);
   });
 });

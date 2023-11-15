@@ -3,7 +3,6 @@ import {
   fireEvent,
   render,
   getByDisplayValue,
-  screen,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
@@ -369,13 +368,10 @@ describe('OpenstaxMetadataForm', () => {
         formDataOverride: formDataEncoded,
       });
       const { openstaxForm } = controller;
-      await openstaxForm.current!.save();
       expect(
         openstaxForm.current!.decodeValues(formDataEncoded)
       ).toMatchSnapshot();
-      expect(
-        (defaultMockContentService.saveOSMeta as jest.Mock).mock.calls
-      ).toMatchSnapshot();
+      expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
     });
   });
   describe('Form validation', () => {
@@ -393,8 +389,6 @@ describe('OpenstaxMetadataForm', () => {
       act(() => {
         fireEvent.change(moduleIdInput, { target: { value: errorValue } });
       });
-      await openstaxForm.current!.save();
-      expect(defaultMockContentService.saveOSMeta).not.toHaveBeenCalled();
       expect(moduleIdInput.value).toBe(errorValue);
       expect(openstaxForm.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
@@ -417,11 +411,10 @@ describe('OpenstaxMetadataForm', () => {
       act(() => {
         fireEvent.change(loInput!, { target: { value: 'invalid ' } });
       });
-      await openstaxFormBadLO.current!.save('new');
+      expect(openstaxFormBadLO.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
         'OpenStax Metadata: Value for "lo" is invalid'
       );
-      expect(defaultFormProps.contentService.saveOSMeta).not.toBeCalled();
     });
     it('rejects invalid book input values', async () => {
       const { openstaxForm: openstaxFormBadLO, getByDisplayValue } =
@@ -439,11 +432,10 @@ describe('OpenstaxMetadataForm', () => {
       act(() => {
         fireEvent.change(loInput!, { target: { value: 'invalid ' } });
       });
-      await openstaxFormBadLO.current!.save('new');
+      expect(openstaxFormBadLO.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
         'OpenStax Metadata: Value for "aacn" is invalid'
       );
-      expect(defaultFormProps.contentService.saveOSMeta).not.toBeCalled();
     });
     // No required fields right now (leaving this in incase this changes)
     // it('does not save when information is missing', async () => {
@@ -474,10 +466,7 @@ describe('OpenstaxMetadataForm', () => {
       };
       const { openstaxForm } = await createForm(formProps);
       expect(openstaxForm.current).toBeTruthy();
-      await openstaxForm.current!.save('does not matter');
       expect(formProps.contentService.getOSMeta).toBeCalledTimes(1);
-      expect(formProps.onSaveError).not.toBeCalled();
-      expect(formProps.contentService.saveOSMeta).toBeCalledTimes(1);
     });
   });
 });
