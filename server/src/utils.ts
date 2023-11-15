@@ -177,3 +177,12 @@ export function parseBooksXML(booksXmlPath: string): {
     publicRoot: bookVars['PUBLIC_ROOT'] ?? '/interactives',
   };
 }
+
+export function assertValue<T>(
+  v: T | null | undefined,
+  message = 'Expected a value but did not get anything'
+) {
+  if (v !== null && v !== undefined) return v;
+  /* istanbul ignore next */
+  throw new Error(`BUG: assertValue. Message: ${message}`);
+}

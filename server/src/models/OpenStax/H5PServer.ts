@@ -10,20 +10,10 @@ export default class OSH5PServer extends H5PServer<OSH5PEditor> {
     res.status(200).send(metadata);
   }
 
-  protected async saveMetadata(req, res) {
-    const id = req.params.contentId;
-    const metadata = req.body;
-    await this.h5pEditor.contentStorage.saveOSMeta(id, metadata);
-    res.status(200).end();
-  }
-
   protected createMetadataRouter() {
     const router = express.Router();
     router.get('/:contentId/openstax-metadata/', (req: any, res) =>
       this.getMetadata(req, res).catch(this.handleError(res))
-    );
-    router.post('/:contentId/openstax-metadata/', (req: any, res) =>
-      this.saveMetadata(req, res).catch(this.handleError(res))
     );
     return router;
   }

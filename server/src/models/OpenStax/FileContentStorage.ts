@@ -35,15 +35,9 @@ function isSolutionPublic(osMeta: any): boolean {
   return (osMeta['is-solution-public'] ?? 'true') === 'true';
 }
 
-type ContentTransaction = {
-  metadata: H5P.IContentMetadata;
-  content: any;
-};
-
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
   private privateContentDirectory: string;
-  private pending: Record<string, ContentTransaction> = {};
 
   constructor(config: Config) {
     super(config.contentDirectory);
@@ -102,13 +96,41 @@ export default class OSStorage extends H5P.fsImplementations
     ) {
       throw new CustomBaseError('Duplicate title');
     }
+    const osMeta = content.osMeta;
+    delete content.osMeta;
     if (id === undefined || id === null) {
       id = await this.createContentId();
     }
-    this.pending[id] = {
-      metadata,
-      content,
-    };
+    const targetPath = path.join(this.contentPath, id);
+    const privatePath = path.join(this.privateContentDirectory, id);
+    osMeta.nickname = metadata.title;
+    try {
+      if (!isSolutionPublic(osMeta)) {
+        const [sanitized, privateData] = yankAnswers(
+          content,
+          metadata.mainLibrary
+        );
+        await fsExtra.ensureDir(privatePath);
+        await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
+
+        // write sanitized content object to content.json file
+        content = sanitized;
+      } else {
+        await fsExtra.rm(privatePath, { recursive: true, force: true });
+      }
+      await fsExtra.ensureDir(targetPath);
+      await Promise.all([
+        this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
+        this.writeJSON(path.join(targetPath, H5P_NAME), metadata),
+        this.writeJSON(path.join(targetPath, METADATA_NAME), {
+          ...(await this.getOSMeta(id)),
+          ...osMeta,
+        }),
+      ]);
+    } catch (e) {
+      await fsExtra.rm(targetPath, { recursive: true, force: true });
+      throw e;
+    }
     return id;
   }
 
@@ -132,51 +154,6 @@ export default class OSStorage extends H5P.fsImplementations
       metadata.mainLibrary = metadata.mainLibrary.toString();
     }
     return metadata;
-  }
-
-  public async saveOSMeta(contentId: string, osMeta: any) {
-    try {
-      const privatePath = path.join(this.privateContentDirectory, contentId);
-      const targetPath = path.join(this.contentPath, contentId);
-      let { content, metadata: h5pMeta } = this.pending[contentId] ?? {
-        content: await this.getParameters(contentId),
-        metadata: await this.getMetadata(contentId),
-      };
-      osMeta.nickname = h5pMeta.title;
-      // check if private
-      if (!isSolutionPublic(osMeta)) {
-        const [sanitized, privateData] = yankAnswers(
-          content,
-          h5pMeta.mainLibrary
-        );
-
-        await fsExtra.ensureDir(privatePath);
-        await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
-
-        // write sanitized content object to content.json file
-        content = sanitized;
-      } else {
-        await fsExtra.rm(privatePath, { recursive: true, force: true });
-      }
-
-      await fsExtra.ensureDir(targetPath);
-
-      try {
-        await Promise.all([
-          this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
-          this.writeJSON(path.join(targetPath, H5P_NAME), h5pMeta),
-          this.writeJSON(path.join(targetPath, METADATA_NAME), {
-            ...(await this.getOSMeta(contentId)),
-            ...osMeta,
-          }),
-        ]);
-      } catch (e) {
-        await fsExtra.rm(targetPath, { recursive: true, force: true });
-        throw e;
-      }
-    } finally {
-      delete this.pending[contentId];
-    }
   }
 
   public async getOSMeta(contentId: string) {

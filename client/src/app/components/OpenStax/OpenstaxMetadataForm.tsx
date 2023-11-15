@@ -333,20 +333,6 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     }
   }
 
-  async save(contentId: string) {
-    if (this.isInputValid) {
-      try {
-        await this.props.contentService.saveOSMeta(
-          contentId,
-          this.encodedValues
-        );
-      } catch (err) {
-        /* istanbul ignore next */
-        this.onSaveError((err as Error).message);
-      }
-    }
-  }
-
   get metadataEntries(): MetadataEntry[] {
     return Object.entries(this.state).filter(isMetadataEntry);
   }
