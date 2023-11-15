@@ -63,11 +63,16 @@ describe('File Content Storage', () => {
         {
           title: 'this should be stored in folder 2',
         } as any,
-        {},
+        {
+          osMeta: { books: ['meta-1'] },
+        },
         {} as any
       )
     ).toBe('2');
-    await storage.saveOSMeta('2', { books: ['meta-1'] });
+    const osMeta2 = {
+      nickname: 'my-nickname',
+      books: ['something'],
+    };
     expect(
       await storage.addContent(
         {
@@ -81,39 +86,54 @@ describe('File Content Storage', () => {
           it: 'is',
           very: 'loosely',
           defined: true,
+          osMeta: { ...osMeta2 },
         },
         {} as any,
         '101'
       )
     ).toBe('101');
-    const osMeta2 = {
-      nickname: 'my-nickname',
-      books: ['something'],
-    };
-    await storage.saveOSMeta('101', { ...osMeta2 });
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 102',
           ...fakeH5PBase,
         } as any,
-        {},
+        {
+          osMeta: {
+            books: ['meta-2'],
+          },
+        },
         {} as any
       )
     ).toBe('102');
-    await storage.saveOSMeta('102', { books: ['meta-2'] });
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 1234',
           ...fakeH5PBase,
         } as any,
-        {},
+        {
+          osMeta: {},
+        },
         {} as any,
         '1234' // should use this id
       )
     ).toBe('1234');
-    // When the nickname is given, that should be used
+    // Modify existing content
+    await storage.addContent(
+      {
+        title: 'this should be stored in folder 1',
+        ...fakeH5PBase,
+      } as any,
+      { osMeta: { books: ['meta-3'] } },
+      {} as any,
+      '1'
+    );
+    expect(await storage.getOSMeta('1')).toStrictEqual({
+      nickname: 'this should be stored in folder 1',
+      books: ['meta-3'],
+      extra: 'Something extra',
+    });
     // title always overwrites nickname
     expect(await storage.getOSMeta('101')).toStrictEqual({
       nickname: 'this should be stored in folder 101',
@@ -124,13 +144,6 @@ describe('File Content Storage', () => {
     expect(await storage.getOSMeta('102')).toStrictEqual({
       nickname: 'this should be stored in folder 102',
       books: ['meta-2'],
-    });
-    // Edge case: Save metadata separately from existing the h5p/content json
-    await storage.saveOSMeta('1', { books: ['meta-3'] });
-    expect(await storage.getOSMeta('1')).toStrictEqual({
-      nickname: 'this should be stored in folder 1',
-      books: ['meta-3'],
-      extra: 'Something extra',
     });
     const result = dirToObj(VIRTUAL_ROOT);
     mockfs.restore();
@@ -149,11 +162,12 @@ describe('File Content Storage', () => {
         preloadedDependencies: [],
         defaultLanguage: '',
       },
-      {},
+      {
+        osMeta: {},
+      },
       {} as any,
       id
     );
-    await storage.saveOSMeta('1234', {});
     const loaded = await storage.getMetadata(id);
     expect(typeof loaded.title).toBe('string');
     expect(typeof loaded.mainLibrary).toBe('string');
@@ -185,13 +199,15 @@ describe('File Content Storage', () => {
             preloadedDependencies: [],
             defaultLanguage: '',
           },
-          h5pContent,
+          {
+            ...h5pContent,
+            osMeta: {
+              'is-solution-public': isSolutionPublic.toString(),
+            },
+          },
           {} as any,
           id
         );
-        await storage.saveOSMeta(id, {
-          'is-solution-public': isSolutionPublic.toString(),
-        });
         expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
         const result = dirToObj(VIRTUAL_ROOT);
         mockfs.restore();
@@ -204,24 +220,26 @@ describe('File Content Storage', () => {
     const h5pContent = {
       fake: 'to make sure it is saved too',
     };
-    await storage.addContent(
-      {
-        title: '',
-        mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
-        language: 'U',
-        license: '',
-        embedTypes: ['iframe'],
-        preloadedDependencies: [],
-        defaultLanguage: '',
-      },
-      h5pContent,
-      {} as any,
-      '1234'
-    );
     await expect(async () => {
-      await storage.saveOSMeta('1234', {
-        'is-solution-public': 'false',
-      });
+      await storage.addContent(
+        {
+          title: '',
+          mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {
+          ...h5pContent,
+          osMeta: {
+            'is-solution-public': 'false',
+          },
+        },
+        {} as any,
+        '1234'
+      );
     }).rejects.toThrowError(
       'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"'
     );
@@ -229,22 +247,23 @@ describe('File Content Storage', () => {
   it('cleans up orphaned files on error', async () => {
     const storage = new OSStorage(config);
     storage.getOSMeta = jest.fn().mockRejectedValue(new Error('TEST'));
-    await storage.addContent(
-      {
-        title: '',
-        mainLibrary: 'H5P.Blanks',
-        language: 'U',
-        license: '',
-        embedTypes: ['iframe'],
-        preloadedDependencies: [],
-        defaultLanguage: '',
-      },
-      {},
-      {} as any,
-      '1234'
-    );
     await expect(async () => {
-      await storage.saveOSMeta('1234', {});
+      await storage.addContent(
+        {
+          title: '',
+          mainLibrary: 'H5P.Blanks',
+          language: 'U',
+          license: '',
+          embedTypes: ['iframe'],
+          preloadedDependencies: [],
+          defaultLanguage: '',
+        },
+        {
+          osMeta: {},
+        },
+        {} as any,
+        '1234'
+      );
     }).rejects.toThrowError('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
   });
@@ -261,7 +280,9 @@ describe('File Content Storage', () => {
           preloadedDependencies: [],
           defaultLanguage: '',
         },
-        {},
+        {
+          osMeta: {},
+        },
         {} as any,
         '12345'
       );
@@ -285,13 +306,15 @@ describe('File Content Storage', () => {
         preloadedDependencies: [],
         defaultLanguage: '',
       },
-      h5pContent,
+      {
+        ...h5pContent,
+        osMeta: {
+          'is-solution-public': 'false',
+        },
+      },
       {} as any,
       id
     );
-    await storage.saveOSMeta(id, {
-      'is-solution-public': 'false',
-    });
 
     expect(await storage.contentExists(id)).toBe(true);
     expect(fsExtra.existsSync(`${privatePath}/12345`)).toBe(true);
@@ -318,10 +341,11 @@ describe('File Content Storage', () => {
           preloadedDependencies: [],
           defaultLanguage: '',
         },
-        {},
+        {
+          osMeta: {},
+        },
         {} as any
       )
     ).toBe('1');
-    await storage.saveOSMeta(expectedId, {});
   });
 });

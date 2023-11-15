@@ -130,43 +130,38 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
 `;
 
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 2`] = `
-[
-  [
-    undefined,
-    {
-      "assignment-type": "",
-      "blooms": "1",
-      "books": {
-        "stax-apbio": {
-          "ap-lo": [
-            "ABC.0.F",
-          ],
-          "science-practice": "concept-explanation",
-        },
-        "stax-psy": {
-          "lo": [
-            "00-00-01",
-          ],
-        },
-      },
-      "dok-tag": "",
-      "is-solution-public": "false",
-      "module-id": [
-        {
-          "element-id": "",
-          "module": "modules/m000001/index.cnxml",
-        },
-        {
-          "element-id": "",
-          "module": "modules/m000002/index.cnxml",
-        },
-        {
-          "element-id": "term-03",
-          "module": "modules/m000003/index.cnxml",
-        },
+{
+  "assignment-type": "",
+  "blooms": "1",
+  "books": {
+    "stax-apbio": {
+      "ap-lo": [
+        "ABC.0.F",
       ],
-      "time": "",
+      "science-practice": "concept-explanation",
+    },
+    "stax-psy": {
+      "lo": [
+        "00-00-01",
+      ],
+    },
+  },
+  "dok-tag": "",
+  "is-solution-public": "false",
+  "module-id": [
+    {
+      "element-id": "",
+      "module": "modules/m000001/index.cnxml",
+    },
+    {
+      "element-id": "",
+      "module": "modules/m000002/index.cnxml",
+    },
+    {
+      "element-id": "term-03",
+      "module": "modules/m000003/index.cnxml",
     },
   ],
-]
+  "time": "",
+}
 `;
