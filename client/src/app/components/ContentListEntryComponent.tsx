@@ -252,7 +252,11 @@ export default class ContentListEntryComponent extends React.Component<{
               h5pUrl={this.h5pUrl}
               contentId={this.props.data.contentId}
               loadContentCallback={this.props.contentService.getEdit}
-              saveContentCallback={this.props.contentService.save}
+              saveContentCallback={async (contentId, requestBody) => {
+                requestBody.params.params.osMeta =
+                  this.openstaxForm.current?.encodedValues;
+                return this.props.contentService.save(contentId, requestBody);
+              }}
               onSaved={this.onSaved}
               onLoaded={this.onEditorLoaded}
               onSaveError={this.onSaveError}
@@ -344,7 +348,6 @@ export default class ContentListEntryComponent extends React.Component<{
     try {
       const returnData = await this.h5pEditor.current?.save();
       if (returnData) {
-        await this.openstaxForm.current?.save(returnData.contentId);
         await this.props.onSaved({
           h5PUrl: this.h5pUrl,
           contentId: returnData.contentId,

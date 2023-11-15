@@ -24,7 +24,6 @@ export interface IContentService {
   ): Promise<{ contentId: string; metadata: IContentMetadata }>;
   generateDownloadLink(contentId: string): string;
   getOSMeta(contentId: string): Promise<any>;
-  saveOSMeta(contentId: string, metadata: any): Promise<void>;
 }
 
 axios.interceptors.response.use(
@@ -141,18 +140,6 @@ export class ContentService implements IContentService {
         `${this.baseUrl}/${contentId}/openstax-metadata/`
       );
       return res.data;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  };
-  saveOSMeta = async (contentId, metadata: any): Promise<void> => {
-    console.log(`ContentService: Saving OSMeta for ${contentId}...`);
-    try {
-      await axios.post(
-        `${this.baseUrl}/${contentId}/openstax-metadata/`,
-        metadata
-      );
     } catch (err) {
       console.error(err);
       throw err;
