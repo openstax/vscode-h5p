@@ -8,6 +8,7 @@ export type SingleInputProps = {
   isValid: boolean;
   handleInputChange: (value: string, isValid?: boolean) => void;
   required?: boolean;
+  isDisabled?: boolean;
 };
 
 export type InputSetHandlerProps<T> = {
@@ -21,6 +22,7 @@ export type InputSetHandlerProps<T> = {
 export type InputState = {
   value: string;
   isValid: boolean;
+  isDisabled?: boolean;
 };
 
 export type BookInputState = InputState & { book: string };
