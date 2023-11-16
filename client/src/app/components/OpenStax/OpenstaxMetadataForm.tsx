@@ -3,7 +3,7 @@ import Blooms from './Blooms';
 import AssignmentType from './AssignmentType';
 import { Book } from './Book';
 import DokTag from './Dok';
-import { assertType, assertValue, chunk } from './utils';
+import { assertType, assertValue, chunk, randomId } from './utils';
 import {
   InputState,
   BookInputState,
@@ -30,13 +30,16 @@ import {
   NURSING_BOOKS,
 } from './constants';
 import { Button } from 'react-bootstrap';
+import Nickname from './Nickname';
 
 type SingleInputs = {
+  nickname: InputState;
   blooms: InputState;
   'assignment-type': InputState;
   'dok-tag': InputState;
   time: InputState;
   'is-solution-public': InputState;
+  'errata-id': InputState;
 };
 
 type InputSets = {
@@ -189,6 +192,19 @@ const exerciseInputs: Array<
   } & ({ key: keyof InputSets } | { key: keyof SingleInputs })
 > = [
   {
+    key: 'nickname',
+    isRequired: true,
+    isActive: true,
+    make(inputHandlerFactory, _) {
+      return (
+        <Nickname
+          {...inputHandlerFactory(this.key)}
+          required={this.isRequired}
+        />
+      );
+    },
+  },
+  {
     key: 'module-id',
     make(_, inputSetHandlerFactory) {
       return (
@@ -248,7 +264,9 @@ const exerciseInputs: Array<
   },
 ];
 
-const metadataKeys: Array<keyof SavedState> = exerciseInputs.map((e) => e.key);
+const metadataKeys: Array<keyof SavedState> = exerciseInputs
+  .map((e) => e.key)
+  .concat(['errata-id']);
 const bookInputKeys: Array<keyof BookInputs> = bookInputs.map((b) => b.key);
 
 function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
@@ -295,6 +313,8 @@ const coders: Partial<
 
 export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public state: FormState = {
+    'errata-id': { ...defaultInputState },
+    nickname: { ...defaultInputState },
     'module-id': [],
     blooms: { ...defaultInputState },
     'assignment-type': { ...defaultInputState },
@@ -324,8 +344,21 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       const metadata = await this.props.contentService.getOSMeta(
         this.props.contentId
       );
-      if (metadata) {
-        this.setState({ ...this.decodeValues(metadata) });
+      if (Object.keys(metadata).length > 0) {
+        const decoded = this.decodeValues(metadata);
+        decoded.nickname = {
+          ...defaultInputState,
+          value: this.props.contentId,
+          isDisabled: true,
+        };
+        this.setState(decoded);
+      } else {
+        const errataId = await randomId();
+        const errataIdInputState = { ...defaultInputState, value: errataId };
+        this.setState({
+          nickname: { ...errataIdInputState },
+          'errata-id': errataIdInputState,
+        });
       }
     } catch (err) {
       // TODO: Improve error handling during decoding

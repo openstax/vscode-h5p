@@ -51,3 +51,33 @@ export function assertType<T>(
   /* istanbul ignore next */
   throw new Error(`BUG: assertType. Message: ${message}`);
 }
+
+// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
+export async function digestMessage(
+  message: string,
+  options?: { algorithm?: string }
+) {
+  const { algorithm = 'SHA-1' } = options ?? {};
+  const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+  const hashBuffer = await crypto.subtle.digest(algorithm, msgUint8); // hash the message
+  const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join(''); // convert bytes to hex string
+  return hashHex;
+}
+
+export async function randomId(options?: {
+  salt?: string;
+  maxLength?: number;
+  message?: string;
+  algorithm?: string;
+}) {
+  const {
+    salt = Date.now().toString(),
+    maxLength = Infinity,
+    message = '',
+  } = options ?? {};
+  const hash = await digestMessage(`${salt} ${message}`, options);
+  return hash.slice(0, maxLength);
+}

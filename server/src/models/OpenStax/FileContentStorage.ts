@@ -3,6 +3,7 @@ import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
+import { assertValue } from '../../utils';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
@@ -88,22 +89,17 @@ export default class OSStorage extends H5P.fsImplementations
     user: H5P.IUser,
     id?: string | undefined
   ): Promise<string> {
-    if (
-      this.allH5PMetadata.some(
-        ({ contentId, h5pMeta }) =>
-          h5pMeta.title === metadata.title && contentId !== id
-      )
-    ) {
-      throw new CustomBaseError('Duplicate title');
-    }
     const osMeta = content.osMeta;
+    const realId =
+      id ?? assertValue<string>(osMeta.nickname?.trim() || undefined);
+    const targetPath = path.join(this.contentPath, realId);
+    const privatePath = path.join(this.privateContentDirectory, realId);
+    const h5pPath = path.join(targetPath, H5P_NAME);
     delete content.osMeta;
-    if (id === undefined || id === null) {
-      id = await this.createContentId();
+    delete osMeta.nickname;
+    if (realId !== id && fsExtra.pathExistsSync(h5pPath)) {
+      throw new CustomBaseError(`Duplicate id ${realId}`);
     }
-    const targetPath = path.join(this.contentPath, id);
-    const privatePath = path.join(this.privateContentDirectory, id);
-    osMeta.nickname = metadata.title;
     try {
       if (!isSolutionPublic(osMeta)) {
         const [sanitized, privateData] = yankAnswers(
@@ -121,9 +117,9 @@ export default class OSStorage extends H5P.fsImplementations
       await fsExtra.ensureDir(targetPath);
       await Promise.all([
         this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
-        this.writeJSON(path.join(targetPath, H5P_NAME), metadata),
+        this.writeJSON(h5pPath, metadata),
         this.writeJSON(path.join(targetPath, METADATA_NAME), {
-          ...(await this.getOSMeta(id)),
+          ...(await this.getOSMeta(realId)),
           ...osMeta,
         }),
       ]);
@@ -131,7 +127,7 @@ export default class OSStorage extends H5P.fsImplementations
       await fsExtra.rm(targetPath, { recursive: true, force: true });
       throw e;
     }
-    return id;
+    return realId;
   }
 
   public async deleteContent(contentId: string, user?: H5P.IUser) {

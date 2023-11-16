@@ -8,6 +8,7 @@ export default function SingleInput({
   styleInvalid = { outline: '2px solid red' },
   handleInputChange,
   placeholder,
+  isDisabled,
 }: SingleInputProps & {
   style?: React.CSSProperties;
   styleInvalid?: React.CSSProperties;
@@ -15,6 +16,7 @@ export default function SingleInput({
 }) {
   return (
     <input
+      disabled={isDisabled === true}
       value={value}
       onChange={(event) => handleInputChange(event.target.value)}
       style={isValid ? style : { ...style, ...styleInvalid }}
