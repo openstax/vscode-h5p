@@ -264,11 +264,12 @@ export default class OSH5PEditor extends H5P.H5PEditor {
     language?: string | undefined
   ): Promise<IHubInfo> {
     const baseValue = await super.getContentTypeCache(user, language);
+    const libsByName = Object.fromEntries(
+      baseValue.libraries.map((lib) => [lib.machineName, lib])
+    );
     return {
       ...baseValue,
-      libraries: baseValue.libraries.filter((lib) =>
-        supportedLibraryNames.includes(lib.machineName)
-      ),
+      libraries: supportedLibraryNames.map((name) => unwrap(libsByName[name])),
     };
   }
 }
