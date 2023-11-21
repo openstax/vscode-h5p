@@ -6,11 +6,12 @@ import {
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
 import Config from './config';
-import { unwrap } from '../../utils';
+import { assertValue, unwrap } from '../../utils';
 
 const supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
-const mathTags = [
+const supportedTags = [
+  // Math tags
   'math',
   'maction',
   'annotation',
@@ -75,6 +76,38 @@ const mathTags = [
   'annotation',
   'annotation-xml',
   'semantics',
+
+  // Tags that are known to have appeared in exercises
+  'a',
+  'b',
+  'blockquote',
+  'br',
+  'caption',
+  'code',
+  'div',
+  'em',
+  'figcaption',
+  'figure',
+  'h1',
+  'h5',
+  'i',
+  'iframe',
+  'img',
+  'li',
+  'ol',
+  'p',
+  'pre',
+  'small',
+  'span',
+  'strong',
+  'style',
+  'sub',
+  'sup',
+  'table',
+  'td',
+  'th',
+  'u',
+  'ul',
 ];
 
 export const alterLibrarySemantics = (
@@ -101,8 +134,8 @@ export const alterLibrarySemantics = (
   let semanticsCopy = [...semantics];
   const semanticMods =
     config.supportedLibraries[library.machineName]?.semantics;
-  if (semanticMods?.supportsMath === true) {
-    semanticsCopy = addTags(semanticsCopy, mathTags);
+  if (semanticMods?.supportsHTML === true) {
+    semanticsCopy = addTags(semanticsCopy, supportedTags);
   }
   const overridesForLib = semanticMods?.overrides;
   if (overridesForLib !== undefined) {
@@ -129,6 +162,66 @@ export const alterLibrarySemantics = (
   }
   return semanticsCopy;
 };
+
+/*
+  Monkey patch some stuff because the alternative was creating copies of the 
+  original classes.
+    - SemanticsEnforcer was removing HTML from content.json and this behavior
+      was undesired
+    - The semanticsEnforcer was a private field of ContentStorer and it was
+      initialized by ContentStorer
+    - The public methods of ContentStorer that used semanticsEnforcer also
+      used private methods of the class
+    - H5PEditor#saveOrUpdateContentReturnMetaData was another public method
+      that we would have needed to override because
+        - Our ContentStorer copy was a different type 
+        - H5PEditor created and used its own instance of ContentStorer
+    - We would have needed to copy H5PEditor#saveOrUpdateContentReturnMetaData
+      and create our own copies of private members to make our override
+      function the same as the original
+*/
+function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
+  const tryPatch = (
+    ptr: any,
+    patch: Record<string, any>,
+    fqPath: string[] = []
+  ) => {
+    for (const [fieldName, value] of Object.entries(patch)) {
+      const newPath = [...fqPath, fieldName];
+      if (!Reflect.has(ptr, fieldName)) {
+        throw new Error(
+          `"${newPath.join('.')}" cannot be patched because it does not exist.`
+        );
+      }
+      if (Object.prototype.toString.call(value) === '[object Object]') {
+        tryPatch(ptr[fieldName], value, newPath);
+      } else {
+        ptr[fieldName] = value;
+      }
+    }
+  };
+
+  tryPatch(
+    h5pEditor,
+    {
+      contentStorer: {
+        semanticsEnforcer: {
+          async enforceSemanticStructure() {
+            // PATCH: do not remove html and attributes from content.json
+            //
+            // Originally this function removed html tags and attributes that
+            // were not allowed in the semantics.json of the library.
+            // We could extend the list of allowed tags, but we could not
+            // extend the list of allowed attributes.
+            // This created problems for HTML images, iframes, etc. because
+            // important attributes, like src or alt, would be stripped.
+          },
+        },
+      },
+    },
+    ['h5pEditor']
+  );
+}
 
 export default class OSH5PEditor extends H5P.H5PEditor {
   constructor(
@@ -163,6 +256,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
       },
       contentUserDataStorage
     );
+    monkeyPatchH5PEditor(this);
   }
 
   public async getContentTypeCache(
