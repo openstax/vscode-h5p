@@ -15,7 +15,7 @@ type SupportedLibrary = {
   unyankAnswers: Unyanker;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
-    supportsMath?: boolean;
+    supportsHTML?: boolean;
     overrides?: Record<string, Record<string, any>>;
   };
 };
@@ -46,7 +46,7 @@ export default class Config {
         yankAnswers: blanksYanker,
         unyankAnswers: shallowMerge,
         semantics: {
-          supportsMath: true,
+          supportsHTML: true,
           overrides: {
             behaviour: {
               caseSensitive: {
@@ -60,7 +60,7 @@ export default class Config {
         yankAnswers: multiChoiceYanker,
         unyankAnswers: shallowMerge,
         semantics: {
-          supportsMath: true,
+          supportsHTML: true,
           overrides: {
             behaviour: {
               randomAnswers: {
