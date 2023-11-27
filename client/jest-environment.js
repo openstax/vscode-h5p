@@ -1,9 +1,6 @@
 const { TextEncoder, TextDecoder } = require('util');
 const crypto = require('crypto');
-const {
-  default: Base,
-  TestEnvironment,
-} = require('jest-environment-jsdom');
+const { default: Base, TestEnvironment } = require('jest-environment-jsdom');
 
 Object.defineProperty(exports, '__esModule', {
   value: true,

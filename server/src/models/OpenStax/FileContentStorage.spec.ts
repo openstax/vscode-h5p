@@ -100,7 +100,7 @@ describe('File Content Storage', () => {
         {
           osMeta: {
             books: ['meta-2'],
-            nickname: '102'
+            nickname: '102',
           },
         },
         {} as any
