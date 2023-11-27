@@ -64,13 +64,13 @@ describe('File Content Storage', () => {
           title: 'this should be stored in folder 2',
         } as any,
         {
-          osMeta: { books: ['meta-1'] },
+          osMeta: { books: ['meta-1'], nickname: '2' },
         },
         {} as any
       )
     ).toBe('2');
     const osMeta2 = {
-      nickname: 'my-nickname',
+      nickname: '101',
       books: ['something'],
     };
     expect(
@@ -88,8 +88,7 @@ describe('File Content Storage', () => {
           defined: true,
           osMeta: { ...osMeta2 },
         },
-        {} as any,
-        '101'
+        {} as any
       )
     ).toBe('101');
     expect(
@@ -101,6 +100,7 @@ describe('File Content Storage', () => {
         {
           osMeta: {
             books: ['meta-2'],
+            nickname: '102'
           },
         },
         {} as any
@@ -125,24 +125,21 @@ describe('File Content Storage', () => {
         title: 'this should be stored in folder 1',
         ...fakeH5PBase,
       } as any,
-      { osMeta: { books: ['meta-3'] } },
+      { osMeta: { books: ['meta-3'], nickname: '1' } },
       {} as any,
       '1'
     );
     expect(await storage.getOSMeta('1')).toStrictEqual({
-      nickname: 'this should be stored in folder 1',
       books: ['meta-3'],
       extra: 'Something extra',
     });
     // title always overwrites nickname
     expect(await storage.getOSMeta('101')).toStrictEqual({
-      nickname: 'this should be stored in folder 101',
       books: osMeta2.books,
     });
     expect(await storage.getOSMeta('3')).toStrictEqual({});
     // When the nickname is not given, the h5p title is used
     expect(await storage.getOSMeta('102')).toStrictEqual({
-      nickname: 'this should be stored in folder 102',
       books: ['meta-2'],
     });
     const result = dirToObj(VIRTUAL_ROOT);
@@ -267,7 +264,7 @@ describe('File Content Storage', () => {
     }).rejects.toThrowError('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
   });
-  it('does not allow duplicate titles', async () => {
+  it('does not allow duplicate ids', async () => {
     const storage = new OSStorage(config);
     await expect(async () => {
       await storage.addContent(
@@ -281,10 +278,9 @@ describe('File Content Storage', () => {
           defaultLanguage: '',
         },
         {
-          osMeta: {},
+          osMeta: { nickname: '1' },
         },
-        {} as any,
-        '12345'
+        {} as any
       );
     }).rejects.toThrowError(/.*duplicate.*/i);
     expect(await storage.contentExists('1234')).toBe(false);
@@ -342,7 +338,7 @@ describe('File Content Storage', () => {
           defaultLanguage: '',
         },
         {
-          osMeta: {},
+          osMeta: { nickname: '1' },
         },
         {} as any
       )

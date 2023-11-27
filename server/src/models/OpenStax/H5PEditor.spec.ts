@@ -60,7 +60,7 @@ describe('alterLibrarySemantics', () => {
       supportedLibraries: {
         [fakeLib.machineName]: {
           semantics: {
-            supportsMath: true,
+            supportsHTML: true,
             overrides: {
               behaviour: {
                 enableRetry: {

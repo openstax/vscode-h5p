@@ -26,8 +26,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
 }
 ",
       "metadata.json": "{
-  "is-solution-public": "false",
-  "nickname": "this should be stored in folder 1234"
+  "is-solution-public": "false"
 }
 ",
     },
@@ -76,8 +75,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
 }
 ",
       "metadata.json": "{
-  "is-solution-public": "true",
-  "nickname": "this should be stored in folder 12345"
+  "is-solution-public": "true"
 }
 ",
     },
@@ -107,8 +105,7 @@ exports[`File Content Storage saves content as expected 1`] = `
   "extra": "Something extra",
   "books": [
     "meta-3"
-  ],
-  "nickname": "this should be stored in folder 1"
+  ]
 }
 ",
     },
@@ -135,7 +132,6 @@ exports[`File Content Storage saves content as expected 1`] = `
 }
 ",
       "metadata.json": "{
-  "nickname": "this should be stored in folder 101",
   "books": [
     "something"
   ]
@@ -160,8 +156,7 @@ exports[`File Content Storage saves content as expected 1`] = `
       "metadata.json": "{
   "books": [
     "meta-2"
-  ],
-  "nickname": "this should be stored in folder 102"
+  ]
 }
 ",
     },
@@ -180,9 +175,7 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }
 ",
-      "metadata.json": "{
-  "nickname": "this should be stored in folder 1234"
-}
+      "metadata.json": "{}
 ",
     },
     "2": {
@@ -195,8 +188,7 @@ exports[`File Content Storage saves content as expected 1`] = `
       "metadata.json": "{
   "books": [
     "meta-1"
-  ],
-  "nickname": "this should be stored in folder 2"
+  ]
 }
 ",
     },
