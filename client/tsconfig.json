@@ -21,6 +21,6 @@
     "rootDir": "src",
     "sourceMap": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", ".vscode-test"]
+  "include": ["src", "jest-environment.js"],
+  "exclude": ["node_modules", ".vscode-test", "jest-environment.js"]
 }
