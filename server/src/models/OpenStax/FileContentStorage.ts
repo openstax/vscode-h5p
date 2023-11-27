@@ -96,11 +96,15 @@ export default class OSStorage extends H5P.fsImplementations
     const privatePath = path.join(this.privateContentDirectory, realId);
     const h5pPath = path.join(targetPath, H5P_NAME);
     delete content.osMeta;
-    delete osMeta.nickname;
     if (realId !== id && fsExtra.pathExistsSync(h5pPath)) {
       throw new CustomBaseError(`Duplicate id ${realId}`);
     }
     try {
+      const newOsMeta = {
+        ...(await this.getOSMeta(realId)),
+        ...osMeta,
+      };
+      delete newOsMeta.nickname;
       if (!isSolutionPublic(osMeta)) {
         const [sanitized, privateData] = yankAnswers(
           content,
@@ -118,10 +122,7 @@ export default class OSStorage extends H5P.fsImplementations
       await Promise.all([
         this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
         this.writeJSON(h5pPath, metadata),
-        this.writeJSON(path.join(targetPath, METADATA_NAME), {
-          ...(await this.getOSMeta(realId)),
-          ...osMeta,
-        }),
+        this.writeJSON(path.join(targetPath, METADATA_NAME), newOsMeta),
       ]);
     } catch (e) {
       await fsExtra.rm(targetPath, { recursive: true, force: true });
