@@ -19,9 +19,9 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "6.2.0",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@lumieducation/h5p-express": "^9.1.2",
-    "@lumieducation/h5p-react": "^9.1.2",
-    "@lumieducation/h5p-server": "^9.1.2",
+    "@lumieducation/h5p-express": "^9.3.2",
+    "@lumieducation/h5p-react": "^9.3.2",
+    "@lumieducation/h5p-server": "^9.3.2",
     "@xmldom/xmldom": "^0.8.10",
     "bootstrap": "5.2.3",
     "cors": "2.8.5",

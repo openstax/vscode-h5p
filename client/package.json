@@ -39,7 +39,7 @@
     "vscode-languageclient": "^8.1.0"
   },
   "devDependencies": {
-    "@lumieducation/h5p-server": "^9.1.2",
+    "@lumieducation/h5p-server": "^9.3.2",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.2",
     "@types/node": "18.11.18",

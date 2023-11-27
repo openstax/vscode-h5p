@@ -204,16 +204,6 @@ export async function startH5P(globalConfig: Config) {
     urlGenerator,
     undefined,
     {
-      getPermissions: async (contentId, user) => {
-        return [
-          H5P.Permission.Delete,
-          H5P.Permission.Download,
-          H5P.Permission.Edit,
-          H5P.Permission.Embed,
-          H5P.Permission.List,
-          H5P.Permission.View,
-        ];
-      },
       customization: {
         global: {
           scripts: [`${Config.serverUrl}/static/player-plugins/mathjax.js`],
