@@ -16,8 +16,10 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
     },
   },
   "dok-tag": "",
+  "errata-id": "",
   "is-solution-public": "false",
   "module-id": [],
+  "nickname": "new",
   "time": "",
 }
 `;
@@ -42,8 +44,10 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
     },
   },
   "dok-tag": "",
+  "errata-id": "",
   "is-solution-public": "false",
   "module-id": [],
+  "nickname": "new",
   "time": "",
 }
 `;
@@ -65,10 +69,22 @@ exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values wh
     },
   },
   "dok-tag": "",
+  "errata-id": "",
   "is-solution-public": "false",
   "module-id": [],
+  "nickname": "new",
   "time": "",
 }
+`;
+
+exports[`OpenstaxMetadataForm Form validation does not save when information is missing 1`] = `[]`;
+
+exports[`OpenstaxMetadataForm Form validation does not save when information is missing 2`] = `
+[
+  [
+    "OpenStax Metadata: Value for "nickname" is invalid",
+  ],
+]
 `;
 
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
@@ -81,10 +97,6 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "value": "ABC.0.F",
     },
   ],
-  "blooms": {
-    "isValid": true,
-    "value": "1",
-  },
   "books": [
     {
       "isValid": true,
@@ -147,6 +159,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
     },
   },
   "dok-tag": "",
+  "errata-id": "",
   "is-solution-public": "false",
   "module-id": [
     {
@@ -162,6 +175,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "module": "modules/m000003/index.cnxml",
     },
   ],
+  "nickname": "new",
   "time": "",
 }
 `;

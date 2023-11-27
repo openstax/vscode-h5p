@@ -24,21 +24,32 @@ const SEL_BOOK_REM = '[data-control-type="remove-book"]';
 const SEL_BOOK_ADD = '[data-control-type="add-book"]';
 
 describe('OpenstaxMetadataForm', () => {
-  const defaultMockContentService = {
-    getOSMeta: jest.fn().mockResolvedValue({}),
-    saveOSMeta: jest.fn().mockResolvedValue(undefined),
-  } as any as IContentService;
+  let defaultMockContentService: IContentService;
 
-  const defaultFormProps = {
-    contentId: 'new',
-    contentService: defaultMockContentService,
-    onSaveError: jest.fn(),
+  let defaultFormProps: {
+    contentId: string;
+    contentService: IContentService;
+    onSaveError: jest.Mock<any, any, any>;
   };
 
-  const minFormData = {
-    nickname: 'test',
-    blooms: 1,
-  };
+  let minFormData: any;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    defaultMockContentService = {
+      getOSMeta: jest.fn().mockResolvedValue({}),
+      save: jest.fn().mockResolvedValue(undefined),
+    } as any as IContentService;
+    defaultFormProps = {
+      contentId: 'new',
+      contentService: defaultMockContentService,
+      onSaveError: jest.fn(),
+    };
+    minFormData = {
+      nickname: 'test',
+      blooms: 1,
+    };
+  });
 
   const createForm = async (formProps) => {
     const openstaxForm = React.createRef<OpenstaxMetadataForm>();
@@ -104,12 +115,11 @@ describe('OpenstaxMetadataForm', () => {
 
   afterEach(cleanup);
 
-  beforeEach(() => jest.resetAllMocks());
-
   describe('Default Input Set', () => {
     it('is rendered and allows users to toggle accordion', async () => {
       const controller = await createForm(defaultFormProps);
       const { getByText } = controller;
+      expect(defaultFormProps.onSaveError).not.toBeCalled();
       // Open the accordion and ensure it is open by checking for books element
       await toggleAccordion(controller);
       expect(await getByText('Books')).toBeTruthy();
@@ -129,6 +139,7 @@ describe('OpenstaxMetadataForm', () => {
           },
         },
       });
+      expect(defaultFormProps.onSaveError).toBeCalled();
       expect(await getByText('Books')).toBeTruthy();
     });
     [-1, 1].forEach((inc) => {
@@ -438,24 +449,34 @@ describe('OpenstaxMetadataForm', () => {
       );
     });
     // No required fields right now (leaving this in incase this changes)
-    // it('does not save when information is missing', async () => {
-    //   const formProps = { ...defaultFormProps };
-    //   const { openstaxForm } = await createForm(formProps);
-    //   await openstaxForm.current!.save('new');
-    //   expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
-    //   expect(formProps.contentService.saveOSMeta).not.toBeCalled();
+    it('does not save when information is missing', async () => {
+      // GIVEN: Metadata form
+      const formProps = { ...defaultFormProps };
+      const { openstaxForm, getByDisplayValue } = await initFormWithMinData({});
+      // WHEN: Data is valid
+      expect(openstaxForm.current!.encodedValues.nickname).toBe(
+        formProps.contentId
+      );
+      // THEN: It is seen as valid and save is not called
+      expect(openstaxForm.current!.isInputValid).toBe(true);
+      expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
+      expect(formProps.contentService.save).not.toBeCalled();
 
-    //   (formProps.contentService.saveOSMeta as jest.Mock).mockReset();
-    //   formProps.onSaveError.mockReset();
-    //   cleanup();
+      (formProps.contentService.save as jest.Mock).mockReset();
+      formProps.onSaveError.mockReset();
 
-    //   const { openstaxForm: openstaxFormNoNick } = await initFormWithMinData({
-    //     formDataOverride: { nickname: '' },
-    //   });
-    //   await openstaxFormNoNick.current!.save('new');
-    //   expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
-    //   expect(formProps.contentService.saveOSMeta).not.toBeCalled();
-    // });
+      // GIVEN: Metadata form
+      const nickInput = getByDisplayValue(formProps.contentId);
+      act(() => {
+        fireEvent.change(nickInput!, { target: { value: '' } });
+      });
+      // WHEN: Nickname is missing (data is invalid/missing required)
+      expect(openstaxForm.current!.encodedValues.nickname).toBe('');
+      // THEN: It is seen as invalid and save is not called
+      expect(openstaxForm.current!.isInputValid).toBe(false);
+      expect(formProps.onSaveError.mock.calls).toMatchSnapshot();
+      expect(formProps.contentService.save).not.toBeCalled();
+    });
     it('does save when all required fields are present', async () => {
       const formProps = {
         ...defaultFormProps,

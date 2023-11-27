@@ -362,7 +362,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       }
     } catch (err) {
       // TODO: Improve error handling during decoding
-      console.error((err as Error).message);
+      this.props.onSaveError((err as Error).message);
     }
   }
 
