@@ -180,6 +180,7 @@ export const alterLibrarySemantics = (
       and create our own copies of private members to make our override
       function the same as the original
 */
+/* istanbul ignore next */
 function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
   const tryPatch = (
     ptr: any,
