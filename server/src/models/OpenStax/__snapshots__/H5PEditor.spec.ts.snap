@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`alterLibrarySemantics does not mutate semantics 1`] = `
+exports[`H5PEditor alterLibrarySemantics does not mutate semantics 1`] = `
 [
   {
     "fields": [
