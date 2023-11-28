@@ -45,40 +45,6 @@ export default class OSStorage extends H5P.fsImplementations
     this.privateContentDirectory = config.privateContentDirectory;
   }
 
-  protected get h5pPaths(): Array<{
-    contentId: string;
-    h5pPath: string;
-  }> {
-    return !fsExtra.existsSync(this.contentPath)
-      ? []
-      : fsExtra
-          .readdirSync(this.contentPath, { withFileTypes: true })
-          .filter((d) => d.isDirectory())
-          .map((dirent) => ({
-            contentId: dirent.name,
-            h5pPath: path.join(this.contentPath, dirent.name, H5P_NAME),
-          }))
-          .filter(({ h5pPath }) => fsExtra.existsSync(h5pPath));
-  }
-
-  protected get allH5PMetadata(): Array<{
-    contentId: string;
-    h5pMeta: H5P.IContentMetadata;
-  }> {
-    return this.h5pPaths.map(({ contentId, h5pPath }) => ({
-      contentId,
-      h5pMeta: fsExtra.readJSONSync(h5pPath),
-    }));
-  }
-
-  protected async createContentId() {
-    const numbered = this.h5pPaths
-      .map(({ contentId }) => parseInt(contentId))
-      .filter((n) => !isNaN(n))
-      .sort((a, b) => a - b);
-    return ((numbered[numbered.length - 1] ?? 0) + 1).toString();
-  }
-
   protected async writeJSON(path: string, obj: any) {
     await fsExtra.writeJSON(path, obj, { spaces: 2 });
   }

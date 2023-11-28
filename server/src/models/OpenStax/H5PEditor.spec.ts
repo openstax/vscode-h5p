@@ -96,7 +96,7 @@ describe('H5PEditor', () => {
   });
   describe('H5PEditor class', () => {
     it('is created with the correct values', async () => {
-      // Test inheritance and monkey patch 
+      // Test inheritance and monkey patch
       new OSH5PEditor(
         jest.fn() as any,
         jest.fn() as any,
