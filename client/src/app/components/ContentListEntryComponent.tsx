@@ -29,6 +29,7 @@ import H5PEditorUI from './H5PEditorUI';
 import { IContentListEntry, IContentService } from '../services/ContentService';
 import './ContentListEntryComponent.css';
 import OpenstaxMetadataForm from './OpenStax/OpenstaxMetadataForm';
+import ConfirmationDialog from './OpenStax/ConfirmationDialog';
 
 export default class ContentListEntryComponent extends React.Component<{
   h5pUrl: string;
@@ -59,6 +60,7 @@ export default class ContentListEntryComponent extends React.Component<{
       saveErrorMessage: '',
       saveError: false,
       showingCustomCopyright: false,
+      showingDeleteConfirmation: false,
     };
     this.h5pEditor = React.createRef();
     this.saveButton = React.createRef();
@@ -76,6 +78,7 @@ export default class ContentListEntryComponent extends React.Component<{
     saveError: boolean;
     saveErrorMessage: string;
     showingCustomCopyright: boolean;
+    showingDeleteConfirmation: boolean;
   };
 
   private h5pPlayer: React.RefObject<H5PPlayerUI>;
@@ -223,7 +226,7 @@ export default class ContentListEntryComponent extends React.Component<{
                 <Col className="p-2" lg="auto">
                   <Button
                     variant="danger"
-                    onClick={() => this.props.onDelete(this.props.data)}
+                    onClick={() => this.showDeleteConfirmation()}
                   >
                     <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
                     delete
@@ -310,6 +313,12 @@ export default class ContentListEntryComponent extends React.Component<{
             </Button>
           </Modal.Footer>
         </Modal>
+        <ConfirmationDialog
+          show={this.state.showingDeleteConfirmation}
+          heading="Delete exercise?"
+          text={`Are you sure you want to delete ${this.props.data.contentId}?`}
+          onResult={(yes) => this.handleConfirmDelete(yes)}
+        ></ConfirmationDialog>
       </ListGroupItem>
     );
   }
@@ -332,6 +341,20 @@ export default class ContentListEntryComponent extends React.Component<{
 
   protected closeCopyrightCustom() {
     this.setState({ showingCustomCopyright: false });
+  }
+
+  protected showDeleteConfirmation() {
+    this.setState({ showingDeleteConfirmation: true });
+  }
+
+  protected handleConfirmDelete(yes: boolean) {
+    try {
+      if (yes) {
+        this.props.onDelete(this.props.data);
+      }
+    } finally {
+      this.setState({ showingDeleteConfirmation: false });
+    }
   }
 
   protected showCopyrightNative() {
