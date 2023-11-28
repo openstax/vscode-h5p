@@ -1,5 +1,6 @@
 import {
   IH5PEditorOptions,
+  IHubContentTypeWithLocalInfo,
   IHubInfo,
   ISemanticsEntry,
 } from '@lumieducation/h5p-server/build/src/types';
@@ -8,9 +9,9 @@ import OSStorage from './FileContentStorage';
 import Config from './config';
 import { assertValue, unwrap } from '../../utils';
 
-const supportedLibraryNames = Object.keys(Config.supportedLibraries);
+const _supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
-const supportedTags = [
+const _supportedTags = [
   // Math tags
   'math',
   'maction',
@@ -135,7 +136,7 @@ export const alterLibrarySemantics = (
   const semanticMods =
     config.supportedLibraries[library.machineName]?.semantics;
   if (semanticMods?.supportsHTML === true) {
-    semanticsCopy = addTags(semanticsCopy, supportedTags);
+    semanticsCopy = addTags(semanticsCopy, _supportedTags);
   }
   const overridesForLib = semanticMods?.overrides;
   if (overridesForLib !== undefined) {
@@ -180,7 +181,6 @@ export const alterLibrarySemantics = (
       and create our own copies of private members to make our override
       function the same as the original
 */
-/* istanbul ignore next */
 function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
   const tryPatch = (
     ptr: any,
@@ -190,6 +190,7 @@ function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
     for (const [fieldName, value] of Object.entries(patch)) {
       const newPath = [...fqPath, fieldName];
       if (!Reflect.has(ptr, fieldName)) {
+        /* istanbul ignore next */
         throw new Error(
           `"${newPath.join('.')}" cannot be patched because it does not exist.`
         );
@@ -222,6 +223,16 @@ function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
     },
     ['h5pEditor']
   );
+}
+
+export function filterLibs(
+  libraries: IHubContentTypeWithLocalInfo[],
+  supportedLibraryNames = _supportedLibraryNames
+) {
+  const libsByName = Object.fromEntries(
+    libraries.map((lib) => [lib.machineName, lib])
+  );
+  return supportedLibraryNames.map((name) => unwrap(libsByName[name]));
 }
 
 export default class OSH5PEditor extends H5P.H5PEditor {
@@ -260,17 +271,15 @@ export default class OSH5PEditor extends H5P.H5PEditor {
     monkeyPatchH5PEditor(this);
   }
 
+  /* istanbul ignore next */
   public async getContentTypeCache(
     user: H5P.IUser,
     language?: string | undefined
   ): Promise<IHubInfo> {
     const baseValue = await super.getContentTypeCache(user, language);
-    const libsByName = Object.fromEntries(
-      baseValue.libraries.map((lib) => [lib.machineName, lib])
-    );
     return {
       ...baseValue,
-      libraries: supportedLibraryNames.map((name) => unwrap(libsByName[name])),
+      libraries: filterLibs(baseValue.libraries),
     };
   }
 }
