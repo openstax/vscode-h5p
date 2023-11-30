@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { IPlayerModel } from '@lumieducation/h5p-server';
 
 import { mergeH5PIntegration, removeUnusedContent } from './H5PUtils';
 import { addScripts, addStylesheets } from './DomUtils';
 import { IH5P, IH5PInstance } from './H5PTypes';
+import { isFalsy } from './Utils';
 
 export interface IxAPIEvent {
   data: {
@@ -81,13 +83,13 @@ export class H5PPlayerComponent extends HTMLElement {
    * goes wrong.
    */
   public get loadContentCallback(): (
-    contentId: string
+    contentId: string,
   ) => Promise<IPlayerModel> {
     return this.privateLoadContentCallback;
   }
 
   public set loadContentCallback(
-    callback: (contentId: string) => Promise<IPlayerModel>
+    callback: (contentId: string) => Promise<IPlayerModel>,
   ) {
     const mustRender = this.privateLoadContentCallback !== callback;
     this.privateLoadContentCallback = callback;
@@ -113,7 +115,7 @@ export class H5PPlayerComponent extends HTMLElement {
   private static template: HTMLTemplateElement;
   private playerModel!: IPlayerModel;
   private privateLoadContentCallback!: (
-    contentId: string
+    contentId: string,
   ) => Promise<IPlayerModel>;
   private resizeObserver: ResizeObserver | undefined;
   private root!: HTMLElement | null;
@@ -123,7 +125,7 @@ export class H5PPlayerComponent extends HTMLElement {
 
   private static initTemplate(): void {
     // We create the static template only once
-    if (!H5PPlayerComponent.template) {
+    if (isFalsy(H5PPlayerComponent.template)) {
       H5PPlayerComponent.template = document.createElement('template');
       H5PPlayerComponent.template.innerHTML = `
                 <style>
@@ -159,10 +161,10 @@ export class H5PPlayerComponent extends HTMLElement {
   async attributeChangedCallback(
     name: string,
     oldVal: any,
-    newVal: any
+    newVal: any,
   ): Promise<void> {
     if (name === 'content-id') {
-      if (oldVal) {
+      if (!isFalsy(oldVal)) {
         removeUnusedContent(oldVal);
       }
       await this.render(newVal);
@@ -180,7 +182,7 @@ export class H5PPlayerComponent extends HTMLElement {
     // component has changed. Otherwise some content types won't resize
     // properly.
     this.resizeObserver = new ResizeObserver(() => {
-      if (window.H5P?.instances) {
+      if (!isFalsy(window.H5P?.instances)) {
         window.H5P.instances.forEach((instance) => {
           instance.trigger('resize');
         });
@@ -200,10 +202,10 @@ export class H5PPlayerComponent extends HTMLElement {
       this.resizeObserver.disconnect();
       this.resizeObserver = null!;
     }
-    if (window.H5P?.externalDispatcher) {
+    if (!isFalsy(window.H5P?.externalDispatcher)) {
       window.H5P.externalDispatcher.off(
         'initialized',
-        this.onContentInitialized
+        this.onContentInitialized,
       );
       window.H5P.externalDispatcher.off('xAPI', this.onxAPI);
     }
@@ -214,26 +216,26 @@ export class H5PPlayerComponent extends HTMLElement {
    * display it. Undefined if there is no copyright information.
    */
   public getCopyrightHtml(): string | undefined {
-    if (!this.h5pInstance) {
+    if (isFalsy(this.h5pInstance)) {
       console.error(
-        'Cannot show copyright as H5P instance is undefined. The H5P object might not be initialized yet.'
+        'Cannot show copyright as H5P instance is undefined. The H5P object might not be initialized yet.',
       );
       return undefined;
     }
-    if (!this.h5pObject) {
+    if (isFalsy(this.h5pObject)) {
       console.error(
-        'H5P object undefined. This typically means H5P has not been initialized yet.'
+        'H5P object undefined. This typically means H5P has not been initialized yet.',
       );
       return undefined;
     }
 
     let metadata = this.h5pInstance.contentData?.metadata;
-    if (!metadata) {
+    if (isFalsy(metadata)) {
       metadata =
         this.playerModel.integration.contents![
           `cid-${this.playerModel.contentId}`
         ].metadata;
-      if (!metadata) {
+      if (isFalsy(metadata)) {
         return undefined;
       }
     }
@@ -248,14 +250,14 @@ export class H5PPlayerComponent extends HTMLElement {
       parameters = this.h5pWindow.JSON.parse(
         this.playerModel.integration.contents![
           `cid-${this.playerModel.contentId}`
-        ].jsonContent
+        ].jsonContent,
       );
     } catch (error: any) {
       console.error(
         'Could not get parameters for content object with id ',
         this.playerModel.contentId,
         '. The copyright text might be incomplete. Details: ',
-        error
+        error,
       );
     }
 
@@ -263,7 +265,7 @@ export class H5PPlayerComponent extends HTMLElement {
       this.h5pInstance,
       parameters,
       this.playerModel.contentId,
-      metadata
+      metadata,
     );
   }
 
@@ -271,7 +273,7 @@ export class H5PPlayerComponent extends HTMLElement {
    * @returns true if there is copyright information to be displayed.
    */
   public hasCopyrightInformation(): boolean {
-    return !!this.getCopyrightHtml();
+    return !isFalsy(this.getCopyrightHtml());
   }
 
   /**
@@ -281,7 +283,7 @@ export class H5PPlayerComponent extends HTMLElement {
    * Has no effect until the H5P object has fully initialized.
    */
   public resize(): void {
-    if (!this.h5pInstance || !this.h5pInstance.trigger) {
+    if (isFalsy(this.h5pInstance) || isFalsy(this.h5pInstance.trigger)) {
       return;
     }
     this.h5pInstance.trigger('resize');
@@ -296,7 +298,7 @@ export class H5PPlayerComponent extends HTMLElement {
       'copyrights',
       this.h5pObject.t('copyrightInformation'),
       copyrightHtml!,
-      this.h5pObject.jQuery('.h5p-container')
+      this.h5pObject.jQuery('.h5p-container'),
     );
     dialog.open(true);
   }
@@ -310,31 +312,31 @@ export class H5PPlayerComponent extends HTMLElement {
       ? window.H5P
       : (
           document.getElementById(
-            `h5p-iframe-${this.playerModel.contentId}`
+            `h5p-iframe-${this.playerModel.contentId}`,
           ) as HTMLIFrameElement
         ).contentWindow!.H5P;
     this.h5pWindow = divMode
       ? window
       : (
           document.getElementById(
-            `h5p-iframe-${this.playerModel.contentId}`
+            `h5p-iframe-${this.playerModel.contentId}`,
           ) as HTMLIFrameElement
         ).contentWindow;
     this.h5pInstance = this.h5pObject!.instances!.find(
       // H5P converts our string contentId into number, so we don't use ===
       // eslint-disable-next-line eqeqeq
-      (i) => i.contentId == this.contentId
+      (i) => i.contentId == this.contentId,
     )!;
-    if (this.h5pInstance) {
+    if (!isFalsy(this.h5pInstance)) {
       this.dispatchEvent(
         new CustomEvent('initialized', {
           detail: { contentId: this.contentId },
-        })
+        }),
       );
-      if (window.H5P?.externalDispatcher) {
+      if (!isFalsy(window.H5P?.externalDispatcher)) {
         window.H5P.externalDispatcher.off(
           'initialized',
-          this.onContentInitialized
+          this.onContentInitialized,
         );
       }
     }
@@ -355,7 +357,7 @@ export class H5PPlayerComponent extends HTMLElement {
             context,
             event,
           },
-        })
+        }),
       );
     }
   };
@@ -365,7 +367,7 @@ export class H5PPlayerComponent extends HTMLElement {
    * @param {string} contentId
    */
   private async render(contentId: string): Promise<void> {
-    if (!this.loadContentCallback) {
+    if (isFalsy(this.loadContentCallback)) {
       return;
     }
     // Get data from H5P server
@@ -381,7 +383,7 @@ export class H5PPlayerComponent extends HTMLElement {
 
     // We have to prevent H5P from initializing when the h5p.js file is
     // loaded.
-    if (!window.H5P) {
+    if (isFalsy(window.H5P)) {
       window.H5P = {} as any;
     }
     window.H5P.preventInit = true;
@@ -391,7 +393,7 @@ export class H5PPlayerComponent extends HTMLElement {
     // content objects on a single page.
     mergeH5PIntegration(
       this.playerModel.integration,
-      this.playerModel.contentId
+      this.playerModel.contentId,
     );
 
     // The server has already told us which embed types are generally
@@ -405,16 +407,16 @@ export class H5PPlayerComponent extends HTMLElement {
 
     // Initialize H5P with the component as root
     window.H5P.preventInit = false;
-    if (window.H5P.externalDispatcher) {
+    if (!isFalsy(window.H5P.externalDispatcher)) {
       window.H5P.externalDispatcher.on(
         'initialized',
         this.onContentInitialized,
-        this
+        this,
       );
     }
     window.H5P.preventInit = false;
 
-    if (window.H5P.externalDispatcher) {
+    if (!isFalsy(window.H5P.externalDispatcher)) {
       // detach xAPI listener first to avoid having multiple listeners on the
       // same content (can safely be done even if it hasn't been attached
       // before)
@@ -432,11 +434,11 @@ export class H5PPlayerComponent extends HTMLElement {
   private async renderDiv(playerModel: IPlayerModel): Promise<void> {
     addStylesheets(
       playerModel.styles,
-      document.getElementsByTagName('head')[0]
+      document.getElementsByTagName('head')[0],
     );
     await addScripts(
       playerModel.scripts,
-      document.getElementsByTagName('head')[0]
+      document.getElementsByTagName('head')[0],
     );
 
     const h5pContainerDiv = document.createElement('div');
@@ -458,7 +460,7 @@ export class H5PPlayerComponent extends HTMLElement {
     // iframe.
     await addScripts(
       window.H5PIntegration.core!.scripts!,
-      document.getElementsByTagName('head')[0]
+      document.getElementsByTagName('head')[0],
     );
 
     const h5pIFrameWrapper = document.createElement('div');
