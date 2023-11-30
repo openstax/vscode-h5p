@@ -1,5 +1,6 @@
 import merge from 'deepmerge';
 import type { IIntegration } from '@lumieducation/h5p-server';
+import { isFalsy } from './Utils';
 
 /**
  * Merges the new IIntegration object with the global one.
@@ -8,18 +9,18 @@ import type { IIntegration } from '@lumieducation/h5p-server';
  */
 export function mergeH5PIntegration(
   newIntegration: IIntegration,
-  contentId: string
+  contentId: string,
 ): void {
-  if (!window.H5PIntegration) {
+  if (isFalsy(window.H5PIntegration)) {
     window.H5PIntegration = newIntegration;
     return;
   }
   if (
-    contentId &&
-    newIntegration.contents &&
-    newIntegration.contents[`cid-${contentId}`]
+    !isFalsy(contentId) &&
+    newIntegration.contents != null &&
+    !isFalsy(newIntegration.contents[`cid-${contentId}`])
   ) {
-    if (!window.H5PIntegration.contents) {
+    if (window.H5PIntegration.contents == null) {
       window.H5PIntegration.contents = {};
     }
     window.H5PIntegration.contents[`cid-${contentId}`] =
@@ -42,8 +43,8 @@ export function mergeH5PIntegration(
  */
 export function removeUnusedContent(contentId: string): void {
   if (
-    window.H5PIntegration?.contents &&
-    window.H5PIntegration.contents[`cid-${contentId}`]
+    window.H5PIntegration?.contents != null &&
+    !isFalsy(window.H5PIntegration.contents[`cid-${contentId}`])
   ) {
     delete window.H5PIntegration.contents[`cid-${contentId}`];
   }

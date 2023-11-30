@@ -115,7 +115,7 @@ export default class ContentListEntryComponent extends React.Component<{
               </Col>
             ) : undefined}
             {this.state.playing &&
-            this.h5pPlayer.current?.hasCopyrightInformation() ? (
+            this.h5pPlayer.current?.hasCopyrightInformation() === true ? (
               <Col className="p-2" lg="auto">
                 <Dropdown>
                   <Dropdown.Toggle variant="light">
@@ -214,7 +214,7 @@ export default class ContentListEntryComponent extends React.Component<{
                 <Col className="p-2" lg="auto">
                   <a
                     href={this.props.generateDownloadLink(
-                      this.props.data.contentId
+                      this.props.data.contentId,
                     )}
                   >
                     <Button variant="info">
@@ -366,7 +366,7 @@ export default class ContentListEntryComponent extends React.Component<{
   };
 
   protected async save() {
-    if (!this.openstaxForm.current?.isInputValid) return;
+    if (this.openstaxForm.current?.isInputValid !== true) return;
     this.setState({ saving: true });
     try {
       const returnData = await this.h5pEditor.current?.save();
@@ -399,7 +399,7 @@ export default class ContentListEntryComponent extends React.Component<{
     }, 5000);
   };
 
-  protected onSaved = async (event) => {
+  protected onSaved = async () => {
     this.setState({
       saving: false,
       saved: true,

@@ -1,9 +1,8 @@
-import React from 'react';
-
 import type { IInstalledLibrary } from '@lumieducation/h5p-server';
+import { isFalsy } from './Utils';
 
 const yesNo = (value: undefined | boolean | 0 | 1) =>
-  value ? (
+  !isFalsy(value) ? (
     <span className="fa fa-check text-success"></span>
   ) : (
     <span className="fa fa-times text-danger"></span>
@@ -45,15 +44,15 @@ export default (props: {
             <tbody>
               <tr>
                 <th>Author</th>
-                <td>{props.details.author || '-'}</td>
+                <td>{(props.details.author ?? '') || '-'}</td>
               </tr>
               <tr>
                 <th>Description</th>
-                <td>{props.details.description || '-'}</td>
+                <td>{(props.details.description ?? '') || '-'}</td>
               </tr>
               <tr>
                 <th>License</th>
-                <td>{props.details.license || '-'}</td>
+                <td>{(props.details.license ?? '') || '-'}</td>
               </tr>
               <tr>
                 <th>Standalone content type</th>
@@ -73,7 +72,7 @@ export default (props: {
               </tr>
               <tr>
                 <th>Allowed embed types</th>
-                <td>{props.details.embedTypes?.join(' ') || '-'}</td>
+                <td>{(props.details.embedTypes?.join(' ') ?? '') || '-'}</td>
               </tr>
               <tr>
                 <th>Number of libraries that use the library</th>

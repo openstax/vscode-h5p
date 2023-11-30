@@ -10,6 +10,7 @@ import {
   ILibraryViewModel,
   LibraryAdministrationService,
 } from '../services/LibraryAdministrationService';
+import { isFalsy } from './Utils';
 
 /**
  * The components displays a list with the currently installed libraries. It
@@ -72,13 +73,13 @@ export default class LibraryAdmin extends React.Component<
           .concat(libraries?.slice(libraryIndex + 1)),
       });
       this.displayMessage(
-        `Successfully deleted library ${library.title} (${library.majorVersion}.${library.minorVersion}).`
+        `Successfully deleted library ${library.title} (${library.majorVersion}.${library.minorVersion}).`,
       );
       await this.updateList();
     } catch {
       this.displayMessage(
         `Error deleting library ${library.title} (${library.majorVersion}.${library.minorVersion}).`,
-        'danger'
+        'danger',
       );
       this.updateLibraryState(newState, { isDeleting: false });
       await this.updateList();
@@ -86,23 +87,23 @@ export default class LibraryAdmin extends React.Component<
   }
 
   protected async fileSelected(files: FileList | null): Promise<void> {
-    if (!files || !files[0]) {
+    if (files == null || isFalsy(files[0])) {
       return;
     }
     try {
       this.setState({ isUploading: true });
       const { installed, updated } = await this.librariesService.postPackage(
-        files[0]
+        files[0],
       );
       if (installed + updated === 0) {
         this.displayMessage(
-          'Upload successful, but no libraries were installed or updated. The content type is probably already installed on the system.'
+          'Upload successful, but no libraries were installed or updated. The content type is probably already installed on the system.',
         );
         return;
       }
       this.displayMessage(
         `Successfully installed ${installed} and updated ${updated} libraries.`,
-        'success'
+        'success',
       );
     } catch {
       this.displayMessage(`Error while uploading package.`, 'danger');
@@ -116,7 +117,7 @@ export default class LibraryAdmin extends React.Component<
   }
 
   protected async restrict(
-    library: ILibraryAdministrationOverviewItem
+    library: ILibraryAdministrationOverviewItem,
   ): Promise<void> {
     try {
       const newLibrary = await this.librariesService.patchLibrary(library, {
@@ -125,12 +126,12 @@ export default class LibraryAdmin extends React.Component<
       this.updateLibraryState(library, newLibrary);
       this.displayMessage(
         `Successfully set restricted property of library ${library.title} (${library.majorVersion}.${library.minorVersion}) to ${newLibrary.restricted}.`,
-        'success'
+        'success',
       );
     } catch {
       this.displayMessage(
         `Error setting restricted proeprty of library ${library.title} (${library.majorVersion}.${library.minorVersion}).`,
-        'danger'
+        'danger',
       );
     }
   }
@@ -149,7 +150,7 @@ export default class LibraryAdmin extends React.Component<
       } catch {
         this.displayMessage(
           `Error getting detailed information about library ${library.title} (${library.majorVersion}.${library.minorVersion}).`,
-          'danger'
+          'danger',
         );
       }
     }
@@ -162,7 +163,7 @@ export default class LibraryAdmin extends React.Component<
 
   protected displayMessage(
     text: string,
-    type: 'primary' | 'success' | 'danger' = 'primary'
+    type: 'primary' | 'success' | 'danger' = 'primary',
   ): void {
     this.setState({
       message: {
@@ -174,7 +175,7 @@ export default class LibraryAdmin extends React.Component<
 
   protected updateLibraryState(
     library: ILibraryViewModel,
-    changes: Partial<ILibraryViewModel>
+    changes: Partial<ILibraryViewModel>,
   ): ILibraryViewModel {
     const { libraries } = this.state;
 
@@ -319,7 +320,7 @@ export default class LibraryAdmin extends React.Component<
                         )}
                       </td>
                     </tr>
-                    {info.isShowingDetails ? (
+                    {info.isShowingDetails === true ? (
                       <tr>
                         <td colSpan={7}>
                           <LibraryDetails

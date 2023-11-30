@@ -2,18 +2,7 @@ import { H5PEditorComponent } from './H5PEditor';
 import { H5PPlayerComponent } from './H5PPlayer';
 
 export function isFalsy<T>(obj: T): boolean {
-  switch (typeof obj) {
-    case 'string':
-      return obj === '';
-    case 'boolean':
-      return obj === false;
-    case 'bigint':
-      return obj === 0n;
-    case 'number':
-      return obj === 0 || isNaN(obj);
-    default:
-      return obj === null || obj === undefined;
-  }
+  return (typeof obj === 'boolean' ? obj : Boolean(obj)) === false;
 }
 
 export function defineElements(element?: string | string[]): void {
