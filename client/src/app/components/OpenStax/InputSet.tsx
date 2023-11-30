@@ -12,7 +12,7 @@ export type InputSetProps<OptionType extends DropdownOption = DropdownOption> =
     handleInputChange: (
       index: number,
       value: string,
-      isValid?: boolean
+      isValid?: boolean,
     ) => void;
     options?: Array<OptionType>;
     placeholder?: string;

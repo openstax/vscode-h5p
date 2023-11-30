@@ -26,9 +26,9 @@ const apBio = [
 ];
 
 export default function SciencePractice(
-  props: SingleInputProps & { book: string }
+  props: SingleInputProps & { book: string },
 ) {
-  let options: DropdownOption[] = [
+  const options: DropdownOption[] = [
     { value: 'argumentation', label: 'Argumentation' },
   ];
   if (props.book === 'stax-apphys') {

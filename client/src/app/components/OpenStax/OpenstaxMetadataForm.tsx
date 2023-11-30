@@ -31,6 +31,7 @@ import {
 } from './constants';
 import { Button } from 'react-bootstrap';
 import Nickname from './Nickname';
+import { isFalsy } from '../Utils';
 
 type SingleInputs = {
   nickname: InputState;
@@ -77,12 +78,12 @@ const bookInputs: Array<{
     book: string,
     inputHandlerFactory: (
       book: string,
-      type: keyof BookInputs
+      type: keyof BookInputs,
     ) => SingleInputProps & { book: string },
     inputSetHandlerFactory: (
       book: string,
-      type: keyof BookInputs
-    ) => InputSetHandlerProps<BookInputState>
+      type: keyof BookInputs,
+    ) => InputSetHandlerProps<BookInputState>,
   ) => JSX.Element;
   key: keyof BookInputs;
   isInputSet?: boolean;
@@ -118,7 +119,7 @@ const bookInputs: Array<{
   {
     key: 'aacn',
     isActive: (book) => NURSING_BOOKS.includes(book),
-    make(book, inputHandlerFactory, _) {
+    make(book, inputHandlerFactory) {
       return (
         <AACN
           {...inputHandlerFactory(book, this.key)}
@@ -130,7 +131,7 @@ const bookInputs: Array<{
   {
     key: 'nclex',
     isActive: (book) => NURSING_BOOKS.includes(book),
-    make(book, inputHandlerFactory, _) {
+    make(book, inputHandlerFactory) {
       return (
         <NCLEX
           {...inputHandlerFactory(book, this.key)}
@@ -142,7 +143,7 @@ const bookInputs: Array<{
   {
     key: 'science-practice',
     isActive: (book) => AP_SCIENCE_BOOKS.includes(book),
-    make(book, inputHandlerFactory, _) {
+    make(book, inputHandlerFactory) {
       return (
         <SciencePractice
           {...inputHandlerFactory(book, this.key)}
@@ -155,7 +156,7 @@ const bookInputs: Array<{
   {
     key: 'hts',
     isActive: (book) => AP_HISTORY_BOOKS.includes(book),
-    make(book, inputHandlerFactory, _) {
+    make(book, inputHandlerFactory) {
       return (
         <HistoricalThinking
           {...inputHandlerFactory(book, this.key)}
@@ -167,7 +168,7 @@ const bookInputs: Array<{
   {
     key: 'rp',
     isActive: (book) => AP_HISTORY_BOOKS.includes(book),
-    make(book, inputHandlerFactory, _) {
+    make(book, inputHandlerFactory) {
       return (
         <ReasoningProcess
           {...inputHandlerFactory(book, this.key)}
@@ -184,8 +185,8 @@ const exerciseInputs: Array<
     make: (
       inputHandlerFactory: (type: keyof SingleInputs) => SingleInputProps,
       inputSetHandlerFactory: (
-        type: keyof InputSets
-      ) => InputSetHandlerProps<InputState>
+        type: keyof InputSets,
+      ) => InputSetHandlerProps<InputState>,
     ) => JSX.Element;
     isInputSet?: boolean;
     isRequired?: boolean;
@@ -195,7 +196,7 @@ const exerciseInputs: Array<
     key: 'nickname',
     isRequired: true,
     isActive: true,
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <Nickname
           {...inputHandlerFactory(this.key)}
@@ -218,7 +219,7 @@ const exerciseInputs: Array<
   },
   {
     key: 'blooms',
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <Blooms {...inputHandlerFactory(this.key)} required={this.isRequired} />
       );
@@ -226,7 +227,7 @@ const exerciseInputs: Array<
   },
   {
     key: 'assignment-type',
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <AssignmentType
           {...inputHandlerFactory(this.key)}
@@ -237,7 +238,7 @@ const exerciseInputs: Array<
   },
   {
     key: 'dok-tag',
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <DokTag {...inputHandlerFactory(this.key)} required={this.isRequired} />
       );
@@ -245,7 +246,7 @@ const exerciseInputs: Array<
   },
   {
     key: 'time',
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <Time {...inputHandlerFactory(this.key)} required={this.isRequired} />
       );
@@ -253,7 +254,7 @@ const exerciseInputs: Array<
   },
   {
     key: 'is-solution-public',
-    make(inputHandlerFactory, _) {
+    make(inputHandlerFactory) {
       return (
         <PublicCheckbox
           {...inputHandlerFactory(this.key)}
@@ -278,7 +279,7 @@ function isSavedEntry(entry: [any, any]): entry is SavedEntry {
 }
 
 function isBookInputEntry(
-  entry: [any, any]
+  entry: [any, any],
 ): entry is [string, BookInputState[]] {
   return bookInputKeys.includes(entry[0]);
 }
@@ -302,7 +303,7 @@ const coders: Partial<
     },
     decoder: (value) => {
       const moduleId = assertValue(
-        assertType<string>(value['module'], 'string').split('/').at(-2)
+        assertType<string>(value['module'], 'string').split('/').at(-2),
       );
       return value['element-id'] !== ''
         ? `${moduleId}#${value['element-id']}`
@@ -342,7 +343,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public async componentDidMount(): Promise<void> {
     try {
       const metadata = await this.props.contentService.getOSMeta(
-        this.props.contentId
+        this.props.contentId,
       );
       if (Object.keys(metadata).length > 0) {
         const decoded = this.decodeValues(metadata);
@@ -373,17 +374,17 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   get encodedValues() {
     // TODO: Remove optional fields that are empty?
     const encodeValue = (key: keyof FormState, state: InputState): any =>
-      key in coders ? coders[key]!.encoder(state) : state.value;
+      key in coders ? assertValue(coders[key]).encoder(state) : state.value;
     const metadata = Object.fromEntries(
       this.metadataEntries.map(([key, oneOrMany]) => [
         key,
         Array.isArray(oneOrMany)
           ? oneOrMany.map((item) => encodeValue(key, item))
           : encodeValue(key, oneOrMany),
-      ])
+      ]),
     );
     const bookMetadataEntries = Object.entries(this.state).filter(
-      isBookInputEntry
+      isBookInputEntry,
     );
     const bookInputSets = bookInputs
       .filter((b) => b.isInputSet === true)
@@ -402,22 +403,24 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   bookStates
                     .filter(
                       (bookState) =>
-                        bookState.book === book && bookState.value !== ''
+                        bookState.book === book && bookState.value !== '',
                     )
                     .map((bookState) => bookState.value),
                 ])
                 .filter(([_, v]) => v.length > 0)
-                .map(([k, v]) => [k, bookInputSets.includes(k) ? v : v[0]])
+                .map(([k, v]) => [k, bookInputSets.includes(k) ? v : v[0]]),
             ),
           ];
-        })
+        }),
     );
     return { ...metadata, books: bookMetadata };
   }
 
   decodeValues(metadata: any): Partial<FormState> {
     const decode = (key: keyof SavedState, value: any): string =>
-      key in coders ? coders[key]!.decoder(value) : value.toString();
+      key in coders
+        ? assertValue(coders[key]).decoder(value)
+        : value.toString();
     const decodeValue = (key: keyof SavedState, value: any): InputState => {
       return {
         ...defaultInputState,
@@ -432,11 +435,11 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           Array.isArray(oneOrMany)
             ? oneOrMany.map((item) => decodeValue(key, item))
             : decodeValue(key, oneOrMany),
-        ])
+        ]),
     );
     const books = Object.entries(metadata['books'] ?? {}) as [string, any];
     const bookMetadata = {
-      books: books.map(([k, _]) => ({ ...defaultInputState, value: k })),
+      books: books.map(([k]) => ({ ...defaultInputState, value: k })),
       ...Object.fromEntries(
         bookInputKeys.map((k) => {
           const value: BookInputState[] = [];
@@ -448,14 +451,14 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   ...defaultInputState,
                   value: v,
                   book,
-                })
+                }),
               );
             } else if (valuesByKey !== undefined) {
               value.push({ ...defaultInputState, value: valuesByKey, book });
             }
           });
           return [k, value];
-        })
+        }),
       ),
     };
     return { ...exerciseMetadata, ...bookMetadata };
@@ -468,14 +471,14 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     ];
     const isInputValid = (
       key: keyof SavedState | keyof BookInputs,
-      state: InputState | undefined
+      state: InputState | undefined,
     ) => {
       if (state?.isValid === false) {
         this.onSaveError(`Value for "${key}" is invalid`);
         return false;
       }
       /* istanbul ignore if (not currently utilized) */
-      if (required.includes(key) && !state?.value) {
+      if (required.includes(key) && isFalsy(state?.value)) {
         this.onSaveError(`"${key}" cannot be empty.`);
         return false;
       }
@@ -483,7 +486,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     };
     const isArrayValid = (
       key: keyof SavedState | keyof BookInputs,
-      inputSet: InputState[]
+      inputSet: InputState[],
     ) => {
       /* istanbul ignore if (not currently utilized) */
       if (required.includes(key) && inputSet.length === 0) {
@@ -496,33 +499,33 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       this.metadataEntries.every(([key, oneOrMany]) =>
         Array.isArray(oneOrMany)
           ? isArrayValid(key, oneOrMany)
-          : isInputValid(key, oneOrMany)
+          : isInputValid(key, oneOrMany),
       ) &&
       this.state.books.every((b) =>
         bookInputs.every(
           (bookInput) =>
             !bookInput.isActive(b.value) ||
-            (bookInput.isInputSet
+            (bookInput.isInputSet === true
               ? isArrayValid(
                   bookInput.key,
                   this.state[bookInput.key].filter(
-                    (state) => state.book === b.value
-                  )
+                    (state) => state.book === b.value,
+                  ),
                 )
               : isInputValid(
                   bookInput.key,
                   this.state[bookInput.key].find(
-                    (state) => state.book === b.value
-                  )
-                ))
-        )
+                    (state) => state.book === b.value,
+                  ),
+                )),
+        ),
       )
     );
   }
 
   render() {
     const inputSetHandlerProps = <K extends keyof InputSets | keyof BookInputs>(
-      type: K
+      type: K,
     ) => {
       return {
         inputs: this.state[type],
@@ -541,7 +544,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         handleInputChange: (
           index: number,
           value: string,
-          isValid: boolean = true
+          isValid: boolean = true,
         ) => {
           const inputs = this.state[type];
           const newInputs = [...inputs];
@@ -552,7 +555,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     };
 
     const inputHandlerProps = <K extends keyof SingleInputs | keyof BookInputs>(
-      type: K
+      type: K,
     ) => ({
       handleInputChange: (value: string, isValid: boolean = true) =>
         this.setState({ [type]: { value, isValid } }),
@@ -579,18 +582,18 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         },
         handleRemoveInput: (index) => {
           baseProps.handleRemoveInput(
-            assertValue(getIdx(book, index, this.state[type]))
+            assertValue(getIdx(book, index, this.state[type])),
           );
         },
         handleInputChange: (
           index: number,
           value: string,
-          isValid: boolean = true
+          isValid: boolean = true,
         ) => {
           baseProps.handleInputChange(
             assertValue(getIdx(book, index, this.state[type])),
             value,
-            isValid
+            isValid,
           );
         },
       };
@@ -604,7 +607,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         }),
         handleInputChange: (value: string, isValid: boolean = true) => {
           const idx = this.state[type].findIndex(
-            (bookState) => bookState.book === book
+            (bookState) => bookState.book === book,
           );
           const newInputs = [...this.state[type]];
           if (idx !== -1) {
@@ -635,7 +638,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           .filter(isBookInputEntry)
           .map(([key, value]) => {
             const isStateActive = activeInputs.some(
-              (input) => input.key === key
+              (input) => input.key === key,
             );
             const updatedValue = value
               .map((bookState) => {
@@ -652,10 +655,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                 }
               })
               .filter(
-                (bookState): bookState is BookInputState => bookState != null
+                (bookState): bookState is BookInputState => bookState != null,
               );
             return [key, updatedValue];
-          })
+          }),
       );
       this.setState(updated);
     };
@@ -673,9 +676,9 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   exerciseInputs
                     .filter((i) => i.isActive !== false)
                     .map((i) =>
-                      i.make(inputHandlerProps, inputSetHandlerProps)
+                      i.make(inputHandlerProps, inputSetHandlerProps),
                     ),
-                  inputsPerRow
+                  inputsPerRow,
                 ).map((inputsChunk, rowIdx) => (
                   <div className="row mb-4" key={`row-${rowIdx}`}>
                     {inputsChunk.map((input, colIdx) => (
@@ -692,9 +695,9 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   const myBook = bookState.value;
                   // Books selected by this dropdown or not selected by any other
                   const selectableBooks = BOOKS.filter(
-                    ([value, _]) =>
+                    ([value]) =>
                       value === myBook ||
-                      bookHandlerProps.inputs.every((b) => value !== b.value)
+                      bookHandlerProps.inputs.every((b) => value !== b.value),
                   );
 
                   return (
@@ -747,10 +750,10 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                                 input.make(
                                   myBook,
                                   bookInputHandlerProps,
-                                  bookInputSetHandlerProps
-                                )
+                                  bookInputSetHandlerProps,
+                                ),
                               ),
-                            inputsPerRow
+                            inputsPerRow,
                           ).map((inputsChunk, rowIdx) => (
                             <div
                               className="row p-0 mt-4"

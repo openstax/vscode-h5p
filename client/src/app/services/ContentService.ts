@@ -20,7 +20,7 @@ export interface IContentService {
   list(): Promise<IContentListEntry[]>;
   save(
     contentId: string,
-    requestBody: { library: string; params: any }
+    requestBody: { library: string; params: any },
   ): Promise<{ contentId: string; metadata: IContentMetadata }>;
   generateDownloadLink(contentId: string): string;
   getOSMeta(contentId: string): Promise<any>;
@@ -32,9 +32,11 @@ axios.interceptors.response.use(
   },
   // If a detailed error message was sent from the server, throw & display that
   function (e) {
-    const errorText = e.response?.data;
-    return Promise.reject(errorText ? new Error(errorText) : e);
-  }
+    const errorData = e.response?.data;
+    return Promise.reject(
+      typeof errorData === 'string' ? new Error(errorData) : e,
+    );
+  },
 );
 
 export class ContentService implements IContentService {
@@ -48,7 +50,7 @@ export class ContentService implements IContentService {
   delete = async (contentId: string): Promise<void> => {
     console.log(`ContentService: deleting ${contentId}...`);
     try {
-      const result = await axios.delete(`${this.baseUrl}/${contentId}`, {
+      await axios.delete(`${this.baseUrl}/${contentId}`, {
         method: 'delete',
         headers: {
           'CSRF-Token': this.csrfToken ?? '',
@@ -95,7 +97,7 @@ export class ContentService implements IContentService {
 
   save = async (
     contentId: string,
-    requestBody: { library: string; params: any }
+    requestBody: { library: string; params: any },
   ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
     if (contentId) {
       console.log(`ContentService: Saving new content.`);
@@ -137,7 +139,7 @@ export class ContentService implements IContentService {
     console.log(`ContentService: Getting OSMeta for ${contentId}...`);
     try {
       const res = await axios.get(
-        `${this.baseUrl}/${contentId}/openstax-metadata/`
+        `${this.baseUrl}/${contentId}/openstax-metadata/`,
       );
       return res.data;
     } catch (err) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { cleanup, fireEvent, render } from '@testing-library/react';
 
 import SingleInput from '../SingleInput';
@@ -14,7 +15,7 @@ import { SingleDropdown } from '../SingleDropdown';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
-  valuesToTest: [string, boolean][]
+  valuesToTest: [string, boolean][],
 ) {
   let value = '';
   let isValid = true;
@@ -39,9 +40,9 @@ function testSingleInputValidation(
 
 function testInputSetValidation(
   factory: (state: InputSetProps) => React.ReactElement<InputSetProps>,
-  valuesToTest: [string, boolean][][]
+  valuesToTest: [string, boolean][][],
 ) {
-  const inputStates = collect(range(valuesToTest[0].length)).map((_) => ({
+  const inputStates = collect(range(valuesToTest[0].length)).map(() => ({
     value: '',
     isValid: true,
   }));
@@ -61,7 +62,7 @@ function testInputSetValidation(
   for (let i = 0; i < valuesToTest.length; i++) {
     valuesToTest.forEach((valueSet) => {
       // First set all the values
-      valueSet.forEach(([value, _], idx) => {
+      valueSet.forEach(([value], idx) => {
         fireEvent.change(inputs[idx], { target: { value } });
       });
       // Then check that they all retained the correct value
@@ -76,7 +77,7 @@ function testInputSetValidation(
 
 function selectOption(container: HTMLElement, idx: number, value: string) {
   const input = [...container.querySelectorAll('input[role="combobox"]')].find(
-    (el, i) => el.id.match(/^react-select-\d+-input$/) && i === idx
+    (el, i) => el.id.match(/^react-select-\d+-input$/) && i === idx,
   );
   if (input === undefined) {
     throw new Error('Failed to find input for select box');
@@ -94,7 +95,6 @@ describe('Inputs', () => {
   describe('SingleInput', () => {
     it('displays the value and styles as expected', () => {
       let value = 'some invalid value';
-      let input;
       const isValid = false;
       const styleInvalid = {
         outline: '123px solid red',
@@ -105,16 +105,16 @@ describe('Inputs', () => {
       const harness: SingleInputProps = {
         value,
         isValid,
-        handleInputChange: (v, _) => {
+        handleInputChange: (v) => {
           value = v;
         },
       };
 
       const { container } = render(
-        <SingleInput {...harness} style={style} styleInvalid={styleInvalid} />
+        <SingleInput {...harness} style={style} styleInvalid={styleInvalid} />,
       );
 
-      input = container.querySelector('input');
+      const input = container.querySelector('input');
       Object.entries({ ...style, ...styleInvalid }).forEach(([k, v]) => {
         expect(input?.style[k]).toBe(v);
       });
@@ -140,7 +140,7 @@ describe('Inputs', () => {
       };
 
       const { container } = render(
-        <SingleDropdown options={options} {...props} />
+        <SingleDropdown options={options} {...props} />,
       );
 
       // Should cause a change to be triggered
@@ -215,7 +215,7 @@ describe('Inputs', () => {
       ];
 
       const { container } = render(
-        <InputSet title="Test" options={options} {...state} />
+        <InputSet title="Test" options={options} {...state} />,
       );
 
       const inputs = container.querySelectorAll('input[role="combobox"]');
@@ -246,7 +246,7 @@ describe('Inputs', () => {
             ['00-00-001', false],
             ['A00-00-02', true],
           ],
-        ]
+        ],
       );
     });
   });
@@ -266,7 +266,7 @@ describe('Inputs', () => {
             ['abc.1.a', false],
             ['ABC.0.F', true],
           ],
-        ]
+        ],
       );
     });
     it('validates values for stax-apphys', () => {
@@ -283,7 +283,7 @@ describe('Inputs', () => {
             ['1-a-23-1', false],
             ['1.B.1.2', true],
           ],
-        ]
+        ],
       );
     });
     it('validates values for other ap books', () => {
@@ -300,7 +300,7 @@ describe('Inputs', () => {
             ['1-a-23-1', false],
             ['1.B.1.2', true],
           ],
-        ]
+        ],
       );
     });
   });
@@ -321,7 +321,7 @@ describe('Inputs', () => {
             ['2', false],
             ['m00012', true],
           ],
-        ]
+        ],
       );
     });
   });
@@ -336,7 +336,7 @@ describe('Inputs', () => {
           ['1.1a', true],
           ['10.9z', true],
           ['10.10a', false],
-        ]
+        ],
       );
     });
   });

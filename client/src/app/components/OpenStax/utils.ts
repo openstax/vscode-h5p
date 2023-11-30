@@ -18,7 +18,7 @@ export function chunk<T>(arr: T[], chunkSize: number): Array<T[]> {
 
 export function debounce<A = unknown, R = void>(
   fn: (args: A) => R,
-  ms: number
+  ms: number,
 ): (args: A) => Promise<R> {
   let timer: NodeJS.Timeout;
 
@@ -35,7 +35,7 @@ export function debounce<A = unknown, R = void>(
 
 export function assertValue<T>(
   v: T | null | undefined,
-  message = 'Expected a value but did not get anything'
+  message = 'Expected a value but did not get anything',
 ) {
   if (v !== null && v !== undefined) return v;
   /* istanbul ignore next */
@@ -45,7 +45,7 @@ export function assertValue<T>(
 export function assertType<T>(
   v: unknown,
   type: string,
-  message = 'Got unexpected type'
+  message = 'Got unexpected type',
 ): T {
   if (typeof v === type) return v as T;
   /* istanbul ignore next */
@@ -55,7 +55,7 @@ export function assertType<T>(
 // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
 export async function digestMessage(
   message: string,
-  options?: { algorithm?: string }
+  options?: { algorithm?: string },
 ) {
   const { algorithm = 'SHA-1' } = options ?? {};
   const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array

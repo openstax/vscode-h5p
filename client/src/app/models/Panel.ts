@@ -28,7 +28,7 @@ export abstract class Panel {
       this.panel.onDidDispose(
         () => this.dispose(),
         null,
-        this.context.subscriptions
+        this.context.subscriptions,
       );
     }
   }

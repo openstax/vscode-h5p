@@ -32,8 +32,8 @@ export async function activate(context: ExtensionContext) {
       context.subscriptions.push(
         window.setStatusBarMessage(
           'H5P Editor: Loading $(sync~spin)',
-          serverReadyEvent.wait()
-        )
+          serverReadyEvent.wait(),
+        ),
       );
       serverReadyEvent
         .wait()
@@ -43,12 +43,12 @@ export async function activate(context: ExtensionContext) {
         .catch((e: Error) => {
           void window.showErrorMessage(e.message);
         });
-    })
+    }),
   );
 
   // The server is implemented in node
   const serverModule = context.asAbsolutePath(
-    path.join('server', 'out', 'server.js')
+    path.join('server', 'out', 'server.js'),
   );
   // The debug options for the server
   // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
@@ -77,24 +77,24 @@ export async function activate(context: ExtensionContext) {
     'h5pEditorServer',
     'H5P Editor Server',
     serverOptions,
-    clientOptions
+    clientOptions,
   );
 
   client.start();
   context.subscriptions.push(
     client.onNotification('server-ready', () => {
       serverReadyEvent.set();
-    })
+    }),
   );
   context.subscriptions.push(
     client.onNotification('server-error', (e) => {
       serverReadyEvent.cancel(new Error(e));
-    })
+    }),
   );
 }
 
 export function deactivate(): Thenable<void> | undefined {
-  if (!client) {
+  if (client == null) {
     return undefined;
   }
   return client.stop();

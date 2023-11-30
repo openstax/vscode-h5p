@@ -11,7 +11,7 @@ export class H5PEditorPanel extends Panel {
       this.id,
       'H5P Editor',
       this.columnSelector(),
-      { retainContextWhenHidden: true }
+      { retainContextWhenHidden: true },
     );
     const { webview } = panel;
     const extensionRoot = vscode.Uri.file(this.context.extensionPath);
@@ -38,7 +38,7 @@ export class H5PEditorPanel extends Panel {
 
 function buildGitpodURL() {
   const port = 27149;
-  if (process.env['GITPOD_WORKSPACE_ID']) {
+  if (process.env['GITPOD_WORKSPACE_ID'] != null) {
     return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
   } else {
     return `http://localhost:${port}`;
@@ -47,17 +47,14 @@ function buildGitpodURL() {
 
 function getHtmlForWebview(
   context: vscode.ExtensionContext,
-  webview: vscode.Webview
+  webview: vscode.Webview,
 ): string {
   const { extensionPath } = context;
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const manifest = require(path.join(
-      extensionPath,
-      'client',
-      'out',
-      'manifest.json'
-    ));
+    const manifest = require(
+      path.join(extensionPath, 'client', 'out', 'manifest.json'),
+    );
     console.debug(`Rendering the web page`);
 
     // get all generated chunks names
@@ -72,8 +69,13 @@ function getHtmlForWebview(
       .map((scriptName) => {
         const jsUri = webview.asWebviewUri(
           vscode.Uri.file(
-            path.join(extensionPath, 'client', 'out', manifest[scriptName].file)
-          )
+            path.join(
+              extensionPath,
+              'client',
+              'out',
+              manifest[scriptName].file,
+            ),
+          ),
         );
         let output = `<script src="${jsUri}"></script>`;
         if (manifest[scriptName].css !== undefined)
@@ -82,9 +84,9 @@ function getHtmlForWebview(
               (css) =>
                 `<link rel="stylesheet" href=" ${webview.asWebviewUri(
                   vscode.Uri.file(
-                    path.join(extensionPath, 'client', 'out', css)
-                  )
-                )}">`
+                    path.join(extensionPath, 'client', 'out', css),
+                  ),
+                )}">`,
             )
             .join('');
         return output;

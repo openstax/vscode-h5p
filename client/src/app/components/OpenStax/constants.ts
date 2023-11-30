@@ -41,8 +41,8 @@ export const BOOKS = [
   ['stax-neuroscience', 'Introduction to Behavioral Neuroscience'],
   ['stax-datascience', 'Data Science'],
 ];
-export const AP_BOOKS = BOOKS.map(([value, _]) => value).filter((value) =>
-  value.startsWith('stax-ap')
+export const AP_BOOKS = BOOKS.map(([value]) => value).filter((value) =>
+  value.startsWith('stax-ap'),
 );
 export const AP_SCIENCE_BOOKS = ['stax-apphys', 'stax-apbio'];
 export const AP_HISTORY_BOOKS = ['stax-apush'];

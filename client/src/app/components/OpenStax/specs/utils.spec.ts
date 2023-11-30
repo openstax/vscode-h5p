@@ -32,7 +32,7 @@ describe('utils', () => {
     ];
     args.map(([arr, chunkSize, expected]) => {
       it(`returns ${JSON.stringify(
-        expected
+        expected,
       )} for ${arr} chunked to ${chunkSize} chunk size`, () => {
         expect(chunk(arr, chunkSize)).toEqual(expected);
       });
