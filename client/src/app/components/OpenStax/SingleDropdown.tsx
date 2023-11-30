@@ -2,7 +2,7 @@ import Select, { StylesConfig } from 'react-select';
 import { DropdownOption } from './types';
 
 export function SingleDropdown<
-  OptionType extends DropdownOption = DropdownOption
+  OptionType extends DropdownOption = DropdownOption,
 >({
   options,
   handleInputChange,

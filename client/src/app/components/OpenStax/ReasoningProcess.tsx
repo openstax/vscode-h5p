@@ -1,6 +1,6 @@
 import BasicFormComponent from './BasicFormComponent';
 import { SingleDropdown } from './SingleDropdown';
-import { DropdownOption, SingleInputProps } from './types';
+import { SingleInputProps } from './types';
 import { collect, range } from './utils';
 
 const options = collect(range(1, 4))

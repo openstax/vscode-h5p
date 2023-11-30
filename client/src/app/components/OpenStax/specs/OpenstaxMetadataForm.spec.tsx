@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   cleanup,
   fireEvent,
@@ -93,7 +94,7 @@ describe('OpenstaxMetadataForm', () => {
     const { formDataOverride = {}, formPropsOverride = {} } = args;
     return await initForm(
       { ...minFormData, ...formDataOverride },
-      formPropsOverride
+      formPropsOverride,
     );
   };
 
@@ -184,7 +185,7 @@ describe('OpenstaxMetadataForm', () => {
   describe('Book inputs', () => {
     const getBook = (
       container: HTMLElement,
-      idx: number
+      idx: number,
     ): HTMLElement | undefined => {
       const el = container.querySelectorAll(SEL_BOOK)[idx];
       return el === undefined ? undefined : (el as HTMLElement);
@@ -192,12 +193,12 @@ describe('OpenstaxMetadataForm', () => {
     const getBookInput = (
       container: HTMLElement,
       bookIdx: number,
-      name: string
+      name: string,
     ): HTMLElement | undefined => {
       const el = Array.from(
         Array.from(container.querySelectorAll(SEL_BOOK))[
           bookIdx
-        ]?.querySelectorAll('.container') ?? []
+        ]?.querySelectorAll('.container') ?? [],
       ).find((el) => el.querySelector('h3')?.textContent?.indexOf(name) === 0);
       return el === undefined ? undefined : (el as HTMLElement);
     };
@@ -278,25 +279,25 @@ describe('OpenstaxMetadataForm', () => {
         fireEvent.change(
           getByDisplayValue(
             getBookInput(container, 1, 'Learning Objectives')!,
-            oldValue
+            oldValue,
           )!,
           {
             target: { value: newValue },
-          }
+          },
         );
       });
       // Remove a book
       act(() => {
         fireEvent.click(
           container.querySelector(SEL_BOOK_REM)!.firstElementChild,
-          { button: 1 }
+          { button: 1 },
         );
       });
       // Add a book
       act(() => {
         fireEvent.click(
           container.querySelector(SEL_BOOK_ADD)!.firstElementChild,
-          { button: 1 }
+          { button: 1 },
         );
       });
       // Add another option
@@ -330,7 +331,7 @@ describe('OpenstaxMetadataForm', () => {
           getByDisplayValue(getBookInput(container, 1, 'AACN')!, oldValue)!,
           {
             target: { value: newValue },
-          }
+          },
         );
       });
       expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
@@ -380,7 +381,7 @@ describe('OpenstaxMetadataForm', () => {
       });
       const { openstaxForm } = controller;
       expect(
-        openstaxForm.current!.decodeValues(formDataEncoded)
+        openstaxForm.current!.decodeValues(formDataEncoded),
       ).toMatchSnapshot();
       expect(openstaxForm.current!.encodedValues).toMatchSnapshot();
     });
@@ -403,7 +404,7 @@ describe('OpenstaxMetadataForm', () => {
       expect(moduleIdInput.value).toBe(errorValue);
       expect(openstaxForm.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
-        'OpenStax Metadata: Value for "module-id" is invalid'
+        'OpenStax Metadata: Value for "module-id" is invalid',
       );
     });
     it('rejects invalid book input set values', async () => {
@@ -424,7 +425,7 @@ describe('OpenstaxMetadataForm', () => {
       });
       expect(openstaxFormBadLO.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
-        'OpenStax Metadata: Value for "lo" is invalid'
+        'OpenStax Metadata: Value for "lo" is invalid',
       );
     });
     it('rejects invalid book input values', async () => {
@@ -445,7 +446,7 @@ describe('OpenstaxMetadataForm', () => {
       });
       expect(openstaxFormBadLO.current!.isInputValid).toBe(false);
       expect(defaultFormProps.onSaveError).toHaveBeenCalledWith(
-        'OpenStax Metadata: Value for "aacn" is invalid'
+        'OpenStax Metadata: Value for "aacn" is invalid',
       );
     });
     // No required fields right now (leaving this in incase this changes)
@@ -455,7 +456,7 @@ describe('OpenstaxMetadataForm', () => {
       const { openstaxForm, getByDisplayValue } = await initFormWithMinData({});
       // WHEN: Data is valid
       expect(openstaxForm.current!.encodedValues.nickname).toBe(
-        formProps.contentId
+        formProps.contentId,
       );
       // THEN: It is seen as valid and save is not called
       expect(openstaxForm.current!.isInputValid).toBe(true);
