@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { IEditorModel, IContentMetadata } from '@lumieducation/h5p-server';
 
 import { mergeH5PIntegration } from './H5PUtils';
-import { addScripts, addStylesheets } from './DomUtils';
+import { addScripts } from './DomUtils';
+import { isFalsy } from './Utils';
 
 declare global {
   /**
    * The H5P core "class" for the editor.
    */
-  var H5PEditor: any;
+  let H5PEditor: any;
   /**
    * Used by the H5P core for namespacing.
    */
-  var ns: any;
+  let ns: any;
 }
 
 export class H5PEditorComponent extends HTMLElement {
@@ -29,7 +31,7 @@ export class H5PEditorComponent extends HTMLElement {
   }
 
   public set contentId(contentId: string) {
-    if (!contentId) {
+    if (isFalsy(contentId)) {
       this.removeAttribute('content-id');
     } else {
       this.setAttribute('content-id', contentId);
@@ -64,7 +66,7 @@ export class H5PEditorComponent extends HTMLElement {
         metadata?: IContentMetadata;
         params?: any;
       }
-    >
+    >,
   ) {
     // We only (re-)render the component if the callback was really changed.
     const mustRender = this.privateLoadContentCallback !== callback;
@@ -101,7 +103,7 @@ export class H5PEditorComponent extends HTMLElement {
    */
   public saveContentCallback!: (
     contentId: string,
-    requestBody: { library: string; params: any }
+    requestBody: { library: string; params: any },
   ) => Promise<{ contentId: string; metadata: IContentMetadata }>;
 
   private editorInstance: any;
@@ -125,7 +127,7 @@ export class H5PEditorComponent extends HTMLElement {
 
   private static initTemplate(): void {
     // We create the static template only once
-    if (!H5PEditorComponent.template) {
+    if (isFalsy(H5PEditorComponent.template)) {
       H5PEditorComponent.template = document.createElement('template');
       H5PEditorComponent.template.innerHTML = `
             <style>
@@ -151,7 +153,7 @@ export class H5PEditorComponent extends HTMLElement {
   public async attributeChangedCallback(
     name: string,
     oldVal: any,
-    newVal: any
+    newVal: any,
   ): Promise<void> {
     // We don't render if the component's content id changes from 'new'
     // to something else, as this would lead to flickering when saving
@@ -180,13 +182,13 @@ export class H5PEditorComponent extends HTMLElement {
    * Called when the component is removed from the DOM.
    */
   public disconnectedCallback(): void {
-    if (this.resizeObserver) {
+    if (!isFalsy(this.resizeObserver)) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null!;
     }
 
     // Unregister our event listener from the global H5P dispatcher.
-    if (window.H5P?.externalDispatcher) {
+    if (!isFalsy(window.H5P?.externalDispatcher)) {
       window.H5P.externalDispatcher.off('editorloaded', this.onEditorLoaded);
     }
   }
@@ -197,9 +199,9 @@ export class H5PEditorComponent extends HTMLElement {
    */
   public resize = (): void => {
     const h5pEditorIframe = this.querySelector(
-      '.h5p-editor-iframe'
+      '.h5p-editor-iframe',
     ) as HTMLIFrameElement;
-    if (h5pEditorIframe) {
+    if (!isFalsy(h5pEditorIframe)) {
       const newHeight =
         h5pEditorIframe.contentWindow?.document?.body?.scrollHeight;
       if (newHeight !== undefined) {
@@ -224,31 +226,31 @@ export class H5PEditorComponent extends HTMLElement {
     if (this.editorInstance === undefined) {
       this.dispatchAndThrowError(
         'save-error',
-        'editorInstance of h5p editor not defined.'
+        'editorInstance of h5p editor not defined.',
       );
     }
-    if (!this.saveContentCallback) {
+    if (isFalsy(this.saveContentCallback)) {
       this.dispatchAndThrowError(
         'save-error',
-        'saveContentCallback of H5P Editor Web Component not defined.'
+        'saveContentCallback of H5P Editor Web Component not defined.',
       );
     }
 
     // Get parameters (and also validates them as a side effect)
     const params = this.editorInstance.getParams();
-    if (!params.params) {
+    if (isFalsy(params.params)) {
       this.dispatchAndThrowError(
         'validation-error',
-        'The parameters entered by the user are invalid.'
+        'The parameters entered by the user are invalid.',
       );
     }
     // Validate mandatory main title. Prevent submitting if that's not set.
     // Deliberately doing it after getParams(), so that any other validation
     // problems are also revealed.
-    if (!this.editorInstance.isMainTitleSet()) {
+    if (isFalsy(this.editorInstance.isMainTitleSet())) {
       this.dispatchAndThrowError(
         'validation-error',
-        "The main title of the content hasn't been set."
+        "The main title of the content hasn't been set.",
       );
     }
 
@@ -264,9 +266,9 @@ export class H5PEditorComponent extends HTMLElement {
             },
             (err) => {
               rej(err);
-            }
+            },
           );
-        }
+        },
       );
     } catch (error: any) {
       this.dispatchAndThrowError('validation-error', error.toString());
@@ -284,7 +286,7 @@ export class H5PEditorComponent extends HTMLElement {
     try {
       saveResponseObject = await this.saveContentCallback(
         this.contentId === 'new' ? undefined! : this.contentId,
-        requestBody
+        requestBody,
       );
     } catch (error: any) {
       this.dispatchAndThrowError('save-error', error.message);
@@ -300,7 +302,7 @@ export class H5PEditorComponent extends HTMLElement {
           contentId: saveResponseObject!.contentId,
           metadata: saveResponseObject!.metadata,
         },
-      })
+      }),
     );
     return saveResponseObject!;
   };
@@ -317,7 +319,7 @@ export class H5PEditorComponent extends HTMLElement {
         detail: {
           message,
         },
-      })
+      }),
     );
     throw new Error(`${eventName}: ${message}`);
   }
@@ -328,15 +330,15 @@ export class H5PEditorComponent extends HTMLElement {
   private onEditorLoaded = (event: { data: string }): void => {
     // We must manually check if our editor instance is initialized, as the
     // event is only sent globally.
-    if (this.editorInstance.selector.form) {
+    if (!isFalsy(this.editorInstance.selector.form)) {
       this.dispatchEvent(
         new CustomEvent('editorloaded', {
           detail: { contentId: this.contentId, ubername: event.data },
-        })
+        }),
       );
       // After our editor has been initialized, it will never fire the
       // global event again, so we can unsubscribe from it.
-      if (window.H5P?.externalDispatcher) {
+      if (!isFalsy(window.H5P?.externalDispatcher)) {
         window.H5P.externalDispatcher.off('editorloaded', this.onEditorLoaded);
       }
     }
@@ -352,7 +354,7 @@ export class H5PEditorComponent extends HTMLElement {
    * of content was created
    */
   private async render(contentId: string): Promise<void> {
-    if (!this.loadContentCallback) {
+    if (isFalsy(this.loadContentCallback)) {
       return;
     }
 
@@ -367,7 +369,7 @@ export class H5PEditorComponent extends HTMLElement {
     };
     try {
       editorModel = await this.loadContentCallback(
-        contentId === 'new' ? undefined! : contentId
+        contentId === 'new' ? undefined! : contentId,
       );
     } catch (error: any) {
       this.root.innerHTML = `<p>Error loading H5P content from server: ${error.message}`;
@@ -379,7 +381,7 @@ export class H5PEditorComponent extends HTMLElement {
 
     // We have to prevent H5P from initializing when the h5p.js file is
     // loaded.
-    if (!window.H5P) {
+    if (isFalsy(window.H5P)) {
       window.H5P = {} as any;
     }
     window.H5P.preventInit = true;
@@ -389,7 +391,7 @@ export class H5PEditorComponent extends HTMLElement {
     // content objects on a single page.
     mergeH5PIntegration(
       editorModel.integration,
-      contentId === 'new' ? undefined! : contentId
+      contentId === 'new' ? undefined! : contentId,
     );
 
     // editorModel.integration.editor!.assets.js =
@@ -404,7 +406,7 @@ export class H5PEditorComponent extends HTMLElement {
     // editorModel.styles = editorModel.integration.editor!.assets.css;
 
     editorModel.integration.editor!.ajaxPath = this.appendH5pUrl(
-      editorModel.integration.editor!.ajaxPath
+      editorModel.integration.editor!.ajaxPath,
     );
     // editorModel.integration.editor!.libraryUrl = this.appendH5pUrl(editorModel.integration.editor!.libraryUrl);
 
@@ -422,16 +424,16 @@ export class H5PEditorComponent extends HTMLElement {
     // (to avoid side effects).
     await addScripts(
       editorModel.scripts,
-      document.getElementsByTagName('head')[0]
+      document.getElementsByTagName('head')[0],
     );
 
     // Configure the H5P core editor.
-    H5PEditor.$ = window.H5P.jQuery || {};
+    H5PEditor.$ = isFalsy(window.H5P.jQuery) ? {} : window.H5P.jQuery;
 
     // Set up the H5P core editor.
     H5PEditor.getAjaxUrl = (
       action: string,
-      parameters: { [x: string]: any }
+      parameters: { [x: string]: any },
     ): string => {
       let url = editorModel.integration.editor!.ajaxPath + action;
       if (parameters !== undefined) {
@@ -449,17 +451,17 @@ export class H5PEditorComponent extends HTMLElement {
 
     window.H5P.preventInit = false;
     // Only initialize H5P once to avoid resetting values.
-    if (!window.h5pIsInitialized) {
+    if (isFalsy(window.h5pIsInitialized)) {
       window.H5P.init(this.root);
       window.h5pIsInitialized = true;
     }
 
     // Register our global editorloaded event handler.
-    if (window.H5P.externalDispatcher) {
+    if (!isFalsy(window.H5P.externalDispatcher)) {
       window.H5P.externalDispatcher.on(
         'editorloaded',
         this.onEditorLoaded,
-        this
+        this,
       );
     }
 
@@ -480,7 +482,7 @@ export class H5PEditorComponent extends HTMLElement {
     H5PEditor.baseUrl = this.h5pUrl;
     H5PEditor.contentId = contentId === 'new' ? undefined : contentId;
     H5PEditor.enableContentHub =
-      editorModel.integration.editor!.enableContentHub || false;
+      editorModel.integration.editor?.enableContentHub ?? false;
 
     if (contentId === 'new') {
       // Create an empty editor for new content
@@ -493,7 +495,7 @@ export class H5PEditorComponent extends HTMLElement {
           metadata: editorModel.metadata,
           params: editorModel.params,
         }),
-        h5pEditorDiv
+        h5pEditorDiv,
       );
     }
 
