@@ -1,0 +1,36 @@
+name: CI GitHub Actions
+
+# https://stackoverflow.com/a/67136237
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout git repository 🕝
+        uses: actions/checkout@v3
+
+      - name: Use node version 18
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Setup
+        run: |
+          npm install
+
+      - name: Unit Tests
+        run: |
+          set -e
+          npm run test
+          npm run lint
+
+      - name: Build and package extension
+        run: |
+          set -e
+          npm run package
