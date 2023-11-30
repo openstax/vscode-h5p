@@ -28,7 +28,7 @@ export interface IH5P {
     instance: IH5PInstance,
     parameters,
     contentId,
-    metadata
+    metadata,
   ) => string;
   triggerXAPI(verb: string, extra: any): void;
   Dialog: IH5PDialog;

@@ -125,7 +125,7 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
   }
 
   private loadContentCallbackWrapper = (
-    contentId: string
+    contentId: string,
   ): Promise<IPlayerModel> => this.props.loadContentCallback(contentId);
 
   private onInitialized = (event: CustomEvent<{ contentId: string }>): void => {
@@ -139,13 +139,13 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
       context: IContext;
       event: IxAPIEvent;
       statement: any;
-    }>
+    }>,
   ): void => {
     if (this.props.onxAPIStatement) {
       this.props.onxAPIStatement(
         event.detail.statement,
         event.detail.context,
-        event.detail.event
+        event.detail.event,
       );
     }
   };
@@ -170,7 +170,7 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
     //@ts-ignore
     this.h5pPlayer.current?.removeEventListener(
       'initialized',
-      this.onInitialized
+      this.onInitialized,
     );
     if (this.props.onxAPIStatement) {
       //@ts-ignore

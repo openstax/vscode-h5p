@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Component, createRef, ReactNode, RefObject } from 'react';
 
 import { defineElements } from './Utils';
@@ -42,7 +41,7 @@ interface IH5PEditorUIProps {
     requestBody: {
       library: string;
       params: any;
-    }
+    },
   ) => Promise<{
     contentId: string;
     metadata: IContentMetadata;
@@ -111,7 +110,7 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
   }
 
   private loadContentCallbackWrapper = (
-    contentId: string
+    contentId: string,
   ): Promise<
     IEditorModel & {
       library?: string;
@@ -123,7 +122,7 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
   };
 
   private onEditorLoaded = (
-    event: CustomEvent<{ contentId: string; ubername: string }>
+    event: CustomEvent<{ contentId: string; ubername: string }>,
   ): void => {
     if (this.props.onLoaded) {
       this.props.onLoaded(event.detail.contentId, event.detail.ubername);
@@ -131,7 +130,7 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
   };
 
   private onSaved = (
-    event: CustomEvent<{ contentId: string; metadata: IContentMetadata }>
+    event: CustomEvent<{ contentId: string; metadata: IContentMetadata }>,
   ): void => {
     if (this.props.onSaved) {
       this.props.onSaved(event.detail.contentId, event.detail.metadata);
@@ -139,7 +138,7 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
   };
 
   private onSaveError = async (
-    event: CustomEvent<{ message: string }>
+    event: CustomEvent<{ message: string }>,
   ): Promise<void> => {
     if (this.props.onSaveError) {
       this.props.onSaveError(event.detail.message);
@@ -152,14 +151,14 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
     //@ts-ignore
     this.h5pEditor.current?.addEventListener(
       'editorloaded',
-      this.onEditorLoaded
+      this.onEditorLoaded,
     );
     //@ts-ignore
     this.h5pEditor.current?.addEventListener('save-error', this.onSaveError);
     //@ts-ignore
     this.h5pEditor.current?.addEventListener(
       'validation-error',
-      this.onSaveError
+      this.onSaveError,
     );
   }
 
@@ -168,7 +167,7 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
     requestBody: {
       library: string;
       params: any;
-    }
+    },
   ): Promise<{
     contentId: string;
     metadata: IContentMetadata;
@@ -191,14 +190,14 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
     //@ts-ignore
     this.h5pEditor.current?.removeEventListener(
       'editorloaded',
-      this.onEditorLoaded
+      this.onEditorLoaded,
     );
     //@ts-ignore
     this.h5pEditor.current?.removeEventListener('save-error', this.onSaveError);
     //@ts-ignore
     this.h5pEditor.current?.removeEventListener(
       'validation-error',
-      this.onSaveError
+      this.onSaveError,
     );
   }
 }

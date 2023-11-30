@@ -90,7 +90,7 @@ export default class ContentList extends React.Component<{
             placeholder="{title} | id:{id} | lib:{lib}"
             onChange={debounce(
               (e) => this.setState({ search: e.target.value }),
-              500
+              500,
             )}
           />
         </div>
@@ -199,11 +199,11 @@ export default class ContentList extends React.Component<{
 
   protected async onSaved(
     oldData: IContentListEntry,
-    newData: IContentListEntry
+    newData: IContentListEntry,
   ) {
     this.setState({
       contentList: this.state.contentList.map((c) =>
-        c === oldData ? newData : c
+        c === oldData ? newData : c,
       ),
     });
   }

@@ -2,7 +2,7 @@ import type {
   IInstalledLibrary,
   ILibraryAdministrationOverviewItem,
 } from '@lumieducation/h5p-server';
-import axios, { AxiosHeaders } from 'axios';
+import axios from 'axios';
 
 /**
  * The data model used to display the library list.
@@ -27,7 +27,7 @@ export class LibraryAdministrationService {
   public async deleteLibrary(library: ILibraryViewModel): Promise<void> {
     try {
       const response = await axios.delete(
-        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`
+        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`,
       );
 
       return response.data;
@@ -58,7 +58,7 @@ export class LibraryAdministrationService {
   > {
     try {
       const response = await axios.get(
-        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`
+        `${this.baseUrl}/${library.machineName}-${library.majorVersion}.${library.minorVersion}`,
       );
       return response.data;
     } catch (err) {
@@ -69,7 +69,7 @@ export class LibraryAdministrationService {
 
   public async patchLibrary(
     library: ILibraryViewModel,
-    changes: Partial<ILibraryViewModel>
+    changes: Partial<ILibraryViewModel>,
   ): Promise<ILibraryViewModel> {
     try {
       const response = await axios.patch(
@@ -79,7 +79,7 @@ export class LibraryAdministrationService {
             'Content-Type': 'application/json;charset=UTF-8',
           },
           body: JSON.stringify(changes),
-        }
+        },
       );
       return response.data;
     } catch (err) {
@@ -89,7 +89,7 @@ export class LibraryAdministrationService {
   }
 
   public async postPackage(
-    file: File
+    file: File,
   ): Promise<{ installed: number; updated: number }> {
     const formData = new FormData();
     formData.append('file', file);
