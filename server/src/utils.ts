@@ -8,14 +8,29 @@ import User from './models/H5PUser';
 import { DOMParser } from '@xmldom/xmldom';
 import * as xpath from 'xpath-ts';
 
+export function isFalsy<T>(obj: T): boolean {
+  switch (typeof obj) {
+    case 'string':
+      return obj === '';
+    case 'boolean':
+      return obj === false;
+    case 'bigint':
+      return obj === 0n;
+    case 'number':
+      return obj === 0 || isNaN(obj);
+    default:
+      return obj === null || obj === undefined;
+  }
+}
+
 /* istanbul ignore next (pure function that depends solely on express) */
 export function createH5PRouter<EditRequestType, ContentRequestType>(
-  onPlay: (req, res) => Promise<void>,
-  onEdit: (req: EditRequestType, res) => Promise<void>,
-  onNew: (req: ContentRequestType, res) => Promise<void>,
-  onSave: (req: ContentRequestType, res) => Promise<void>,
-  onDelete: (req: ContentRequestType, res) => Promise<void>,
-  onFetch: (req: ContentRequestType, res) => Promise<void>
+  onPlay: (req: any, res: any) => Promise<void>,
+  onEdit: (req: EditRequestType, res: any) => Promise<void>,
+  onNew: (req: ContentRequestType, res: any) => Promise<void>,
+  onSave: (req: ContentRequestType, res: any) => Promise<void>,
+  onDelete: (req: ContentRequestType, res: any) => Promise<void>,
+  onFetch: (req: ContentRequestType, res: any) => Promise<void>,
 ): express.Router {
   const router = express.Router();
 
@@ -33,39 +48,31 @@ export async function downloadLibraries(
   hostname: string,
   port: number,
   path: string,
-  h5PEditor: H5P.H5PEditor
+  h5PEditor: H5P.H5PEditor,
 ): Promise<any> {
-  console.log(`Updating libraries`);
-  const res = await fetch(`http://${hostname}:${port}${path}`).then((res) =>
-    res.json()
-  );
+  console.log('Updating libraries');
+  const res = await (await fetch(`http://${hostname}:${port}${path}`)).json();
   const user = new User();
-  return Promise.all(
+  await Promise.all(
     res.libraries
-      .filter((lib) => !lib.installed || !lib.isUpToDate)
-      .map((lib) => lib.machineName)
-      .map(async (libraryName) => {
+      .filter((lib: any) => isFalsy(lib.installed) || isFalsy(lib.isUpToDate))
+      .map((lib: any) => lib.machineName)
+      .map(async (libraryName: string) => {
         console.log(`Installing ${libraryName}`);
-        return h5PEditor
-          .installLibraryFromHub(libraryName, user)
-          .then((res) => {
-            console.log(res);
-          });
-      })
+        const res = await h5PEditor.installLibraryFromHub(libraryName, user);
+        console.log(res);
+      }),
   );
 }
 
 export function getIps(external: boolean = false): string[] {
   if (!external) return ['localhost'];
   const interfaces = os.networkInterfaces();
-  return (
-    interfaces &&
-    Object.values(interfaces).flatMap((devInts) =>
-      devInts!
-        .filter((int: { internal: any }) => !int.internal)
-        .filter((int: { family: string }) => int.family === 'IPv4')
-        .map((int: { address: any }) => int.address)
-    )
+  return Object.values(interfaces).flatMap((devInts) =>
+    assertValue(devInts)
+      .filter((int: { internal: any }) => isFalsy(int.internal))
+      .filter((int: { family: string }) => int.family === 'IPv4')
+      .map((int: { address: any }) => int.address),
   );
 }
 
@@ -75,15 +82,16 @@ export async function fsRemove(folderPath: string) {
 
 export async function download(
   url: string,
-  destinationPath: string
+  destinationPath: string,
 ): Promise<void> {
   console.debug(`Downloading ${url} to ${destinationPath}`);
 
   const fileStream = fs.createWriteStream(destinationPath);
   const res = await fetch(url);
+  const body = assertValue(res.body);
   await new Promise((resolve, reject) => {
-    res.body!.pipe(fileStream);
-    res.body!.on('error', reject);
+    body.pipe(fileStream);
+    body.on('error', reject);
     fileStream.on('finish', resolve);
   });
 }
@@ -93,7 +101,7 @@ export async function extractArchive(
   destinationFolder: string,
   deleteArchive: boolean,
   filesToExtract?: string[],
-  opt: decompress.DecompressOptions = { strip: 1 }
+  opt: decompress.DecompressOptions = { strip: 1 },
 ): Promise<void> {
   console.log(`Extracting file ${path}`);
   try {
@@ -103,9 +111,9 @@ export async function extractArchive(
       files
         .filter((file) => !filesToExtract.includes(file.path))
         .forEach((file) => fsRemove(file.path));
-      filesToExtract.forEach((file) =>
-        console.log(`${destinationFolder}/${file}`)
-      );
+      filesToExtract.forEach((file) => {
+        console.log(`${destinationFolder}/${file}`);
+      });
     } else {
       files.forEach((file) => console.log(`${destinationFolder}/${file.path}`));
     }
@@ -118,7 +126,7 @@ export async function extractArchive(
 
 export class ParseError extends Error {}
 
-export function parseXML(xmlString) {
+export function parseXML(xmlString: string) {
   const locator = { lineNumber: 0, columnNumber: 0 };
   /* istanbul ignore next */
   const cb = () => {
@@ -166,8 +174,8 @@ export function parseBooksXML(booksXmlPath: string): {
           throw new Error('Found empty var in books.xml');
         }
         return trimmed;
-      })
-    )
+      }),
+    ),
   );
   return {
     booksRoot: bookVars['BOOKS_ROOT'] ?? '/collections',
@@ -180,7 +188,7 @@ export function parseBooksXML(booksXmlPath: string): {
 
 export function assertValue<T>(
   v: T | null | undefined,
-  message = 'Expected a value but did not get anything'
+  message = 'Expected a value but did not get anything',
 ) {
   if (v !== null && v !== undefined) return v;
   /* istanbul ignore next */

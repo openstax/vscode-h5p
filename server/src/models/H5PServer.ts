@@ -11,7 +11,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 
-import { createH5PRouter, getIps } from '../utils';
+import { assertValue, createH5PRouter, getIps, isFalsy } from '../utils';
 import User from './H5PUser';
 
 /**
@@ -21,7 +21,7 @@ import User from './H5PUser';
 function displayIps(port: string): void {
   console.log('H5P Server Started!');
   getIps().forEach((address) =>
-    console.log(`Server address....  http://${address}:${port}`)
+    console.log(`Server address....  http://${address}:${port}`),
   );
 }
 
@@ -30,43 +30,43 @@ export default class H5PServer<
   PlayerType extends H5P.H5PPlayer = H5P.H5PPlayer,
   EditRequestType extends IRequestWithUser &
     IRequestWithLanguage = IRequestWithLanguage & IRequestWithUser,
-  ContentRequestType extends IRequestWithUser = IRequestWithUser
+  ContentRequestType extends IRequestWithUser = IRequestWithUser,
 > {
   constructor(
     protected readonly h5pEditor: EditorType,
     protected readonly h5pPlayer: PlayerType,
     protected readonly tempFolderPath: string,
-    protected readonly languageOverride: string | 'auto' = 'auto'
+    protected readonly languageOverride: string | 'auto' = 'auto',
   ) {}
 
   public async start(port: number) {
     const server = express();
-    this.configureMiddleware(server, port);
+    this.configureMiddleware(server);
     // For developer convenience we display a list of IPs, the server is running
     // on. You can then simply click on it in the terminal.
     displayIps(port.toString());
-    server.listen(port, getIps()[0], () => {
+    server.listen(port, assertValue(getIps()[0]), () => {
       console.log(
         `... port ${port} with Settings:  ${JSON.stringify(
-          server.settings
-        )} mode`
+          server.settings,
+        )} mode`,
       );
     });
   }
 
   protected handleError(res: express.Response) {
-    return (err) => {
+    return (err: any) => {
       console.error(err);
-      if (!res.headersSent) {
+      if (isFalsy(res.headersSent)) {
         res.status(500).send((err as Error).message);
       }
     };
   }
 
-  protected configureMiddleware(server: express.Express, port: number) {
-    server.use((err, req, res, next) => {
+  protected configureMiddleware(server: express.Express) {
+    server.use((err: any, req: any, res: any, next: any) => {
       next();
-      if (err || res.statusCode >= 400) {
+      if (!isFalsy(err) || res.statusCode >= 400) {
         console.error(err.stack);
         res.status(500).send('Something broke!');
       }
@@ -82,14 +82,14 @@ export default class H5PServer<
         origin: '*',
         credentials: false,
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      })
+      }),
     );
 
     server.use(bodyParser.json({ limit: '500mb' }));
     server.use(
       bodyParser.urlencoded({
         extended: true,
-      })
+      }),
     );
 
     // Configure file uploads
@@ -98,7 +98,7 @@ export default class H5PServer<
         limits: { fileSize: this.h5pEditor.config.maxTotalSize },
         useTempFiles: true,
         tempFileDir: `${this.tempFolderPath}/tmp`,
-      })
+      }),
     );
 
     // It is important that you inject a user object into the request object!
@@ -106,7 +106,7 @@ export default class H5PServer<
     // object to be present in requests.
     // In your real implementation you would create the object using sessions,
     // JSON webtokens or some other means.
-    server.use((req: IRequestWithUser, res: any, next: any) => {
+    server.use((req: IRequestWithUser, _res: any, next: any) => {
       req.user = new User();
       next();
     });
@@ -131,10 +131,10 @@ export default class H5PServer<
         `${this.tempFolderPath}/editor`, // the path on the local disc where the
         // files of the JavaScript client of the editor are stored
         undefined,
-        'en' // You can change the language of the editor here by setting
+        'en', // You can change the language of the editor here by setting
         // the language code you need here. 'auto' means the route will try
         // to use the language detected by the i18next language detector.
-      )
+      ),
     );
 
     // The expressRoutes are routes that create pages for these actions:
@@ -155,21 +155,21 @@ export default class H5PServer<
         (req: ContentRequestType, res) =>
           this.onDelete(req, res).catch(this.handleError(res)),
         (req: ContentRequestType, res) =>
-          this.onFetch(req, res).catch(this.handleError(res))
-      )
+          this.onFetch(req, res).catch(this.handleError(res)),
+      ),
     );
     // The LibraryAdministrationExpress routes are REST endpoints that offer
     // library management functionality.
     server.use(
       `${this.h5pEditor.config.baseUrl}/libraries`,
-      libraryAdministrationExpressRouter(this.h5pEditor)
+      libraryAdministrationExpressRouter(this.h5pEditor),
     );
 
     // The ContentTypeCacheExpress routes are REST endpoints that allow updating
     // the content type cache manually.
     server.use(
       `${this.h5pEditor.config.baseUrl}/content-type-cache`,
-      contentTypeCacheExpressRouter(this.h5pEditor.contentTypeCache)
+      contentTypeCacheExpressRouter(this.h5pEditor.contentTypeCache),
     );
   }
 
@@ -186,7 +186,7 @@ export default class H5PServer<
         showFrame: true,
         showH5PIcon: true,
         showLicenseButton: true,
-      }
+      },
     );
     res.send(h5pPage);
     res.status(200).end();
@@ -196,16 +196,18 @@ export default class H5PServer<
     // This route merges the render and the /ajax/params routes to avoid a
     // second request.
     const editorModel = (await this.h5pEditor.render(
-      req.params.contentId,
+      assertValue(req.params.contentId),
       this.languageOverride === 'auto'
         ? req.language ?? 'en'
         : this.languageOverride,
-      req.user
+      req.user,
     )) as H5P.IEditorModel;
-    if (!req.params.contentId || req.params.contentId === 'undefined') {
+    if (isFalsy(req.params.contentId) || req.params.contentId === 'undefined') {
       res.send(editorModel);
     } else {
-      const content = await this.h5pEditor.getContent(req.params.contentId);
+      const content = await this.h5pEditor.getContent(
+        assertValue(req.params.contentId),
+      );
       res.send({
         ...editorModel,
         library: content.library,
@@ -218,22 +220,23 @@ export default class H5PServer<
 
   protected async onNew(req: ContentRequestType, res: any) {
     if (
-      !req.body.params ||
-      !req.body.params.params ||
-      !req.body.params.metadata ||
-      !req.body.library ||
-      !req.user
+      isFalsy(req.body.params) ||
+      isFalsy(req.body.params.params) ||
+      isFalsy(req.body.params.metadata) ||
+      isFalsy(req.body.library) ||
+      isFalsy(req.user)
     ) {
       res.status(400).send('Malformed request').end();
       return;
     }
     const { id: contentId, metadata } =
       await this.h5pEditor.saveOrUpdateContentReturnMetaData(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         undefined!,
         req.body.params.params,
         req.body.params.metadata,
         req.body.library,
-        req.user
+        req.user,
       );
     res.send(JSON.stringify({ contentId, metadata }));
     res.status(200).end();
@@ -241,29 +244,32 @@ export default class H5PServer<
 
   protected async onSave(req: ContentRequestType, res: any) {
     if (
-      !req.body.params ||
-      !req.body.params.params ||
-      !req.body.params.metadata ||
-      !req.body.library ||
-      !req.user
+      isFalsy(req.body.params) ||
+      isFalsy(req.body.params.params) ||
+      isFalsy(req.body.params.metadata) ||
+      isFalsy(req.body.library) ||
+      isFalsy(req.user)
     ) {
       res.status(400).send('Malformed request').end();
       return;
     }
     const { id: contentId, metadata } =
       await this.h5pEditor.saveOrUpdateContentReturnMetaData(
-        req.params.contentId.toString(),
+        String(req.params.contentId),
         req.body.params.params,
         req.body.params.metadata,
         req.body.library,
-        req.user
+        req.user,
       );
     res.send(JSON.stringify({ contentId, metadata }));
     res.status(200).end();
   }
 
   protected async onDelete(req: ContentRequestType, res: any) {
-    await this.h5pEditor.deleteContent(req.params.contentId, req.user);
+    await this.h5pEditor.deleteContent(
+      assertValue(req.params.contentId),
+      req.user,
+    );
     res.send(`Content ${req.params.contentId} successfully deleted.`);
     res.status(200).end();
   }
@@ -274,10 +280,10 @@ export default class H5PServer<
       contentIds.map(async (id) => ({
         content: await this.h5pEditor.contentManager.getContentMetadata(
           id,
-          req.user
+          req.user,
         ),
         id,
-      }))
+      })),
     );
 
     res.status(200).send(
@@ -285,7 +291,7 @@ export default class H5PServer<
         contentId: o.id,
         title: o.content.title,
         mainLibrary: o.content.mainLibrary,
-      }))
+      })),
     );
   }
 }

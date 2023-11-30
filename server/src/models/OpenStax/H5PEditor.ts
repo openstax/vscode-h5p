@@ -114,7 +114,7 @@ const _supportedTags = [
 export const alterLibrarySemantics = (
   library: H5P.LibraryName,
   semantics: ISemanticsEntry[],
-  config = Config
+  config = Config,
 ) => {
   const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
     return semantics.map((s) => {
@@ -143,7 +143,7 @@ export const alterLibrarySemantics = (
     Object.entries(overridesForLib).forEach(([key, overrides]) => {
       const propertyIdx = semanticsCopy.findIndex((s) => s.name === key);
       if (propertyIdx !== -1) {
-        const original = semanticsCopy[propertyIdx];
+        const original = assertValue(semanticsCopy[propertyIdx]);
         if (original.fields) {
           semanticsCopy[propertyIdx] = {
             ...original,
@@ -185,14 +185,14 @@ function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
   const tryPatch = (
     ptr: any,
     patch: Record<string, any>,
-    fqPath: string[] = []
+    fqPath: string[] = [],
   ) => {
     for (const [fieldName, value] of Object.entries(patch)) {
       const newPath = [...fqPath, fieldName];
       if (!Reflect.has(ptr, fieldName)) {
         /* istanbul ignore next */
         throw new Error(
-          `"${newPath.join('.')}" cannot be patched because it does not exist.`
+          `"${newPath.join('.')}" cannot be patched because it does not exist.`,
         );
       }
       if (Object.prototype.toString.call(value) === '[object Object]') {
@@ -221,16 +221,16 @@ function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
         },
       },
     },
-    ['h5pEditor']
+    ['h5pEditor'],
   );
 }
 
 export function filterLibs(
   libraries: IHubContentTypeWithLocalInfo[],
-  supportedLibraryNames = _supportedLibraryNames
+  supportedLibraryNames = _supportedLibraryNames,
 ) {
   const libsByName = Object.fromEntries(
-    libraries.map((lib) => [lib.machineName, lib])
+    libraries.map((lib) => [lib.machineName, lib]),
   );
   return supportedLibraryNames.map((name) => unwrap(libsByName[name]));
 }
@@ -241,12 +241,12 @@ export default class OSH5PEditor extends H5P.H5PEditor {
     config: H5P.IH5PConfig,
     libraryStorage: H5P.ILibraryStorage,
     // Change type in server from IContentStorage to OSStorage by making this public readonly
-    public readonly contentStorage: OSStorage,
+    public override readonly contentStorage: OSStorage,
     temporaryStorage: H5P.ITemporaryFileStorage,
     translationCallback?: H5P.ITranslationFunction | undefined,
     urlGenerator?: H5P.IUrlGenerator | undefined,
     options?: IH5PEditorOptions | undefined,
-    contentUserDataStorage?: H5P.IContentUserDataStorage | undefined
+    contentUserDataStorage?: H5P.IContentUserDataStorage | undefined,
   ) {
     super(
       cache,
@@ -266,15 +266,15 @@ export default class OSH5PEditor extends H5P.H5PEditor {
           alterLibrarySemantics,
         },
       },
-      contentUserDataStorage
+      contentUserDataStorage,
     );
     monkeyPatchH5PEditor(this);
   }
 
   /* istanbul ignore next */
-  public async getContentTypeCache(
+  public override async getContentTypeCache(
     user: H5P.IUser,
-    language?: string | undefined
+    language?: string | undefined,
   ): Promise<IHubInfo> {
     const baseValue = await super.getContentTypeCache(user, language);
     return {

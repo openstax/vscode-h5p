@@ -1,9 +1,11 @@
+import { assertValue } from '../../utils';
+
 export type Yanker = (content: any) => [unknown, unknown];
 export type Unyanker = (publicData: any, privateData: any) => unknown;
 
 function yankByKeys(content: any, keys: string[]): [unknown, unknown] {
-  const publicData = {};
-  const privateData = {};
+  const publicData: Record<string, any> = {};
+  const privateData: Record<string, any> = {};
   Object.entries(content).forEach(([k, v]) => {
     if (keys.includes(k)) {
       privateData[k] = v;
@@ -23,8 +25,9 @@ export const multiChoiceYanker: Yanker = (content) => {
 };
 
 export const questionSetYanker: Yanker = (content) => {
-  const yankBySubtype = (q) => {
-    const [libraryName, _version] = q.library.split(' ');
+  const yankBySubtype = (q: any) => {
+    const library = assertValue<string>(q.library);
+    const [libraryName] = library.split(' ');
     switch (libraryName) {
       case 'H5P.MultiChoice':
         return multiChoiceYanker(q.params);
@@ -41,7 +44,7 @@ export const questionSetYanker: Yanker = (content) => {
   const publicData = {
     ...content,
     // NOTE: Impure map
-    questions: content.questions.map((q) => {
+    questions: content.questions.map((q: any) => {
       const [pub, priv] = yankBySubtype(q);
       privateData.push(priv);
       return {
@@ -55,10 +58,10 @@ export const questionSetYanker: Yanker = (content) => {
 
 export const questionSetMerge: Unyanker = (
   publicData: any,
-  privateData: any
+  privateData: any,
 ) => {
   const copy = { ...publicData };
-  copy.questions.forEach((q, idx) => {
+  copy.questions.forEach((q: any, idx: number) => {
     q.params = shallowMerge(q.params, privateData[idx]);
   });
   return copy;

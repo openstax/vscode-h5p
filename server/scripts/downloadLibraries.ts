@@ -8,13 +8,13 @@ import * as qs from 'qs';
 import fetch from 'node-fetch';
 import fsExtra from 'fs-extra';
 import * as tar from 'tar';
-import { extractArchive } from '../src/utils';
+import { assertValue, extractArchive } from '../src/utils';
 import path from 'path';
 import { exec } from 'child_process';
 
 const SERVER_ROOT = `${__dirname}/..`;
 const archiveFile = path.resolve(
-  process.argv[2] ?? `${SERVER_ROOT}/out/${Config.h5pServerArchiveName}`
+  process.argv[2] ?? `${SERVER_ROOT}/out/${Config.h5pServerArchiveName}`,
 );
 const tempFolderPath = os.tmpdir() + '/h5p_builder';
 const config = new H5P.H5PConfig(undefined, Config.h5pConfig);
@@ -26,7 +26,7 @@ const h5pEditor = createH5PEditor(
   `${tempFolderPath}/user-data`,
   undefined,
   undefined,
-  undefined
+  undefined,
 );
 
 const registrationData = {
@@ -42,7 +42,7 @@ const registrationData = {
 
 const user = new User();
 
-function sh(cmd) {
+function sh(cmd: string) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
@@ -79,25 +79,25 @@ async function downloadH5PLibs() {
       .map(async (dirent) => ({
         name: dirent.name,
         ...(await fsExtra.readJSON(
-          `${librariesPath}/${dirent.name}/library.json`
+          `${librariesPath}/${dirent.name}/library.json`,
         )),
-      }))
+      })),
   );
   const toInstall = Object.keys(Config.supportedLibraries).filter(
     (libraryName) => {
-      const lib = data.find((item) => item.id === libraryName);
+      const lib = data.find((item: any) => item.id === libraryName);
       if (lib == null) {
         throw new Error(`Could not find "${libraryName}"`);
       }
       // Are there any existing libraries with the exact version?
       return !existingLibraries.some(
-        (existingLib) =>
-          existingLib.name.startsWith(libraryName) &&
+        (existingLib: any) =>
+          assertValue<string>(existingLib.name).startsWith(libraryName) &&
           existingLib.majorVersion === lib.version.major &&
           existingLib.minorVersion === lib.version.minor &&
-          existingLib.patchVersion === lib.version.patch
+          existingLib.patchVersion === lib.version.patch,
       );
-    }
+    },
   );
   if (toInstall.length === 0) {
     console.log('Libraries already up-to-date.');
@@ -118,7 +118,7 @@ async function downloadH5PLibs() {
           }
         }
       }
-    })
+    }),
   );
 }
 
@@ -134,7 +134,7 @@ async function includePatchedMathtype() {
   await sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
 }
 
-async function createArchive(files) {
+async function createArchive(files: string[]) {
   fsExtra.ensureDirSync(path.dirname(archiveFile));
   // Chdir into temp folder so the archived file paths are relative to that location
   process.chdir(tempFolderPath);
@@ -143,7 +143,7 @@ async function createArchive(files) {
       gzip: true,
       file: archiveFile,
     },
-    files
+    files,
   );
   process.chdir(__dirname);
 }

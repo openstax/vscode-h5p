@@ -22,7 +22,7 @@ jest.mock('os', () => {
   };
 });
 
-function setupMockfs(fsImpl) {
+function setupMockfs(fsImpl: Record<string, any>) {
   // Required to avoid jest buffered messages (which fails with mock fs)
   console.log = jest.fn();
   console.debug = jest.fn();
@@ -34,7 +34,7 @@ function setupMockfs(fsImpl) {
 }
 
 function dirToObj(base: string) {
-  const dir = {};
+  const dir: Record<string, any> = {};
   fsExtra.readdirSync(base, { withFileTypes: true }).forEach((dirent) => {
     const p = path.join(base, dirent.name);
     dir[dirent.name] = dirent.isDirectory()
@@ -134,7 +134,7 @@ describe('Utility functions', () => {
       mockFetch = fetch as unknown as jest.Mock;
       mockFetch.mockResolvedValue({
         body: {
-          pipe(outputStream) {
+          pipe(outputStream: fsExtra.WriteStream) {
             outputStream.write('Something');
             outputStream.end();
           },

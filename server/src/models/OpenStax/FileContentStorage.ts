@@ -19,7 +19,7 @@ function assertLibrary(mainLibrary: string) {
 
 function yankAnswers(
   content: unknown,
-  mainLibrary: string
+  mainLibrary: string,
 ): [unknown, unknown] {
   return assertLibrary(mainLibrary).yankAnswers(content);
 }
@@ -27,7 +27,7 @@ function yankAnswers(
 function unyankAnswers(
   publicData: unknown,
   privateData: unknown,
-  mainLibrary: string
+  mainLibrary: string,
 ): unknown {
   return assertLibrary(mainLibrary).unyankAnswers(publicData, privateData);
 }
@@ -49,21 +49,25 @@ export default class OSStorage extends H5P.fsImplementations
     await fsExtra.writeJSON(path, obj, { spaces: 2 });
   }
 
-  public async addContent(
+  public override async addContent(
     metadata: H5P.IContentMetadata,
     content: any,
-    user: H5P.IUser,
-    id?: string | undefined
+    _user: H5P.IUser,
+    id?: string | undefined,
   ): Promise<string> {
     const osMeta = content.osMeta;
-    const realId =
-      id ?? assertValue<string>(osMeta.nickname?.trim() || undefined);
+    const realId = id ?? assertValue<string>(osMeta.nickname?.trim());
     const targetPath = path.join(this.contentPath, realId);
     const privatePath = path.join(this.privateContentDirectory, realId);
     const h5pPath = path.join(targetPath, H5P_NAME);
     delete content.osMeta;
-    if (realId !== id && fsExtra.pathExistsSync(h5pPath)) {
-      throw new CustomBaseError(`Duplicate id ${realId}`);
+    if (realId !== id) {
+      if (realId.length === 0) {
+        throw new CustomBaseError('ID cannot be empty');
+      }
+      if (fsExtra.pathExistsSync(h5pPath)) {
+        throw new CustomBaseError(`Duplicate id ${realId}`);
+      }
     }
     try {
       const newOsMeta = {
@@ -74,7 +78,7 @@ export default class OSStorage extends H5P.fsImplementations
       if (!isSolutionPublic(osMeta)) {
         const [sanitized, privateData] = yankAnswers(
           content,
-          metadata.mainLibrary
+          metadata.mainLibrary,
         );
         await fsExtra.ensureDir(privatePath);
         await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
@@ -97,7 +101,7 @@ export default class OSStorage extends H5P.fsImplementations
     return realId;
   }
 
-  public async deleteContent(contentId: string, user?: H5P.IUser) {
+  public override async deleteContent(contentId: string, user?: H5P.IUser) {
     const privatePath = path.join(this.privateContentDirectory, contentId);
     await Promise.all([
       super.deleteContent(contentId, user),
@@ -105,9 +109,9 @@ export default class OSStorage extends H5P.fsImplementations
     ]);
   }
 
-  public async getMetadata(
+  public override async getMetadata(
     contentId: string,
-    user?: H5P.IUser
+    user?: H5P.IUser,
   ): Promise<H5P.IContentMetadata> {
     const metadata = await super.getMetadata(contentId, user);
     if ((typeof metadata.title as unknown) !== 'string') {
@@ -124,9 +128,9 @@ export default class OSStorage extends H5P.fsImplementations
     return fsExtra.existsSync(mdPath) ? await fsExtra.readJSON(mdPath) : {};
   }
 
-  public async getParameters(
+  public override async getParameters(
     contentId: string,
-    user?: H5P.IUser | undefined
+    user?: H5P.IUser | undefined,
   ): Promise<any> {
     const [content, osMeta] = await Promise.all([
       super.getParameters(contentId, user),
@@ -138,7 +142,7 @@ export default class OSStorage extends H5P.fsImplementations
       const privatePath = path.join(
         this.privateContentDirectory,
         contentId,
-        CONTENT_NAME
+        CONTENT_NAME,
       );
       const [h5pMeta, privateData] = await Promise.all([
         this.getMetadata(contentId),
