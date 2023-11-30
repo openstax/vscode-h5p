@@ -1,5 +1,4 @@
 import AwaitLock from 'await-lock';
-import { filenameFromUrl } from './Utils';
 
 const lock = new AwaitLock();
 
@@ -13,7 +12,7 @@ const lock = new AwaitLock();
  */
 export async function addScripts(
   scripts: string[],
-  target: HTMLElement
+  target: HTMLElement,
 ): Promise<any> {
   // We need to lock this function to avoid it being started nearly
   // simultaneously. This can happen if several instances of the web component
@@ -26,7 +25,7 @@ export async function addScripts(
   await lock.acquireAsync();
   try {
     const existingScripts = Array.from(
-      target.getElementsByTagName('script')
+      target.getElementsByTagName('script'),
     ).map((el) => el.dataset.h5pSrc);
     await Promise.all(
       scripts.map((scriptUrl) => {
@@ -50,7 +49,7 @@ export async function addScripts(
 
         target.appendChild(scriptTag);
         return promise;
-      })
+      }),
     );
   } finally {
     lock.release();
@@ -69,7 +68,7 @@ export async function addScripts(
  */
 export function addStylesheets(styles: string[], target: HTMLElement): void {
   const existingTargetStylesheets = Array.from(
-    target.getElementsByTagName('link')
+    target.getElementsByTagName('link'),
   ).map((el) => el.dataset.h5pHref);
 
   for (const styleUrl of styles) {

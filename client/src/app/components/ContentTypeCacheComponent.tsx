@@ -22,7 +22,7 @@ export default class ContentTypeCacheComponent extends React.Component {
       updatingCache: false,
     };
     this.contentTypeCacheService = new ContentTypeCacheService(
-      props.endpointUrl
+      props.endpointUrl,
     );
   }
 
