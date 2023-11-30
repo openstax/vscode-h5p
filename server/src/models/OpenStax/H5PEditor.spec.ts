@@ -104,7 +104,7 @@ describe('H5PEditor', () => {
         jest.fn() as any,
         jest.fn() as any,
         undefined,
-        undefined
+        undefined,
       );
     });
   });
@@ -115,7 +115,7 @@ describe('H5PEditor', () => {
           { machineName: 'Test' },
           { machineName: 'Not returned' },
         ] as IHubContentTypeWithLocalInfo[],
-        ['Test']
+        ['Test'],
       );
       expect(result).toStrictEqual([{ machineName: 'Test' }]);
     });

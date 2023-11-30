@@ -14,15 +14,15 @@ import * as fsExtra from 'fs-extra';
 import { prepareEnvironment, startH5P } from './createH5PServer';
 import Config from './models/OpenStax/config';
 import path from 'path';
-import { parseBooksXML } from './utils';
+import { assertValue, parseBooksXML } from './utils';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
 
-let hasConfigurationCapability = false;
+// let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
+// let hasDiagnosticRelatedInformationCapability = false;
 
 function createRepoConfig(workspaceRoot: string): Config {
   const booksXmlPath = path.join(workspaceRoot, 'META-INF', 'books.xml');
@@ -38,17 +38,14 @@ connection.onInitialize((params: InitializeParams) => {
 
   // Does the client support the `workspace/configuration` request?
   // If not, we fall back using global settings.
-  hasConfigurationCapability = !!(
-    capabilities.workspace && !!capabilities.workspace.configuration
-  );
-  hasWorkspaceFolderCapability = !!(
-    capabilities.workspace && !!capabilities.workspace.workspaceFolders
-  );
-  hasDiagnosticRelatedInformationCapability = !!(
-    capabilities.textDocument &&
-    capabilities.textDocument.publishDiagnostics &&
-    capabilities.textDocument.publishDiagnostics.relatedInformation
-  );
+  // hasConfigurationCapability =
+  //   capabilities.workspace?.configuration === true;
+
+  hasWorkspaceFolderCapability =
+    capabilities.workspace?.workspaceFolders === true;
+
+  // hasDiagnosticRelatedInformationCapability =
+  //   capabilities.textDocument?.publishDiagnostics?.relatedInformation != null;
 
   const result: InitializeResult = {
     capabilities: {},
@@ -68,7 +65,9 @@ connection.onInitialized(() => {
       (await connection.workspace.getWorkspaceFolders()) ?? [];
     if (currentWorkspaces.length > 0) {
       // TODO: workspace switching
-      const workspaceRoot = URI.parse(currentWorkspaces[0].uri).fsPath;
+      const workspaceRoot = URI.parse(
+        assertValue(currentWorkspaces[0]?.uri),
+      ).fsPath;
       const config = createRepoConfig(workspaceRoot);
 
       console.log('Preparing environment for server');

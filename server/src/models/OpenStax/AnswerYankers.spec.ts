@@ -36,7 +36,7 @@ describe('AnswerYankers', () => {
 
         // Merge them back together
         expect(shallowMerge(publicData, privateData)).toStrictEqual(
-          fakeContent
+          fakeContent,
         );
       });
     });
@@ -96,7 +96,7 @@ describe('AnswerYankers', () => {
       expect(publicData).toMatchSnapshot();
       expect(privateData).toMatchSnapshot();
       expect(questionSetMerge(publicData, privateData)).toStrictEqual(
-        fakeContent
+        fakeContent,
       );
     });
   });

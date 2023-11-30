@@ -27,7 +27,7 @@ export default class Config {
   constructor(
     public workspaceRoot: string,
     contentPath: string,
-    privatePath: string
+    privatePath: string,
   ) {
     const trimPat = /^[/ ]+|[/ ]+$/g;
     this.contentPath = contentPath?.replace(trimPat, '');
@@ -36,9 +36,10 @@ export default class Config {
 
   public static readonly port: number = Number(process.env.PORT) || 27149;
   /* istanbul ignore next */
-  public static readonly serverUrl: string = process.env['GITPOD_WORKSPACE_ID']
-    ? `https://${Config.port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
-    : `http://localhost:${Config.port}`;
+  public static readonly serverUrl: string =
+    process.env['GITPOD_WORKSPACE_ID'] !== undefined
+      ? `https://${Config.port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
+      : `http://localhost:${Config.port}`;
 
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {

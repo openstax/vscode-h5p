@@ -6,7 +6,7 @@ import { Cache, caching } from 'cache-manager';
 
 import * as H5P from '@lumieducation/h5p-server';
 
-import { download, extractArchive, fsRemove } from './utils';
+import { download, extractArchive, fsRemove, isFalsy } from './utils';
 import Config from './models/OpenStax/config';
 import OSH5PEditor from './models/OpenStax/H5PEditor';
 import OSStorage from './models/OpenStax/FileContentStorage';
@@ -16,14 +16,14 @@ export async function prepareEnvironment(globalConfig: Config) {
   console.log('Preparing environment');
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   const lastUpdatedFile = `${tempFolderPath}/lastUpdatedDate.json`;
-  const environmentReady = await new Promise<boolean>((resolve, reject) => {
+  const environmentReady = await new Promise<boolean>((resolve) => {
     fs.stat(lastUpdatedFile, function (err: any) {
       console.log('Checking last updated date');
       if (
-        !err &&
+        isFalsy(err) &&
         (new Date().getTime() -
           new Date(
-            fsExtra.readJSONSync(lastUpdatedFile).lastUpdatedDate
+            fsExtra.readJSONSync(lastUpdatedFile).lastUpdatedDate,
           ).getTime()) /
           (1000 * 60 * 60 * 24) <
           4
@@ -62,12 +62,12 @@ export async function prepareEnvironment(globalConfig: Config) {
     }
     await download(
       `https://github.com/h5p/h5p-php-library/archive/${version}.zip`,
-      coreFile
+      coreFile,
     );
     await extractArchive(coreFile, `${tempFolderPath}/core`, true);
     await download(
       `https://github.com/h5p/h5p-editor-php-library/archive/${version}.zip`,
-      editorFile
+      editorFile,
     );
 
     await extractArchive(editorFile, `${tempFolderPath}/editor`, true);
@@ -96,15 +96,15 @@ export function createH5PEditor(
       contentId: string,
       metadata: H5P.IContentMetadata,
       parameters: any,
-      user: H5P.IUser
+      user: H5P.IUser,
     ) => Promise<void>;
     contentWasCreated?: (
       contentId: string,
       metadata: H5P.IContentMetadata,
       parameters: any,
-      user: H5P.IUser
+      user: H5P.IUser,
     ) => Promise<void>;
-  }
+  },
 ): OSH5PEditor {
   console.debug(`Using in memory cache for caching library storage.`);
   const cache: Cache = caching({
@@ -139,7 +139,7 @@ export function createH5PEditor(
       lockProvider: lock,
       hooks: hooks,
     },
-    userStorage
+    userStorage,
   );
 
   return h5pEditor;
@@ -149,14 +149,11 @@ export async function startH5P(globalConfig: Config) {
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   console.log(`Express Server serving: ${tempFolderPath}`);
   // Load the configuration file from the local file system
-  fs.readFile(`${tempFolderPath}/config.json`, (err, data) => {
-    if (err) throw err;
-  });
   const config = await new H5P.H5PConfig(
-    new H5P.fsImplementations.JsonStorage(`${tempFolderPath}/config.json`)
+    new H5P.fsImplementations.JsonStorage(`${tempFolderPath}/config.json`),
   ).load();
   const urlGenerator = new H5P.UrlGenerator(config, {
-    queryParamGenerator: (user) => {
+    queryParamGenerator: () => {
       return {
         name: '',
         value: '',
@@ -191,7 +188,7 @@ export async function startH5P(globalConfig: Config) {
     `${tempFolderPath}/user-data`, // the path on the local disc where user data should be stored
     urlGenerator,
     undefined,
-    undefined
+    undefined,
   );
 
   h5pEditor.setRenderer((model) => model);
@@ -209,7 +206,7 @@ export async function startH5P(globalConfig: Config) {
           scripts: [`${Config.serverUrl}/static/player-plugins/mathjax.js`],
         },
       },
-    }
+    },
   );
 
   h5pPlayer.setRenderer((model) => model);
@@ -225,6 +222,6 @@ export async function startH5P(globalConfig: Config) {
     `${tempFolderPath}`,
     false,
     undefined,
-    { strip: 0 }
+    { strip: 0 },
   );
 }

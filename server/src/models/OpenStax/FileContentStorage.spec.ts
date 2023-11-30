@@ -7,7 +7,7 @@ import Config from './config';
 const VIRTUAL_ROOT = '/root';
 
 function dirToObj(base: string) {
-  const dir = {};
+  const dir: Record<string, any> = {};
   fsExtra.readdirSync(base, { withFileTypes: true }).forEach((dirent) => {
     const p = path.join(base, dirent.name);
     dir[dirent.name] = dirent.isDirectory()
@@ -66,8 +66,8 @@ describe('File Content Storage', () => {
         {
           osMeta: { books: ['meta-1'], nickname: '2' },
         },
-        {} as any
-      )
+        {} as any,
+      ),
     ).toBe('2');
     const osMeta2 = {
       nickname: '101',
@@ -88,8 +88,8 @@ describe('File Content Storage', () => {
           defined: true,
           osMeta: { ...osMeta2 },
         },
-        {} as any
-      )
+        {} as any,
+      ),
     ).toBe('101');
     expect(
       await storage.addContent(
@@ -103,8 +103,8 @@ describe('File Content Storage', () => {
             nickname: '102',
           },
         },
-        {} as any
-      )
+        {} as any,
+      ),
     ).toBe('102');
     expect(
       await storage.addContent(
@@ -116,8 +116,8 @@ describe('File Content Storage', () => {
           osMeta: {},
         },
         {} as any,
-        '1234' // should use this id
-      )
+        '1234', // should use this id
+      ),
     ).toBe('1234');
     // Modify existing content
     await storage.addContent(
@@ -127,7 +127,7 @@ describe('File Content Storage', () => {
       } as any,
       { osMeta: { books: ['meta-3'], nickname: '1' } },
       {} as any,
-      '1'
+      '1',
     );
     expect(await storage.getOSMeta('1')).toStrictEqual({
       books: ['meta-3'],
@@ -163,7 +163,7 @@ describe('File Content Storage', () => {
         osMeta: {},
       },
       {} as any,
-      id
+      id,
     );
     const loaded = await storage.getMetadata(id);
     expect(typeof loaded.title).toBe('string');
@@ -203,13 +203,13 @@ describe('File Content Storage', () => {
             },
           },
           {} as any,
-          id
+          id,
         );
         expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
         const result = dirToObj(VIRTUAL_ROOT);
         mockfs.restore();
         expect(result).toMatchSnapshot();
-      }
+      },
     );
   });
   it('throws an error when it cannot make solutions private', async () => {
@@ -235,10 +235,10 @@ describe('File Content Storage', () => {
           },
         },
         {} as any,
-        '1234'
+        '1234',
       );
     }).rejects.toThrowError(
-      'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"'
+      'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"',
     );
   });
   it('cleans up orphaned files on error', async () => {
@@ -259,7 +259,7 @@ describe('File Content Storage', () => {
           osMeta: {},
         },
         {} as any,
-        '1234'
+        '1234',
       );
     }).rejects.toThrowError('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
@@ -280,7 +280,7 @@ describe('File Content Storage', () => {
         {
           osMeta: { nickname: '1' },
         },
-        {} as any
+        {} as any,
       );
     }).rejects.toThrowError(/.*duplicate.*/i);
     expect(await storage.contentExists('1234')).toBe(false);
@@ -309,7 +309,7 @@ describe('File Content Storage', () => {
         },
       },
       {} as any,
-      id
+      id,
     );
 
     expect(await storage.contentExists(id)).toBe(true);
@@ -340,8 +340,8 @@ describe('File Content Storage', () => {
         {
           osMeta: { nickname: '1' },
         },
-        {} as any
-      )
+        {} as any,
+      ),
     ).toBe('1');
   });
 });

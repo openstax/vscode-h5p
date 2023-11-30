@@ -7,10 +7,11 @@ export default class H5PServer {
   public onFetch = jest.fn().mockResolvedValue([{}]);
   public handleError = jest.fn();
 
-  public h5pEditor;
-  protected configureMiddleware(server, port) {}
-  public start(mockEditor, server, port) {
+  public h5pEditor: any;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected configureMiddleware(_server: any) {}
+  public start(mockEditor: any, server: any) {
     this.h5pEditor = mockEditor;
-    this.configureMiddleware(server, port);
+    this.configureMiddleware(server);
   }
 }

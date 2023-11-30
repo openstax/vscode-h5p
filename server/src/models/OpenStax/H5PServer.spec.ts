@@ -19,7 +19,7 @@ describe('OSH5PServer', () => {
   it('starts and does stuff', async () => {
     const server: any = new OSH5PServer(jest.fn() as any, jest.fn() as any, '');
     server.handleError.mockImplementation(
-      (res) => (_) => res.status(500).end()
+      (res: any) => () => res.status(500).end(),
     );
     server.start(mockEditor, app, Config.port);
     let res = await request(app).get('/does-not-exist-404-please');
@@ -28,7 +28,7 @@ describe('OSH5PServer', () => {
 
     // fetch non-existing
     res = await request(app).get(
-      `${h5pConfig.baseUrl}/undefined/openstax-metadata/`
+      `${h5pConfig.baseUrl}/undefined/openstax-metadata/`,
     );
     expect(res.status).toBe(200);
     expect(res.body).toStrictEqual({});
@@ -39,7 +39,7 @@ describe('OSH5PServer', () => {
       .fn()
       .mockRejectedValue('Fetch Error');
     res = res = await request(app).get(
-      `${h5pConfig.baseUrl}/undefined/openstax-metadata/`
+      `${h5pConfig.baseUrl}/undefined/openstax-metadata/`,
     );
     expect(res.status).toBe(500);
     expect(mockEditor.contentStorage.getOSMeta).toBeCalledTimes(1);
