@@ -20,7 +20,7 @@ export default class H5PViewerComponent extends React.Component<{
   private contentService: ContentService;
   private h5pUrl: string;
 
-  render() {
+  override render() {
     return (
       <div className="App">
         <Container>

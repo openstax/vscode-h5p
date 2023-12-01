@@ -1,6 +1,6 @@
 import { InputSet, InputSetProps } from './InputSet';
 
-const PATTERNS = {
+const PATTERNS: Record<string, { pattern: RegExp; placeholder: string }> = {
   'stax-apbio': {
     pattern: /^[A-Z]{3}[-.]\d{1,2}[-.][A-Z]$/,
     placeholder: '[A-Z]{3}-#{1,2}.[A-Z]',

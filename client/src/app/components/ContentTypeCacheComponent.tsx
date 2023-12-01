@@ -26,19 +26,19 @@ export default class ContentTypeCacheComponent extends React.Component {
     );
   }
 
-  public state: {
+  public override state: {
     lastCacheUpdate: Date | undefined;
     updatingCache: boolean;
   };
 
   protected contentTypeCacheService: ContentTypeCacheService;
 
-  public async componentDidMount(): Promise<void> {
+  public override async componentDidMount(): Promise<void> {
     const lastCacheUpdate = await this.contentTypeCacheService.getCacheUpdate();
     this.setState({ lastCacheUpdate });
   }
 
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     return (
       <div>
         <h2>

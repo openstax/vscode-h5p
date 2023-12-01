@@ -2,7 +2,11 @@ export default function BasicFormComponent({
   title,
   content,
   required = false,
-}) {
+}: {
+  title: string;
+  content: JSX.Element;
+  required?: boolean;
+}): JSX.Element {
   return (
     <>
       <div className="container">
@@ -10,7 +14,9 @@ export default function BasicFormComponent({
           <div>
             <h3>
               {title}{' '}
-              <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+              <span style={{ color: 'red' }}>
+                {required ?? false ? '*' : ''}
+              </span>
             </h3>
           </div>
         </div>

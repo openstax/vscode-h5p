@@ -56,28 +56,28 @@ export default class H5PEditorUI extends Component<IH5PEditorUIProps> {
 
   private h5pEditor!: RefObject<H5PEditorWebComponent>;
 
-  public componentDidMount(): void {
+  public override componentDidMount(): void {
     this.registerEvents();
     this.setServiceCallbacks();
   }
 
-  public componentDidUpdate(): void {
+  public override componentDidUpdate(): void {
     this.registerEvents();
     this.setServiceCallbacks();
     this.h5pEditor.current?.resize();
   }
 
-  public componentWillUnmount(): void {
+  public override componentWillUnmount(): void {
     this.unregisterEvents();
   }
 
-  public getSnapshotBeforeUpdate(): void {
+  public override getSnapshotBeforeUpdate(): void {
     // Should the old editor instance be destroyed, we unregister from it...
     this.unregisterEvents();
     return;
   }
 
-  public render(): ReactNode {
+  public override render(): ReactNode {
     return (
       <h5p-editor
         ref={this.h5pEditor}
