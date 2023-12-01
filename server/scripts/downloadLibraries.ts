@@ -149,7 +149,9 @@ async function createArchive(files: string[]) {
 }
 
 async function main() {
-  await downloadH5PLibs();
+  if (process.env['CI_TEST'] === undefined) {
+    await downloadH5PLibs();
+  }
   await includePatchedMathtype();
   await createArchive(['libraries', 'editor']);
 }
