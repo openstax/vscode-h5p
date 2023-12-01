@@ -3,7 +3,7 @@ import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
-import { assertValue } from '../../utils';
+import { assertValue } from '../../../../common/src/utils';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';

@@ -3,7 +3,7 @@ import type { IEditorModel, IContentMetadata } from '@lumieducation/h5p-server';
 
 import { mergeH5PIntegration } from './H5PUtils';
 import { addScripts } from './DomUtils';
-import { isFalsy } from './Utils';
+import { isFalsy } from '../../../../common/src/utils';
 
 declare global {
   /**

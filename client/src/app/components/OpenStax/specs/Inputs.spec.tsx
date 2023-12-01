@@ -6,12 +6,12 @@ import { DropdownOption, SingleInputProps } from '../types';
 import { InputSet, InputSetProps } from '../InputSet';
 import LO from '../LO';
 import React from 'react';
-import { collect, range } from '../utils';
 import AACN from '../AACN';
 import { act } from 'react-dom/test-utils';
 import ModuleID from '../ModuleID';
 import APLO from '../APLO';
 import { SingleDropdown } from '../SingleDropdown';
+import { range } from '../../../../../../common/src/utils';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -42,7 +42,7 @@ function testInputSetValidation(
   factory: (state: InputSetProps) => React.ReactElement<InputSetProps>,
   valuesToTest: [string, boolean][][],
 ) {
-  const inputStates = collect(range(valuesToTest[0].length)).map(() => ({
+  const inputStates = range(valuesToTest[0].length).map(() => ({
     value: '',
     isValid: true,
   }));

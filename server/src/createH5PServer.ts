@@ -6,11 +6,12 @@ import { Cache, caching } from 'cache-manager';
 
 import * as H5P from '@lumieducation/h5p-server';
 
-import { download, extractArchive, fsRemove, isFalsy } from './utils';
+import { download, extractArchive, fsRemove } from './utils';
 import Config from './models/OpenStax/config';
 import OSH5PEditor from './models/OpenStax/H5PEditor';
 import OSStorage from './models/OpenStax/FileContentStorage';
 import OSH5PServer from './models/OpenStax/H5PServer';
+import { isFalsy } from '../../common/src/utils';
 
 export async function prepareEnvironment(globalConfig: Config) {
   console.log('Preparing environment');

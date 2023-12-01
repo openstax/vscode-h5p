@@ -1,9 +1,6 @@
+import { isFalsy } from '../../../../common/src/utils';
 import { H5PEditorComponent } from './H5PEditor';
 import { H5PPlayerComponent } from './H5PPlayer';
-
-export function isFalsy<T>(obj: T): boolean {
-  return (typeof obj === 'boolean' ? obj : Boolean(obj)) === false;
-}
 
 export function defineElements(element?: string | string[]): void {
   if (

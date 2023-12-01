@@ -13,7 +13,7 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "outDir": "out",
-    "rootDir": ".",
+    "rootDir": "../",
 
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
@@ -27,6 +27,10 @@
     "noUncheckedIndexedAccess": true,                    /* Add 'undefined' to a type when accessed using an index. */
     "noImplicitOverride": true,                          /* Ensure overriding members in derived classes are marked with an override modifier. */
   },
-  "include": ["src", "scripts"],
-  "exclude": [".node_modules", ".vscode-test"]
+  "include": [
+    "src/**/*.ts",
+    "scripts/**/*.ts",
+    "src/**/*.spec.ts",
+  ],
+  "exclude": ["**/node_modules", "**/.vscode-test"]
 }

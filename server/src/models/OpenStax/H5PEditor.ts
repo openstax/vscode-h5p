@@ -7,7 +7,7 @@ import {
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
 import Config from './config';
-import { assertValue, unwrap } from '../../utils';
+import { assertValue, unwrap } from '../../../../common/src/utils';
 
 const _supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
@@ -232,7 +232,7 @@ export function filterLibs(
   const libsByName = Object.fromEntries(
     libraries.map((lib) => [lib.machineName, lib]),
   );
-  return supportedLibraryNames.map((name) => unwrap(libsByName[name]));
+  return supportedLibraryNames.map((name) => assertValue(libsByName[name]));
 }
 
 export default class OSH5PEditor extends H5P.H5PEditor {

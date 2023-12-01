@@ -11,8 +11,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 
-import { assertValue, createH5PRouter, getIps, isFalsy } from '../utils';
+import { createH5PRouter, getIps } from '../utils';
 import User from './H5PUser';
+import { assertValue, isFalsy } from '../../../common/src/utils';
 
 /**
  * Displays links to the server at all available IP addresses.
