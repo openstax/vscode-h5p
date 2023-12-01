@@ -8,9 +8,10 @@ import * as qs from 'qs';
 import fetch from 'node-fetch';
 import fsExtra from 'fs-extra';
 import * as tar from 'tar';
-import { assertValue, extractArchive } from '../src/utils';
+import { extractArchive } from '../src/utils';
 import path from 'path';
 import { exec } from 'child_process';
+import { assertValue } from '../../common/src/utils';
 
 const SERVER_ROOT = `${__dirname}/..`;
 const archiveFile = path.resolve(

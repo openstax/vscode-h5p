@@ -1,4 +1,4 @@
-import { assertValue } from '../../utils';
+import { assertValue } from '../../../../common/src/utils';
 
 export type Yanker = (content: any) => [unknown, unknown];
 export type Unyanker = (publicData: any, privateData: any) => unknown;

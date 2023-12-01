@@ -14,7 +14,8 @@ import * as fsExtra from 'fs-extra';
 import { prepareEnvironment, startH5P } from './createH5PServer';
 import Config from './models/OpenStax/config';
 import path from 'path';
-import { assertValue, parseBooksXML } from './utils';
+import { parseBooksXML } from './utils';
+import { assertValue } from '../../common/src/utils';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.

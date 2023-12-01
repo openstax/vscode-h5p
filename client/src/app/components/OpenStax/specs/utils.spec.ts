@@ -1,11 +1,6 @@
-import { chunk, collect, debounce, range } from '../utils';
+import { range, chunk, debounce } from '../../../../../../common/src/utils';
 
 describe('utils', () => {
-  describe('collect', () => {
-    it('returns an array from iterable', () => {
-      expect(collect([1, 2, 3])).toEqual([1, 2, 3]);
-    });
-  });
   describe('range', () => {
     const args: [number, number | undefined, number[]][] = [
       [1, 3, [1, 2]],
@@ -13,7 +8,7 @@ describe('utils', () => {
     ];
     args.map(([a, b, expected]) => {
       it(`returns ${JSON.stringify(expected)} for range ${a} to ${b}`, () => {
-        expect(collect(range(a, b))).toEqual(expected);
+        expect(range(a, b)).toEqual(expected);
       });
     });
   });

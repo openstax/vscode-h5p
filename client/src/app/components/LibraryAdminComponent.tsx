@@ -10,7 +10,7 @@ import {
   ILibraryViewModel,
   LibraryAdministrationService,
 } from '../services/LibraryAdministrationService';
-import { isFalsy } from './Utils';
+import { isFalsy } from '../../../../common/src/utils';
 
 /**
  * The components displays a list with the currently installed libraries. It

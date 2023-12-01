@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import type { IIntegration } from '@lumieducation/h5p-server';
-import { isFalsy } from './Utils';
+import { isFalsy } from '../../../../common/src/utils';
 
 /**
  * Merges the new IIntegration object with the global one.

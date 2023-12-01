@@ -1,9 +1,9 @@
+import { range } from '../../../../../common/src/utils';
 import BasicFormComponent from './BasicFormComponent';
 import { SingleDropdown } from './SingleDropdown';
 import { SingleInputProps } from './types';
-import { collect, range } from './utils';
 
-const options = collect(range(1, 7))
+const options = range(1, 7)
   .map((b) => b.toString())
   .map((b) => ({ label: b, value: b }));
 

@@ -3,7 +3,6 @@ import Blooms from './Blooms';
 import AssignmentType from './AssignmentType';
 import { Book } from './Book';
 import DokTag from './Dok';
-import { assertType, assertValue, chunk, randomId } from './utils';
 import {
   InputState,
   BookInputState,
@@ -31,7 +30,13 @@ import {
 } from './constants';
 import { Button } from 'react-bootstrap';
 import Nickname from './Nickname';
-import { isFalsy } from '../Utils';
+import {
+  assertType,
+  assertValue,
+  chunk,
+  isFalsy,
+  randomId,
+} from '../../../../../common/src/utils';
 
 type SingleInputs = {
   nickname: InputState;

@@ -1,5 +1,5 @@
 import type { IInstalledLibrary } from '@lumieducation/h5p-server';
-import { isFalsy } from './Utils';
+import { isFalsy } from '../../../../common/src/utils';
 
 const yesNo = (value: undefined | boolean | 0 | 1) =>
   !isFalsy(value) ? (

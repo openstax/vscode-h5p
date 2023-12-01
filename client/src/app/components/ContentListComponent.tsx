@@ -8,7 +8,7 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 // The .js references are necessary for requireJs to work in the browser.
 import { IContentService, IContentListEntry } from '../services/ContentService';
 import ContentListEntryComponent from './ContentListEntryComponent';
-import { chunk, range, debounce } from './OpenStax/utils';
+import { chunk, debounce, range } from '../../../../common/src/utils';
 
 export default class ContentList extends React.Component<{
   h5pUrl: string;

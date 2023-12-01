@@ -7,21 +7,7 @@ import * as H5P from '@lumieducation/h5p-server';
 import User from './models/H5PUser';
 import { DOMParser } from '@xmldom/xmldom';
 import * as xpath from 'xpath-ts';
-
-export function isFalsy<T>(obj: T): boolean {
-  switch (typeof obj) {
-    case 'string':
-      return obj === '';
-    case 'boolean':
-      return obj === false;
-    case 'bigint':
-      return obj === 0n;
-    case 'number':
-      return obj === 0 || isNaN(obj);
-    default:
-      return obj === null || obj === undefined;
-  }
-}
+import { assertValue, isFalsy, unwrap } from '../../common/src/utils';
 
 /* istanbul ignore next (pure function that depends solely on express) */
 export function createH5PRouter<EditRequestType, ContentRequestType>(
@@ -148,12 +134,6 @@ export function parseXML(xmlString: string) {
   return doc;
 }
 
-export function unwrap<T>(optional: T | null | undefined): T {
-  if (optional != null) return optional;
-  /* istanbul ignore next */
-  throw new Error('BUG: unwrap optional without value.');
-}
-
 export function parseBooksXML(booksXmlPath: string): {
   booksRoot: string;
   pagesRoot: string;
@@ -184,13 +164,4 @@ export function parseBooksXML(booksXmlPath: string): {
     privateRoot: bookVars['PRIVATE_ROOT'] ?? '/private',
     publicRoot: bookVars['PUBLIC_ROOT'] ?? '/interactives',
   };
-}
-
-export function assertValue<T>(
-  v: T | null | undefined,
-  message = 'Expected a value but did not get anything',
-) {
-  if (v !== null && v !== undefined) return v;
-  /* istanbul ignore next */
-  throw new Error(`BUG: assertValue. Message: ${message}`);
 }

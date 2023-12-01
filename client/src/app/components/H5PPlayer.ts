@@ -4,7 +4,7 @@ import type { IPlayerModel } from '@lumieducation/h5p-server';
 import { mergeH5PIntegration, removeUnusedContent } from './H5PUtils';
 import { addScripts, addStylesheets } from './DomUtils';
 import { IH5P, IH5PInstance } from './H5PTypes';
-import { isFalsy } from './Utils';
+import { isFalsy } from '../../../../common/src/utils';
 
 export interface IxAPIEvent {
   data: {
