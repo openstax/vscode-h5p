@@ -313,7 +313,7 @@ const coders: Partial<
 };
 
 export default class OpenstaxMetadataForm extends React.Component<FormProps> {
-  public state: FormState = {
+  public override state: FormState = {
     'errata-id': { ...defaultInputState },
     nickname: { ...defaultInputState },
     'module-id': [],
@@ -340,7 +340,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     this.props.onSaveError(`OpenStax Metadata: ${message}`);
   }
 
-  public async componentDidMount(): Promise<void> {
+  public override async componentDidMount(): Promise<void> {
     try {
       const metadata = await this.props.contentService.getOSMeta(
         this.props.contentId,
@@ -523,7 +523,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     );
   }
 
-  render() {
+  override render() {
     const inputSetHandlerProps = <K extends keyof InputSets | keyof BookInputs>(
       type: K,
     ) => {
@@ -535,7 +535,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
             [type]: [...inputs, newInput ?? { ...defaultInputState }],
           });
         },
-        handleRemoveInput: (index) => {
+        handleRemoveInput: (index: number) => {
           const inputs = this.state[type];
           const newInputs = [...inputs];
           newInputs.splice(index, 1);
@@ -573,6 +573,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
             idxByBook++;
           }
         }
+        return undefined;
       };
       const baseProps = inputSetHandlerProps(type);
       return {
@@ -580,7 +581,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         handleAddInput: () => {
           baseProps.handleAddInput({ ...defaultInputState, book });
         },
-        handleRemoveInput: (index) => {
+        handleRemoveInput: (index: number) => {
           baseProps.handleRemoveInput(
             assertValue(getIdx(book, index, this.state[type])),
           );

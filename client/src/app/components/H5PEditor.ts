@@ -261,10 +261,14 @@ export class H5PEditorComponent extends HTMLElement {
           // By calling getContent we also upgrade the content (this
           // is an unexpected side effect)
           this.editorInstance.getContent(
-            (c) => {
+            (
+              c:
+                | { library: string; params: string }
+                | PromiseLike<{ library: string; params: string }>,
+            ) => {
               res(c);
             },
-            (err) => {
+            (err: any) => {
               rej(err);
             },
           );

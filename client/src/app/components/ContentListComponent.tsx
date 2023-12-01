@@ -21,7 +21,7 @@ export default class ContentList extends React.Component<{
     this.h5pUrl = props.h5pUrl;
   }
 
-  public state: {
+  public override state: {
     contentList: IContentListEntry[];
     page: number;
     resultsPerPage: number;
@@ -36,7 +36,7 @@ export default class ContentList extends React.Component<{
    */
   protected newCounter = 0;
 
-  public async componentDidMount(): Promise<void> {
+  public override async componentDidMount(): Promise<void> {
     await this.updateList();
   }
 
@@ -75,7 +75,7 @@ export default class ContentList extends React.Component<{
     return filtered;
   }
 
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     const pages = chunk(this.filteredItems, this.state.resultsPerPage);
     return (
       <div>
@@ -175,7 +175,7 @@ export default class ContentList extends React.Component<{
     });
   }
 
-  protected onDiscard(content) {
+  protected onDiscard(content: IContentListEntry) {
     this.setState({
       contentList: this.state.contentList.filter((c) => c !== content),
     });

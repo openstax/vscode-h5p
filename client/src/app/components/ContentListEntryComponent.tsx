@@ -69,7 +69,7 @@ export default class ContentListEntryComponent extends React.Component<{
     this.h5pUrl = props.h5pUrl;
   }
 
-  public state: {
+  public override state: {
     editing: boolean;
     loading: boolean;
     playing: boolean;
@@ -86,7 +86,7 @@ export default class ContentListEntryComponent extends React.Component<{
   private saveButton: React.RefObject<HTMLButtonElement>;
   private openstaxForm: React.RefObject<OpenstaxMetadataForm>;
 
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     return (
       <ListGroupItem
         key={this.props.data.originalNewKey ?? this.props.data.contentId}
@@ -385,7 +385,7 @@ export default class ContentListEntryComponent extends React.Component<{
     }
   }
 
-  protected onSaveError = async (saveErrorMessage) => {
+  protected onSaveError = async (saveErrorMessage: any) => {
     this.setState({
       saving: false,
       saved: false,

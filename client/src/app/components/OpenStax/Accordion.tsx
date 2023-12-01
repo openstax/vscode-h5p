@@ -19,7 +19,7 @@ type AccordionProps = {
 export default function Accordion(props: AccordionProps) {
   const [openIdx, setOpenIdx] = useState(props.initiallyOpenedIdx ?? null);
 
-  const handleSectionClick = (idx) => {
+  const handleSectionClick = (idx: number) => {
     setOpenIdx(idx === openIdx ? null : idx);
   };
 

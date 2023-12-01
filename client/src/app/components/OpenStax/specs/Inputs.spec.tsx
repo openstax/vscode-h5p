@@ -116,7 +116,7 @@ describe('Inputs', () => {
 
       const input = container.querySelector('input');
       Object.entries({ ...style, ...styleInvalid }).forEach(([k, v]) => {
-        expect(input?.style[k]).toBe(v);
+        expect(input?.style[k as any]).toBe(v);
       });
       expect(input?.value).toBe(value);
       fireEvent.change(input!, { target: { value: 'test' } });

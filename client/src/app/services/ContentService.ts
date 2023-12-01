@@ -129,13 +129,13 @@ export class ContentService implements IContentService {
   generateDownloadLink = (contentId: string): string =>
     `${this.baseUrl}/download/${contentId}`;
 
-  setCsrfToken = (csrfToken): void => {
+  setCsrfToken = (csrfToken: string | undefined): void => {
     this.csrfToken = csrfToken;
   };
   getCsrfToken = (): string | undefined => {
     return this.csrfToken;
   };
-  getOSMeta = async (contentId): Promise<any> => {
+  getOSMeta = async (contentId: string): Promise<any> => {
     console.log(`ContentService: Getting OSMeta for ${contentId}...`);
     try {
       const res = await axios.get(

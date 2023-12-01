@@ -37,17 +37,17 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
 
   private h5pPlayer: RefObject<H5PPlayerComponent>;
 
-  public componentDidMount(): void {
+  public override componentDidMount(): void {
     this.registerEvents();
     this.setServiceCallbacks();
   }
 
-  public componentDidUpdate(): void {
+  public override componentDidUpdate(): void {
     this.registerEvents();
     this.setServiceCallbacks();
   }
 
-  public componentWillUnmount(): void {
+  public override componentWillUnmount(): void {
     this.unregisterEvents();
   }
 
@@ -84,7 +84,7 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
     return this.h5pPlayer.current?.getCopyrightHtml() ?? '';
   }
 
-  public getSnapshotBeforeUpdate(): void {
+  public override getSnapshotBeforeUpdate(): void {
     // Should the old editor instance be destroyed, we unregister from it...
     this.unregisterEvents();
     return;
@@ -97,7 +97,7 @@ export default class H5PPlayerUI extends Component<IH5PPlayerUIProps> {
     return this.h5pPlayer.current?.hasCopyrightInformation();
   }
 
-  public render(): ReactNode {
+  public override render(): ReactNode {
     return (
       <h5p-player
         ref={this.h5pPlayer}

@@ -11,14 +11,14 @@ export interface IH5PInstance {
 }
 
 export interface IH5PDialog {
-  new (name: string, title: string, content: string, $element: any);
+  new (name: string, title: string, content: string, $element: any): any;
   open(scrollbar: boolean): void;
   close(): void;
 }
 
 export interface IH5PEventDispatcher {
-  on(eventName: string, callback: (event: any) => void, that?: any);
-  off(eventName: string, callback: (event: any) => void, that?: any);
+  on(eventName: string, callback: (event: any) => void, that?: any): any;
+  off(eventName: string, callback: (event: any) => void, that?: any): any;
 }
 
 export interface IH5P {
@@ -26,14 +26,14 @@ export interface IH5P {
   instances: IH5PInstance[];
   getCopyrights: (
     instance: IH5PInstance,
-    parameters,
-    contentId,
-    metadata,
+    parameters: any,
+    contentId: any,
+    metadata: any,
   ) => string;
   triggerXAPI(verb: string, extra: any): void;
   Dialog: IH5PDialog;
   externalDispatcher: IH5PEventDispatcher;
-  init(root: any);
+  init(root: any): any;
   preventInit: boolean;
   jQuery: any;
 }

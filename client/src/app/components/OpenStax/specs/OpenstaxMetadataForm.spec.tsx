@@ -52,19 +52,30 @@ describe('OpenstaxMetadataForm', () => {
     };
   });
 
-  const createForm = async (formProps) => {
+  const createForm = async (
+    formProps: JSX.IntrinsicAttributes &
+      JSX.IntrinsicClassAttributes<OpenstaxMetadataForm> &
+      Readonly<{
+        contentService: IContentService;
+        contentId: string;
+        onSaveError: (message: string) => void;
+      }>,
+  ) => {
     const openstaxForm = React.createRef<OpenstaxMetadataForm>();
     let all;
     await act(async () => {
       all = render(<OpenstaxMetadataForm {...formProps} ref={openstaxForm} />);
     });
-    return { openstaxForm, ...all };
+    return { openstaxForm, ...all! };
   };
 
-  const toggleAccordion = async ({ getByText }, state = true) => {
+  const toggleAccordion = async (
+    { getByText }: { getByText: (text: string) => Node },
+    state = true,
+  ) => {
     const formTitle = await getByText('OpenStax Metadata');
     const formParent = formTitle.parentElement;
-    if (state && formParent.getAttribute('data-is-item-open') === 'true') {
+    if (state && formParent?.getAttribute('data-is-item-open') === 'true') {
       return;
     }
     expect(formTitle).toBeTruthy();
@@ -73,7 +84,7 @@ describe('OpenstaxMetadataForm', () => {
     fireEvent.click(formTitle.parentElement!, { button: 1 });
   };
 
-  const initForm = async (formData, formPropsOverride) => {
+  const initForm = async (formData: any, formPropsOverride: any) => {
     const formProps = {
       ...defaultFormProps,
       contentService: {
@@ -88,8 +99,8 @@ describe('OpenstaxMetadataForm', () => {
   };
 
   const initFormWithMinData = async (args: {
-    formDataOverride?;
-    formPropsOverride?;
+    formDataOverride?: any;
+    formPropsOverride?: any;
   }) => {
     const { formDataOverride = {}, formPropsOverride = {} } = args;
     return await initForm(

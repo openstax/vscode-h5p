@@ -47,7 +47,7 @@ export default class LibraryAdmin extends React.Component<
     this.librariesService = new LibraryAdministrationService(props.endpointUrl);
   }
 
-  public async componentDidMount(): Promise<void> {
+  public override async componentDidMount(): Promise<void> {
     return this.updateList();
   }
 
@@ -200,7 +200,7 @@ export default class LibraryAdmin extends React.Component<
     return newState;
   }
 
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     return (
       <div>
         <h2>
