@@ -23,8 +23,8 @@
           }
           const showedCheckButton = mutations.some((mutation) =>
             Array.from(mutation.addedNodes).some((node) =>
-              node.className?.includes('h5p-question-check-answer')
-            )
+              node.className?.includes('h5p-question-check-answer'),
+            ),
           );
           if (showedCheckButton) {
             MathJax.Hub.Typeset(document.querySelector('.h5p-answers'));

@@ -47,6 +47,19 @@ will open a new VSCode window with the extension running. Clinking on a
 - Libraries are saved in an append-only tar file
   (`server/out/h5p-libraries.tar.gz`).
 
+## Adding CKEditor plugins
+
+Plugins are included in the h5p-server archive named
+[h5pServerArchiveName](./server/src/models/OpenStax/config.ts) which is created
+by the [downloadLibraries](./server/scripts/downloadLibraries.ts) script.
+
+To add a plugin, there are several steps:
+
+1. Add a step to copy the plugin into the `ckeditorPlugins` directory in
+   [downloadLibraries](./server/scripts/downloadLibraries.ts)
+1. Add a step in the [editor plugin](./server/static/editor-plugins/addons.js) that adds
+   the plugin to ckeditor config
+
 ## H5P Library Licenses
 
 [H5P.Blanks](https://github.com/h5p/h5p-blanks),
@@ -98,8 +111,8 @@ packaged extension and they are provided under the following license:
 ## Authors
 
 - [OpenStax CE-BE](https://github.com/openstax)
-  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
   - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
+  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
   - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
 
 ## What we still need to know
