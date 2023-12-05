@@ -109,6 +109,7 @@ const _supportedTags = [
   'th',
   'u',
   'ul',
+  'html',
 ];
 
 export const alterLibrarySemantics = (
@@ -261,7 +262,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
         customization: {
           ...options?.customization,
           global: {
-            scripts: [`${Config.serverUrl}/static/editor-plugins/mathtype.js`],
+            scripts: [`${Config.serverUrl}/static/editor-plugins/addons.js`],
           },
           alterLibrarySemantics,
         },

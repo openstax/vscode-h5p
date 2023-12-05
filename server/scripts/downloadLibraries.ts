@@ -29,6 +29,7 @@ const h5pEditor = createH5PEditor(
   undefined,
   undefined,
 );
+const ckeditorPlugins = `${tempFolderPath}/editor/ckeditor/plugins`;
 
 const registrationData = {
   core_api_version: `${config.coreApiVersion.major}.${config.coreApiVersion.minor}`,
@@ -124,7 +125,6 @@ async function downloadH5PLibs() {
 }
 
 async function includePatchedMathtype() {
-  const ckeditorPlugins = `${tempFolderPath}/editor/ckeditor/plugins`;
   const mathTypePlugin = `${ckeditorPlugins}/ckeditor_wiris`;
   const nodeModules = `${SERVER_ROOT}/node_modules`;
   const patchFile = `${__dirname}/mathtype-plugin-js.patch`;
