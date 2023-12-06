@@ -58,7 +58,7 @@ To add a plugin, there are several steps:
 1. Add a step to copy the plugin into the `ckeditorPlugins` directory in
    [downloadLibraries](./server/scripts/downloadLibraries.ts)
 1. Add a step in the [editor plugin](./server/static/editor-plugins/addons.js) that adds
-   the plugin to ckeditor config
+   the plugin to ckeditor config (and rerun `build:copy-extras`)
 
 ## H5P Library Licenses
 
