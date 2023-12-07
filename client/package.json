@@ -57,6 +57,6 @@
     "build": "pnpm build:app && pnpm build:extension --minify",
     "build:app": "vite build",
     "build:extension": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "test": "npx jest --updateSnapshot"
+    "test": "jest --updateSnapshot"
   }
 }
