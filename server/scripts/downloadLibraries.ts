@@ -105,23 +105,30 @@ async function downloadH5PLibs() {
     console.log('Libraries already up-to-date.');
     return;
   }
-  await Promise.all(
-    toInstall.map(async (libraryName) => {
-      for (let tries = 2; tries--; tries > 0) {
-        try {
-          console.log(`Installing ${libraryName}`);
-          await h5pEditor.installLibraryFromHub(libraryName, user);
-          break;
-        } catch (e) {
-          if (tries === 0) {
-            throw e;
-          } else {
-            console.error(`Could not install "${libraryName}". Retrying...`);
-          }
+  for (const libraryName of toInstall) {
+    for (let tries = 3; tries--; tries > 0) {
+      try {
+        console.log(`Installing ${libraryName}`);
+        await h5pEditor.installLibraryFromHub(libraryName, user);
+        break;
+      } catch (e) {
+        if (tries === 0) {
+          console.error(e);
+          throw new Error(`Could not install "${libraryName}".`);
+        } else {
+          const hi = 5000;
+          const lo = 1000;
+          const waitTime = Math.round(Math.random() * (hi - lo) + lo);
+          console.error(
+            `Could not install "${libraryName}". Retrying in ${
+              waitTime / 1000
+            }s...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
         }
       }
-    }),
-  );
+    }
+  }
 }
 
 async function includePatchedMathtype() {
