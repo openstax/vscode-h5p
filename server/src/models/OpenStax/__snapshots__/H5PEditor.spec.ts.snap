@@ -128,6 +128,7 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics 1`] = `
             "th",
             "u",
             "ul",
+            "html",
           ],
           "type": "text",
           "widget": "html",

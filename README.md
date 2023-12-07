@@ -51,21 +51,20 @@ will open a new VSCode window with the extension running. Clinking on a
 
 Plugins are included in the h5p-server archive named
 [h5pServerArchiveName](./server/src/models/OpenStax/config.ts) which is created
-by the [downloadLibraries](./server/scripts/downloadLibraries.ts) script.
+by the [postbuild](./server/scripts/postbuild.ts) script.
 
 To add a plugin, there are several steps:
 
 1. Include the plugin repository as a git submodule inside
    `server/ckeditor-plugins`
 1. Add the plugin path to the `pluginPaths` in
-   [downloadLibraries](./server/scripts/downloadLibraries.ts)
+   [postbuild](./server/scripts/postbuild.ts)
 1. Add a step in the
    [addons.js editor plugin](./server/static/editor-plugins/addons.js) that adds
    the plugin to ckeditor config
 1. Run `npm run build` in the repository root. This will, among other things,
-   run `build:copy-extras` which updates the `addons.js` that is served by the
-   H5P server and copy your new plugin into the archive that is extracted when
-   the H5P server starts.
+   update the `addons.js` that is served by the H5P server and copy your new
+   plugin into the archive that is extracted when the H5P server starts.
 1. If all went well, you should see you plugin in the list of plugins included
    when you build the extension, ex: `Including ckeditor plugin "insertpre"`
 

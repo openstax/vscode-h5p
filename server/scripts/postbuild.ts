@@ -13,11 +13,14 @@ import path from 'path';
 import { exec } from 'child_process';
 import { assertValue } from '../../common/src/utils';
 
-const SERVER_ROOT = `${__dirname}/..`;
-const archiveFile = path.resolve(
-  process.argv[2] ?? `${SERVER_ROOT}/out/${Config.h5pServerArchiveName}`,
-);
-const tempFolderPath = os.tmpdir() + '/h5p_builder';
+const SERVER_ROOT = path.resolve(__dirname, '..');
+const OUT = path.resolve(SERVER_ROOT, 'out');
+const archiveFile =
+  process.argv[2] === undefined
+    ? path.resolve(OUT, Config.h5pServerArchiveName)
+    : path.resolve(process.argv[2]);
+const tempFolderPath = path.resolve(os.tmpdir(), 'h5p_builder');
+const nodeModules = path.resolve(SERVER_ROOT, 'node_modules');
 const config = new H5P.H5PConfig(undefined, Config.h5pConfig);
 const h5pEditor = createH5PEditor(
   config,
@@ -67,13 +70,7 @@ async function downloadH5PLibs() {
   });
   const data = (await response.json()).contentTypes;
   const librariesPath = `${tempFolderPath}/libraries`;
-  // Include existing versions of libraries
-  if (fsExtra.pathExistsSync(archiveFile)) {
-    fsExtra.ensureDirSync(librariesPath);
-    await extractArchive(archiveFile, tempFolderPath, false, undefined, {
-      strip: 0,
-    });
-  }
+  fsExtra.ensureDirSync(librariesPath);
   const existingLibraries = await Promise.all(
     fsExtra
       .readdirSync(librariesPath, { withFileTypes: true })
@@ -133,7 +130,6 @@ async function downloadH5PLibs() {
 
 async function includePatchedMathtype() {
   const mathTypePlugin = `${ckeditorPlugins}/ckeditor_wiris`;
-  const nodeModules = `${SERVER_ROOT}/node_modules`;
   const patchFile = `${__dirname}/mathtype-plugin-js.patch`;
 
   console.log('Patching and including ckeditor_wiris plugin...');
@@ -170,10 +166,37 @@ async function includeAdditionalCKEditorPlugins() {
   );
 }
 
-async function createArchive(files: string[]) {
+async function copyExtras() {
+  const extras: Array<{ src: string; dst: string }> = [
+    {
+      src: path.resolve(
+        nodeModules,
+        '@lumieducation',
+        'h5p-server',
+        'build',
+        'src',
+        'schemas',
+      ),
+      dst: path.resolve(OUT, 'schemas'),
+    },
+    {
+      src: path.resolve(SERVER_ROOT, 'static'),
+      dst: path.resolve(OUT, 'static'),
+    },
+  ];
+  await Promise.all(
+    extras.map(async ({ src, dst }) => {
+      console.log(`Copying "${path.basename(src)}"`);
+      await fsExtra.copy(src, dst);
+    }),
+  );
+}
+
+async function createArchive(archiveFile: string, wd: string, files: string[]) {
+  const initialDir = process.cwd();
+  process.chdir(wd);
   fsExtra.ensureDirSync(path.dirname(archiveFile));
-  // Chdir into temp folder so the archived file paths are relative to that location
-  process.chdir(tempFolderPath);
+  // Chdir into wd so the archived file paths are relative to that location
   await tar.c(
     {
       gzip: true,
@@ -181,16 +204,27 @@ async function createArchive(files: string[]) {
     },
     files,
   );
-  process.chdir(__dirname);
+  process.chdir(initialDir);
 }
 
 async function main() {
-  if (process.env['CI_TEST'] === undefined) {
-    await downloadH5PLibs();
+  // Extract archive if it exists
+  if (fsExtra.pathExistsSync(archiveFile)) {
+    await extractArchive(archiveFile, tempFolderPath, false, undefined, {
+      strip: 0,
+    });
   }
-  await includePatchedMathtype();
-  await includeAdditionalCKEditorPlugins();
-  await createArchive(['libraries', 'editor']);
+  // Modify its contents
+  await Promise.all([
+    process.env['CI_TEST'] === undefined
+      ? downloadH5PLibs()
+      : Promise.resolve(),
+    copyExtras(),
+    includePatchedMathtype(),
+    includeAdditionalCKEditorPlugins(),
+  ]);
+  // Recreate it
+  await createArchive(archiveFile, tempFolderPath, ['libraries', 'editor']);
 }
 
 main()
