@@ -11,16 +11,52 @@
     // This math tag is added to semantic entries in the server (inside OSH5PEditor)
     H5PEditor.HtmlAddons.html = H5PEditor.HtmlAddons.html || {};
     H5PEditor.HtmlAddons.html.addons = function (config, tags) {
-      // Add the MathType plugin.
-      config.extraPlugins = (config.extraPlugins ? ',' : '') + 'ckeditor_wiris';
-
-      // Add the MathType plugin to toolbar.
-      config.toolbar.push({
-        name: 'wirisplugins',
-        items: ['ckeditor_wiris_formulaEditor'],
-      });
-
-      // Add additional plugins here
+      // Eanble additional plugins here
+      // This list is also in `downloadLibraries`; DRY?
+      const plugins = [
+        'ckeditor_wiris',
+        'blockquote',
+        'image',
+        'sourcearea',
+        'indent',
+        'indentblock',
+        'indentlist',
+        'iframe',
+        'codeTag',
+        'insertpre',
+      ];
+      // Configure toolbar here (NOTE: not all plugins have toolbar buttons)
+      const toolbarAdditions = [
+        {
+          name: 'ckeditor_wiris',
+          items: ['ckeditor_wiris_formulaEditor']
+        },
+        {
+          name: 'format',
+          items: [
+            'Indent',
+            'Outdent',
+            'Code',
+          ]
+        },
+        {
+          name: 'insert',
+          items: [
+            'Iframe',
+            'InsertPre',
+          ],
+        },
+        {
+          name: 'advanced',
+          items: [
+            'Source',
+          ]
+        }
+      ];
+      // Add the plugins to the list of extra plugins.
+      config.extraPlugins = (config.extraPlugins ? ',' : '') + plugins.join(',');
+      // Add the plugins to toolbar.
+      config.toolbar.push(...toolbarAdditions);
     };
   });
 })(H5P.jQuery);

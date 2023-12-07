@@ -1,0 +1,9 @@
+[submodule "server/ckeditor-plugins/insertpre"]
+	path = server/ckeditor-plugins/insertpre
+	url = https://github.com/wwalc/insertpre.git
+[submodule "server/ckeditor-plugins/codetag"]
+	path = server/ckeditor-plugins/codetag
+	url = https://github.com/drupal-ckeditor-libraries-group/codetag.git
+[submodule "server/ckeditor-plugins/ckeditor4"]
+	path = server/ckeditor-plugins/ckeditor4
+	url = https://github.com/ckeditor/ckeditor4

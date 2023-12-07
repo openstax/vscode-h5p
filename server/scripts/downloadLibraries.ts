@@ -142,6 +142,34 @@ async function includePatchedMathtype() {
   await sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
 }
 
+async function includeAdditionalCKEditorPlugins() {
+  const ckeditorPluginsRoot = path.resolve(SERVER_ROOT, 'ckeditor-plugins');
+  const ckEditorRepoPlugins = path.resolve(
+    ckeditorPluginsRoot,
+    'ckeditor4',
+    'plugins',
+  );
+  const pluginPaths = [
+    'blockquote',
+    'image',
+    'sourcearea',
+    'indent',
+    'indentblock',
+    'indentlist',
+    'iframe',
+  ].map((plugin) => path.resolve(ckEditorRepoPlugins, plugin));
+  pluginPaths.push(path.resolve(ckeditorPluginsRoot, 'codetag'));
+  pluginPaths.push(path.resolve(ckeditorPluginsRoot, 'insertpre'));
+  await Promise.all(
+    pluginPaths.map(async (src) => {
+      const pluginName = path.basename(src);
+      const dst = path.resolve(ckeditorPlugins, pluginName);
+      console.log(`Including ckeditor plugin "${pluginName}"`);
+      await fsExtra.copy(src, dst);
+    }),
+  );
+}
+
 async function createArchive(files: string[]) {
   fsExtra.ensureDirSync(path.dirname(archiveFile));
   // Chdir into temp folder so the archived file paths are relative to that location
@@ -161,6 +189,7 @@ async function main() {
     await downloadH5PLibs();
   }
   await includePatchedMathtype();
+  await includeAdditionalCKEditorPlugins();
   await createArchive(['libraries', 'editor']);
 }
 

@@ -1,6 +1,6 @@
-node_modules/**
-client/node_modules/**
-client/out/**
-server/node_modules/**
-server/out/**
+**node_modules
+**out
+**coverage
+.*
 server/static/**
+server/ckeditor-plugins/**
