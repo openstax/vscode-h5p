@@ -55,10 +55,19 @@ by the [downloadLibraries](./server/scripts/downloadLibraries.ts) script.
 
 To add a plugin, there are several steps:
 
-1. Add a step to copy the plugin into the `ckeditorPlugins` directory in
+1. Include the plugin repository as a git submodule inside
+   `server/ckeditor-plugins`
+1. Add the plugin path to the `pluginPaths` in
    [downloadLibraries](./server/scripts/downloadLibraries.ts)
-1. Add a step in the [editor plugin](./server/static/editor-plugins/addons.js) that adds
-   the plugin to ckeditor config (and rerun `build:copy-extras`)
+1. Add a step in the
+   [addons.js editor plugin](./server/static/editor-plugins/addons.js) that adds
+   the plugin to ckeditor config
+1. Run `npm run build` in the repository root. This will, among other things,
+   run `build:copy-extras` which updates the `addons.js` that is served by the
+   H5P server and copy your new plugin into the archive that is extracted when
+   the H5P server starts.
+1. If all went well, you should see you plugin in the list of plugins included
+   when you build the extension, ex: `Including ckeditor plugin "insertpre"`
 
 ## H5P Library Licenses
 
