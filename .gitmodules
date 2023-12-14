@@ -7,3 +7,6 @@
 [submodule "server/ckeditor-plugins/ckeditor4"]
 	path = server/ckeditor-plugins/ckeditor4
 	url = https://github.com/ckeditor/ckeditor4
+[submodule "server/ckeditor-plugins/BootstrapCK4-Skin"]
+	path = server/ckeditor-plugins/BootstrapCK4-Skin
+	url = https://github.com/Kunstmaan/BootstrapCK4-Skin.git
