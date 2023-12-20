@@ -70,7 +70,7 @@ export const BOOKS = [
   ['stax-estadisticaempresarial', 'Introducción a la estadística empresarial'],
   ['stax-precalculo', 'Precálculo'],
   ['stax-quimica', 'Química'],
-].sort(([bookA], [bookB]) => bookA.localeCompare(bookB));
+].sort((a, b) => a[1].localeCompare(b[1]));
 export const AP_BOOKS = BOOKS.map(([value]) => value).filter((value) =>
   value.startsWith('stax-ap'),
 );
