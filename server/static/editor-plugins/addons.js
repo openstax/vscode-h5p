@@ -14,6 +14,7 @@
       // Eanble additional plugins here
       // This list is also in `downloadLibraries`; DRY?
       const plugins = [
+        'h5pimageupload',
         'ckeditor_wiris',
         'blockquote',
         'image',
@@ -44,6 +45,7 @@
           items: [
             'Iframe',
             'InsertPre',
+            'H5PImageUpload',
           ],
         },
         {
