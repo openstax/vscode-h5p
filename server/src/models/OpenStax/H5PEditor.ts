@@ -109,7 +109,7 @@ const _supportedTags = [
   'th',
   'u',
   'ul',
-  'html',
+  'html', // This tag is what activates the editor plugin (addons.js)
 ];
 
 export const alterLibrarySemantics = (
@@ -262,7 +262,10 @@ export default class OSH5PEditor extends H5P.H5PEditor {
         customization: {
           ...options?.customization,
           global: {
-            scripts: [`${Config.serverUrl}/static/editor-plugins/addons.js`],
+            scripts: [
+              `${Config.serverUrl}/static/editor-plugins/addons.js`,
+              `${Config.serverUrl}/static/common-plugins/baseurl.js`,
+            ],
           },
           alterLibrarySemantics,
         },
