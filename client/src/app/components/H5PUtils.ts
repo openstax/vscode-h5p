@@ -2,6 +2,28 @@ import merge from 'deepmerge';
 import type { IIntegration } from '@lumieducation/h5p-server';
 import { isFalsy } from '../../../../common/src/utils';
 
+const combineMerge = <T extends Partial<unknown>>(
+  target: T[],
+  source: T[],
+  options: {
+    isMergeableObject: (item: T) => boolean;
+    cloneUnlessOtherwiseSpecified: (item: T, options: any) => T;
+  },
+) => {
+  const destination = target.slice();
+
+  source.forEach((item, index) => {
+    if (typeof destination[index] === 'undefined') {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
+    } else if (options.isMergeableObject(item)) {
+      destination[index] = merge(target[index], item, options);
+    } else if (target.indexOf(item) === -1) {
+      destination.push(item);
+    }
+  });
+  return destination;
+};
+
 /**
  * Merges the new IIntegration object with the global one.
  * @param newIntegration
@@ -34,7 +56,9 @@ export function mergeH5PIntegration(
   // this.
   delete newIntegrationDup.contents;
 
-  window.H5PIntegration = merge(window.H5PIntegration, newIntegrationDup);
+  window.H5PIntegration = merge(window.H5PIntegration, newIntegrationDup, {
+    arrayMerge: combineMerge,
+  });
 }
 
 /**
