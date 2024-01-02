@@ -4,12 +4,14 @@ import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
 import { assertValue } from '../../../../common/src/utils';
+import { iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
+const IMG_DIR = 'images';
 
 function assertLibrary(mainLibrary: string) {
   const library = Config.supportedLibraries[mainLibrary];
@@ -38,13 +40,35 @@ function isSolutionPublic(osMeta: any): boolean {
   return (osMeta['is-solution-public'] ?? 'true') === 'true';
 }
 
+function replaceTempImages(content: unknown, pathPrefix: string) {
+  const replaced: Array<{ tmpName: string; newName: string }> = [];
+  iterHTML(content, ({ document }) => {
+    document
+      .xpath<Element>('//img[@data-filename][@src]')
+      .filter((img) => img.getAttribute('src')?.endsWith('#tmp') === true)
+      .forEach((img) => {
+        const src = assertValue(img.getAttribute('src'));
+        const name = assertValue(img.getAttribute('data-filename'));
+        const { pathname } = new URL(src);
+        const tmpName = `images/${path.basename(pathname)}`; // images prefix hardcoded into h5p-server/src/H5PEditor.ts
+        const newName = `${pathPrefix}/${name}`; // Our prefix can be anything
+        replaced.push({ tmpName, newName });
+        img.removeAttribute('data-filename');
+        img.setAttribute('src', newName);
+      });
+  });
+  return replaced;
+}
+
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
   private readonly privateContentDirectory: string;
+  private readonly temporaryFileStorage: H5P.ITemporaryFileStorage;
 
-  constructor(config: Config) {
+  constructor(config: Config, temporaryFileStorage: H5P.ITemporaryFileStorage) {
     super(config.contentDirectory);
     this.privateContentDirectory = config.privateContentDirectory;
+    this.temporaryFileStorage = temporaryFileStorage;
   }
 
   protected async writeJSON(
@@ -85,10 +109,27 @@ export default class OSStorage extends H5P.fsImplementations
     }
   }
 
+  protected async moveTempFiles(
+    replacedImages: Array<{ tmpName: string; newName: string }>,
+    id: string,
+    user: H5P.IUser,
+    isPrivate: boolean,
+  ) {
+    await Promise.all(
+      replacedImages.map(async ({ tmpName, newName }) => {
+        const stream = await this.temporaryFileStorage.getFileStream(
+          tmpName,
+          user,
+        );
+        await this._addFile(id, newName, stream, isPrivate);
+      }),
+    );
+  }
+
   public override async addContent(
     metadata: H5P.IContentMetadata,
     content: any,
-    _user: H5P.IUser,
+    user: H5P.IUser,
     id?: string | undefined,
   ): Promise<string> {
     const osMeta = content.osMeta;
@@ -110,6 +151,9 @@ export default class OSStorage extends H5P.fsImplementations
           content,
           metadata.mainLibrary,
         );
+        // Replace images in private content
+        const imagesReplaced = replaceTempImages(privateData, IMG_DIR);
+        await this.moveTempFiles(imagesReplaced, realId, user, true);
         await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
         // write sanitized content object to content.json file
@@ -117,7 +161,10 @@ export default class OSStorage extends H5P.fsImplementations
       } else {
         await this.deletePrivateContent(realId);
       }
+      // Replace images in pubic content
+      const imagesReplaced = replaceTempImages(content, IMG_DIR);
       await Promise.all([
+        this.moveTempFiles(imagesReplaced, realId, user, false),
         this.writeJSON(realId, CONTENT_NAME, content, false),
         this.writeJSON(realId, H5P_NAME, metadata, false),
         this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
@@ -182,5 +229,53 @@ export default class OSStorage extends H5P.fsImplementations
       ]);
       return unyankAnswers(content, privateData, h5pMeta.mainLibrary);
     }
+  }
+
+  private async _findFilePath(id: string, filename: string) {
+    const publicPath = path.join(this.contentPath, id, filename);
+    const privatePath = path.join(this.privateContentDirectory, id, filename);
+    if (await fsExtra.exists(publicPath)) {
+      return publicPath;
+    } else if (await fsExtra.exists(privatePath)) {
+      return privatePath;
+    } else {
+      return undefined;
+    }
+  }
+
+  override async getFileStats(
+    id: string,
+    filename: string,
+  ): Promise<H5P.IFileStats> {
+    const realPath = await this._findFilePath(id, filename);
+    if (realPath === undefined) {
+      throw new H5pError(
+        'content-file-missing',
+        { filename, contentId: id },
+        404,
+      );
+    }
+    return await fsExtra.stat(realPath);
+  }
+
+  public override async getFileStream(
+    id: string,
+    filename: string,
+    _user: H5P.IUser,
+    rangeStart?: number | undefined,
+    rangeEnd?: number | undefined,
+  ): Promise<fsExtra.ReadStream> {
+    const realPath = await this._findFilePath(id, filename);
+    if (realPath === undefined) {
+      throw new H5pError(
+        'content-file-missing',
+        { filename, contentId: id },
+        404,
+      );
+    }
+    return fsExtra.createReadStream(realPath, {
+      start: rangeStart,
+      end: rangeEnd,
+    });
   }
 }

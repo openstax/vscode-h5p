@@ -126,12 +126,15 @@ export function createH5PEditor(
   const userStorage: H5P.IContentUserDataStorage =
     new H5P.fsImplementations.FileContentUserDataStorage(localUserContentPath);
 
+  const temporaryFileStorage =
+    new H5P.fsImplementations.DirectoryTemporaryFileStorage(localTemporaryPath);
+
   const h5pEditor = new OSH5PEditor(
     new H5P.cacheImplementations.CachedKeyValueStorage('kvcache', cache), // this is a general-purpose cache
     config,
     new H5P.cacheImplementations.CachedLibraryStorage(libraryStorage, cache),
-    new OSStorage(extensionConfig),
-    new H5P.fsImplementations.DirectoryTemporaryFileStorage(localTemporaryPath),
+    new OSStorage(extensionConfig, temporaryFileStorage),
+    temporaryFileStorage,
     translationCallback,
     urlGenerator,
     {
@@ -139,6 +142,7 @@ export function createH5PEditor(
       enableLibraryNameLocalization: true,
       lockProvider: lock,
       hooks: hooks,
+      permissionSystem: new H5P.LaissezFairePermissionSystem(),
     },
     userStorage,
   );
@@ -204,7 +208,10 @@ export async function startH5P(globalConfig: Config) {
     {
       customization: {
         global: {
-          scripts: [`${Config.serverUrl}/static/player-plugins/mathjax.js`],
+          scripts: [
+            `${Config.serverUrl}/static/player-plugins/mathjax.js`,
+            `${Config.serverUrl}/static/common-plugins/baseurl.js`,
+          ],
         },
       },
     },
