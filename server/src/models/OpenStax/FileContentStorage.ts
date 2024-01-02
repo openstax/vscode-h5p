@@ -4,6 +4,8 @@ import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
 import { assertValue } from '../../../../common/src/utils';
+import { Readable } from 'stream';
+import { H5pError } from '@lumieducation/h5p-server';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
@@ -38,15 +40,49 @@ function isSolutionPublic(osMeta: any): boolean {
 
 export default class OSStorage extends H5P.fsImplementations
   .FileContentStorage {
-  private privateContentDirectory: string;
+  private readonly privateContentDirectory: string;
 
   constructor(config: Config) {
     super(config.contentDirectory);
     this.privateContentDirectory = config.privateContentDirectory;
   }
 
-  protected async writeJSON(path: string, obj: any) {
-    await fsExtra.writeJSON(path, obj, { spaces: 2 });
+  protected async writeJSON(
+    id: string,
+    filename: string,
+    content: unknown,
+    isPrivate: boolean,
+  ) {
+    await this._addFile(
+      id,
+      filename,
+      JSON.stringify(content, null, 2),
+      isPrivate,
+    );
+  }
+
+  private async _addFile(
+    id: string,
+    filename: string,
+    content: Readable | string,
+    isPrivate: boolean,
+  ) {
+    const dst = path.join(
+      isPrivate ? this.privateContentDirectory : this.contentPath,
+      id,
+      filename,
+    );
+    await fsExtra.ensureDir(path.dirname(dst));
+    if (typeof content === 'string') {
+      await fsExtra.writeFile(dst, content);
+    } else {
+      await new Promise((resolve, reject) =>
+        content
+          .pipe(fsExtra.createWriteStream(dst, { encoding: 'utf-8' }))
+          .on('error', reject)
+          .on('finish', resolve),
+      );
+    }
   }
 
   public override async addContent(
@@ -57,15 +93,9 @@ export default class OSStorage extends H5P.fsImplementations
   ): Promise<string> {
     const osMeta = content.osMeta;
     const realId = id ?? assertValue<string>(osMeta.nickname?.trim());
-    const targetPath = path.join(this.contentPath, realId);
-    const privatePath = path.join(this.privateContentDirectory, realId);
-    const h5pPath = path.join(targetPath, H5P_NAME);
     delete content.osMeta;
     if (realId !== id) {
-      if (realId.length === 0) {
-        throw new CustomBaseError('ID cannot be empty');
-      }
-      if (fsExtra.pathExistsSync(h5pPath)) {
+      if (await this.contentExists(realId)) {
         throw new CustomBaseError(`Duplicate id ${realId}`);
       }
     }
@@ -80,32 +110,34 @@ export default class OSStorage extends H5P.fsImplementations
           content,
           metadata.mainLibrary,
         );
-        await fsExtra.ensureDir(privatePath);
-        await this.writeJSON(path.join(privatePath, CONTENT_NAME), privateData);
+        await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
         // write sanitized content object to content.json file
         content = sanitized;
       } else {
-        await fsExtra.rm(privatePath, { recursive: true, force: true });
+        await this.deletePrivateContent(realId);
       }
-      await fsExtra.ensureDir(targetPath);
       await Promise.all([
-        this.writeJSON(path.join(targetPath, CONTENT_NAME), content),
-        this.writeJSON(h5pPath, metadata),
-        this.writeJSON(path.join(targetPath, METADATA_NAME), newOsMeta),
+        this.writeJSON(realId, CONTENT_NAME, content, false),
+        this.writeJSON(realId, H5P_NAME, metadata, false),
+        this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
       ]);
-    } catch (e) {
-      await fsExtra.rm(targetPath, { recursive: true, force: true });
-      throw e;
+    } catch (error) {
+      await fsExtra.remove(path.join(this.getContentPath(), realId.toString()));
+      throw new H5pError('storage-file-implementations:error-creating-content');
     }
     return realId;
   }
 
-  public override async deleteContent(contentId: string, user?: H5P.IUser) {
+  protected async deletePrivateContent(contentId: string) {
     const privatePath = path.join(this.privateContentDirectory, contentId);
+    await fsExtra.rm(privatePath, { recursive: true, force: true });
+  }
+
+  public override async deleteContent(contentId: string, user?: H5P.IUser) {
     await Promise.all([
       super.deleteContent(contentId, user),
-      fsExtra.rm(privatePath, { recursive: true, force: true }),
+      this.deletePrivateContent(contentId),
     ]);
   }
 
