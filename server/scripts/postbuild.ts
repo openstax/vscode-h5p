@@ -169,8 +169,12 @@ function getCKEditorPluginPaths() {
     src: path.resolve(submodulesRoot, 'insertpre'),
     dst: path.resolve(CKEDITOR_PLUGINS, 'insertpre'),
   });
+  pluginPaths.push({
+    src: path.resolve(submodulesRoot, 'h5pimageupload'),
+    dst: path.resolve(CKEDITOR_PLUGINS, 'h5pimageupload'),
+  });
   pluginPaths.push(
-    ...['editor.css', 'icons.png'].map((file) => ({
+    ...['editor.css', 'icons.png', 'icons_hidpi.png'].map((file) => ({
       src: path.resolve(
         submodulesRoot,
         'BootstrapCK4-Skin',
