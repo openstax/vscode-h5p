@@ -3,8 +3,8 @@ import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
-import { assertValue } from '../../../../common/src/utils';
-import { iterHTML } from './ContentMutators';
+import { assertTrue, assertValue } from '../../../../common/src/utils';
+import { iterContent, iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
 
@@ -58,6 +58,18 @@ function replaceTempImages(content: unknown, pathPrefix: string) {
       });
   });
   return replaced;
+}
+
+function validateContent(content: unknown) {
+  const tmpPathPattern = /src="[^"]+?#tmp"/;
+  iterContent(content, (field) => {
+    if (typeof field.value === 'string') {
+      assertTrue(
+        !tmpPathPattern.test(field.value),
+        `ERROR: Found unexpected temp path in ${field.fqPath.join('.')}`,
+      );
+    }
+  });
 }
 
 export default class OSStorage extends H5P.fsImplementations
@@ -140,39 +152,36 @@ export default class OSStorage extends H5P.fsImplementations
         throw new CustomBaseError(`Duplicate id ${realId}`);
       }
     }
-    try {
-      const newOsMeta = {
-        ...(await this.getOSMeta(realId)),
-        ...osMeta,
-      };
-      delete newOsMeta.nickname;
-      if (!isSolutionPublic(osMeta)) {
-        const [sanitized, privateData] = yankAnswers(
-          content,
-          metadata.mainLibrary,
-        );
-        // Replace images in private content
-        const imagesReplaced = replaceTempImages(privateData, IMG_DIR);
-        await this.moveTempFiles(imagesReplaced, realId, user, true);
-        await this.writeJSON(realId, CONTENT_NAME, privateData, true);
+    const newOsMeta = {
+      ...(await this.getOSMeta(realId)),
+      ...osMeta,
+    };
+    delete newOsMeta.nickname;
+    if (!isSolutionPublic(osMeta)) {
+      const [sanitized, privateData] = yankAnswers(
+        content,
+        metadata.mainLibrary,
+      );
+      // Replace images in private content
+      const imagesReplaced = replaceTempImages(privateData, IMG_DIR);
+      validateContent(privateData);
+      await this.moveTempFiles(imagesReplaced, realId, user, true);
+      await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
-        // write sanitized content object to content.json file
-        content = sanitized;
-      } else {
-        await this.deletePrivateContent(realId);
-      }
-      // Replace images in pubic content
-      const imagesReplaced = replaceTempImages(content, IMG_DIR);
-      await Promise.all([
-        this.moveTempFiles(imagesReplaced, realId, user, false),
-        this.writeJSON(realId, CONTENT_NAME, content, false),
-        this.writeJSON(realId, H5P_NAME, metadata, false),
-        this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
-      ]);
-    } catch (error) {
-      await fsExtra.remove(path.join(this.getContentPath(), realId.toString()));
-      throw new H5pError('storage-file-implementations:error-creating-content');
+      // write sanitized content object to content.json file
+      content = sanitized;
+    } else {
+      await this.deletePrivateContent(realId);
     }
+    // Replace images in pubic content
+    const imagesReplaced = replaceTempImages(content, IMG_DIR);
+    validateContent(content);
+    await Promise.all([
+      this.moveTempFiles(imagesReplaced, realId, user, false),
+      this.writeJSON(realId, CONTENT_NAME, content, false),
+      this.writeJSON(realId, H5P_NAME, metadata, false),
+      this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
+    ]);
     return realId;
   }
 

@@ -1,3 +1,7 @@
+export function assertTrue(v: boolean, msg: string) {
+  if (!v) throw new Error(msg);
+}
+
 export function assertValue<T>(
   v: T | null | undefined,
   message = 'Expected a value but did not get anything',

@@ -48,12 +48,12 @@ function parseAsHTML(value: string): HTMLContent {
 }
 
 export function iterContent(
-  content: any,
+  content: unknown,
   handler: (field: ContentField) => void,
 ) {
   const recurse = (
     name: string,
-    value: any,
+    value: unknown,
     parent: Partial<unknown> | undefined,
     prevPath: string[],
   ) => {
@@ -66,24 +66,17 @@ export function iterContent(
         handler({ name, fqPath, value, parent, type: jsType });
         return;
       case 'object': {
-        let type: 'object' | 'array';
-        if (Array.isArray(value)) {
-          type = 'array';
-        } else if (
-          Object.prototype.toString.call(value) === '[object Object]'
-        ) {
-          type = 'object';
-        } else {
-          return;
-        }
+        const type = Array.isArray(value) ? 'array' : 'object';
         handler({ name, fqPath, value, parent, type });
-        Object.entries(value).forEach(([k, v]) => {
-          recurse(k, v, value, fqPath);
-        });
+        if (value != null) {
+          Object.entries(value).forEach(([k, v]) => {
+            recurse(k, v, value, fqPath);
+          });
+        }
       }
     }
   };
-  recurse('.', content, undefined, []);
+  recurse('', content, undefined, []);
 }
 
 export function iterHTML(
