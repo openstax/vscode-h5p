@@ -1,10 +1,13 @@
 {
-  "module-id": [],
-  "blooms": "",
-  "assignment-type": "",
-  "dok-tag": "",
-  "time": "",
-  "is-solution-public": "false",
-  "books": {},
-  "nickname": "SomeTitle"
+  "errata_id": "04bc8f1ef451d73dd62c8d95c0b2f5fb0472b6e6",
+  "collaborator_solutions": [
+    {
+      "content": "This should probably include a toggle to preview since it supports <html>.",
+      "solution_type": "summary"
+    }
+  ],
+  "is_solution_public": false,
+  "books": [],
+  "blooms": "3",
+  "time": "medium"
 }

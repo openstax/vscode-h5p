@@ -1,6 +1,9 @@
 {
   "media": {
-    "disableImageZooming": false
+    "disableImageZooming": false,
+    "type": {
+      "params": {}
+    }
   },
   "text": "Fill in the missing words",
   "overallFeedback": [

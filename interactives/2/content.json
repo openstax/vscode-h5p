@@ -1,6 +1,9 @@
 {
   "media": {
-    "disableImageZooming": false
+    "disableImageZooming": false,
+    "type": {
+      "params": {}
+    }
   },
   "overallFeedback": [
     {
@@ -53,5 +56,25 @@
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
   },
-  "question": "<p><math><mn>2</mn><mi>x</mi><mo>+</mo><mn>7</mn><mi>y</mi><mo>=</mo><mn>3</mn></math></p>\n"
+  "question": "<p><math><mn>2</mn><mi>x</mi><mo>+</mo><mn>7</mn><mi>y</mi><mo>=</mo><mn>3</mn></math></p>\n",
+  "answers": [
+    {
+      "correct": true,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<div>A</div>\n\n<div><img alt=\"An image from CORGI\" src=\"images/Screen Shot 2023-04-14 at 8.55.21 AM.png\" style=\"width: 300px; height: 98px;\"/></div>\n"
+    },
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<div>B</div>\n"
+    }
+  ]
 }

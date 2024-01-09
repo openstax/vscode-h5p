@@ -1,10 +1,30 @@
 {
-  "module-id": [],
-  "blooms": "",
-  "assignment-type": "",
-  "dok-tag": "1",
-  "time": "",
-  "is-solution-public": "false",
-  "books": {},
-  "nickname": "AnotherTitle"
+  "errata_id": "1e23540b6eec5cea967605a9623c8c7504deebb2",
+  "collaborator_solutions": [
+    {
+      "content": "a",
+      "solution_type": "detailed"
+    },
+    {
+      "content": "b",
+      "solution_type": "summary"
+    }
+  ],
+  "is_solution_public": true,
+  "books": [
+    {
+      "name": "stax-matnewborn",
+      "lo": [
+        "1-2-3"
+      ],
+      "aacn": "12.1a",
+      "nclex": "yes"
+    }
+  ],
+  "blooms": "3",
+  "dok": "2",
+  "assignment_type": "homework",
+  "time": "medium",
+  "feature_page": "m00123",
+  "feature_id": "fs-something23"
 }
