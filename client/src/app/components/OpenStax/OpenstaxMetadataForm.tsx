@@ -10,7 +10,7 @@ import {
   InputSetHandlerProps,
 } from './types';
 import LO from './LO';
-import ModuleID from './ModuleID';
+import Context from './Context';
 import APLO from './APLO';
 import Time from './Time';
 import { IContentService } from '../../services/ContentService';
@@ -31,39 +31,43 @@ import {
 import { Button } from 'react-bootstrap';
 import Nickname from './Nickname';
 import {
-  assertType,
   assertValue,
   chunk,
   isFalsy,
   randomId,
 } from '../../../../../common/src/utils';
+import DetailedSolution from './DetailedSolution';
+import { adaptToNetworkModel, adaptToFormModel } from './metadata-adaptor';
+import SummarySolution from './SummarySolution';
 
 type SingleInputs = {
   nickname: InputState;
   blooms: InputState;
-  'assignment-type': InputState;
-  'dok-tag': InputState;
+  assignment_type: InputState;
+  dok: InputState;
   time: InputState;
-  'is-solution-public': InputState;
-  'errata-id': InputState;
+  is_solution_public: InputState;
+  errata_id: InputState;
+  detailed_solution: InputState;
+  summary_solution: InputState;
+  context: InputState;
 };
 
 type InputSets = {
   books: InputState[];
-  'module-id': InputState[];
 };
 
-type BookInputs = {
+export type BookInputs = {
   lo: BookInputState[];
-  'ap-lo': BookInputState[];
+  aplo: BookInputState[];
   hts: BookInputState[];
   rp: BookInputState[];
-  'science-practice': BookInputState[];
+  science_practice: BookInputState[];
   aacn: BookInputState[];
   nclex: BookInputState[];
 };
 
-type FormState = SingleInputs & InputSets & BookInputs;
+export type FormState = SingleInputs & InputSets & BookInputs;
 
 type FormProps = {
   contentService: IContentService;
@@ -71,9 +75,10 @@ type FormProps = {
   onSaveError: (message: string) => void;
 };
 
-type SavedState = Record<keyof SingleInputs | keyof InputSets, any>;
-type MetadataEntry = [keyof SavedState, InputState | InputState[]];
-type SavedEntry = [keyof SavedState, string | string[]];
+type MetadataEntry = [
+  keyof SingleInputs | keyof InputSets,
+  InputState | InputState[],
+];
 
 const defaultInputState: InputState = { value: '', isValid: true };
 
@@ -108,7 +113,7 @@ const bookInputs: Array<{
     isInputSet: true,
   },
   {
-    key: 'ap-lo',
+    key: 'aplo',
     isActive: (book) => AP_BOOKS.includes(book),
     make(book, _, inputSetHandlerFactory) {
       return (
@@ -146,7 +151,7 @@ const bookInputs: Array<{
     },
   },
   {
-    key: 'science-practice',
+    key: 'science_practice',
     isActive: (book) => AP_SCIENCE_BOOKS.includes(book),
     make(book, inputHandlerFactory) {
       return (
@@ -211,11 +216,11 @@ const exerciseInputs: Array<
     },
   },
   {
-    key: 'module-id',
-    make(_, inputSetHandlerFactory) {
+    key: 'context',
+    make(inputHandlerFactory) {
       return (
-        <ModuleID
-          {...inputSetHandlerFactory(this.key)}
+        <Context
+          {...inputHandlerFactory(this.key)}
           required={this.isRequired}
         />
       );
@@ -231,7 +236,7 @@ const exerciseInputs: Array<
     },
   },
   {
-    key: 'assignment-type',
+    key: 'assignment_type',
     make(inputHandlerFactory) {
       return (
         <AssignmentType
@@ -242,7 +247,7 @@ const exerciseInputs: Array<
     },
   },
   {
-    key: 'dok-tag',
+    key: 'dok',
     make(inputHandlerFactory) {
       return (
         <DokTag {...inputHandlerFactory(this.key)} required={this.isRequired} />
@@ -258,7 +263,19 @@ const exerciseInputs: Array<
     },
   },
   {
-    key: 'is-solution-public',
+    key: 'detailed_solution',
+    make(inputHandlerFactory) {
+      return <DetailedSolution {...inputHandlerFactory(this.key)} />;
+    },
+  },
+  {
+    key: 'summary_solution',
+    make(inputHandlerFactory) {
+      return <SummarySolution {...inputHandlerFactory(this.key)} />;
+    },
+  },
+  {
+    key: 'is_solution_public',
     make(inputHandlerFactory) {
       return (
         <PublicCheckbox
@@ -270,69 +287,62 @@ const exerciseInputs: Array<
   },
 ];
 
-const metadataKeys: Array<keyof SavedState> = exerciseInputs
-  .map((e) => e.key)
-  .concat(['errata-id']);
-const bookInputKeys: Array<keyof BookInputs> = bookInputs.map((b) => b.key);
+const EXERCISE_INPUT_KEYS: Set<keyof SingleInputs | keyof InputSets> = new Set(
+  exerciseInputs.map((e) => e.key).concat(['errata_id']),
+);
+const BOOK_INPUT_KEYS: Set<keyof BookInputs> = new Set(
+  bookInputs.map((b) => b.key),
+);
+const INPUT_SET_KEYS: Set<keyof FormState> = new Set(
+  exerciseInputs
+    .filter(({ isInputSet }) => isInputSet === true)
+    .map(({ key }) => key as keyof FormState)
+    .concat(['books'])
+    .concat(
+      bookInputs
+        .filter(({ isInputSet }) => isInputSet === true)
+        .map(({ key }) => key),
+    ),
+);
 
-function isMetadataEntry(entry: [any, any]): entry is MetadataEntry {
-  return metadataKeys.includes(entry[0]);
+export function getBookInputKeys(): Array<keyof BookInputs> {
+  return Array.from(BOOK_INPUT_KEYS);
 }
 
-function isSavedEntry(entry: [any, any]): entry is SavedEntry {
-  return metadataKeys.includes(entry[0]);
+export function isInputSet(key: keyof FormState): boolean {
+  return INPUT_SET_KEYS.has(key);
 }
 
-function isBookInputEntry(
+export function isMetadataEntry(
+  entry: [unknown, unknown],
+): entry is MetadataEntry {
+  return EXERCISE_INPUT_KEYS.has(entry[0] as any);
+}
+
+export function isBookInputEntry(
   entry: [any, any],
-): entry is [string, BookInputState[]] {
-  return bookInputKeys.includes(entry[0]);
+): entry is [keyof BookInputs, BookInputState[]] {
+  return BOOK_INPUT_KEYS.has(entry[0]);
 }
-
-const coders: Partial<
-  Record<
-    keyof FormState,
-    {
-      encoder: (state: InputState) => any;
-      decoder: (value: any) => string;
-    }
-  >
-> = {
-  'module-id': {
-    encoder: (state: InputState) => {
-      const splitValue = state.value.split('#');
-      return {
-        module: `modules/${splitValue[0]}/index.cnxml`,
-        'element-id': splitValue[1] ?? '',
-      };
-    },
-    decoder: (value) => {
-      const moduleId = assertValue(
-        assertType<string>(value['module'], 'string').split('/').at(-2),
-      );
-      return value['element-id'] !== ''
-        ? `${moduleId}#${value['element-id']}`
-        : moduleId;
-    },
-  },
-};
 
 export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public override state: FormState = {
-    'errata-id': { ...defaultInputState },
+    errata_id: { ...defaultInputState },
     nickname: { ...defaultInputState },
-    'module-id': [],
+    context: { ...defaultInputState },
     blooms: { ...defaultInputState },
-    'assignment-type': { ...defaultInputState },
-    'dok-tag': { ...defaultInputState },
+    assignment_type: { ...defaultInputState },
+    dok: { ...defaultInputState },
     time: { ...defaultInputState },
-    'is-solution-public': { ...defaultInputState, value: 'false' },
+    detailed_solution: { ...defaultInputState },
+    summary_solution: { ...defaultInputState },
+    is_solution_public: { ...defaultInputState, value: 'false' },
     books: [],
-    'ap-lo': [],
+    aplo: [],
     lo: [],
     rp: [],
     hts: [],
-    'science-practice': [],
+    science_practice: [],
     aacn: [],
     nclex: [],
   };
@@ -363,7 +373,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         const errataIdInputState = { ...defaultInputState, value: errataId };
         this.setState({
           nickname: { ...errataIdInputState },
-          'errata-id': errataIdInputState,
+          errata_id: errataIdInputState,
         });
       }
     } catch (err) {
@@ -377,96 +387,11 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   }
 
   get encodedValues() {
-    // TODO: Remove optional fields that are empty?
-    const encodeValue = (key: keyof FormState, state: InputState): any =>
-      key in coders ? assertValue(coders[key]).encoder(state) : state.value;
-    const metadata = Object.fromEntries(
-      this.metadataEntries.map(([key, oneOrMany]) => [
-        key,
-        Array.isArray(oneOrMany)
-          ? oneOrMany.map((item) => encodeValue(key, item))
-          : encodeValue(key, oneOrMany),
-      ]),
-    );
-    const bookMetadataEntries = Object.entries(this.state).filter(
-      isBookInputEntry,
-    );
-    const bookInputSets = bookInputs
-      .filter((b) => b.isInputSet === true)
-      .map((b) => b.key as string);
-    const bookMetadata = Object.fromEntries(
-      this.state.books
-        .filter((b) => b.value !== '')
-        .map((b) => {
-          const book = b.value;
-          return [
-            book,
-            Object.fromEntries(
-              bookMetadataEntries
-                .map(([stateKey, bookStates]): [string, string[]] => [
-                  stateKey,
-                  bookStates
-                    .filter(
-                      (bookState) =>
-                        bookState.book === book && bookState.value !== '',
-                    )
-                    .map((bookState) => bookState.value),
-                ])
-                .filter(([_, v]) => v.length > 0)
-                .map(([k, v]) => [k, bookInputSets.includes(k) ? v : v[0]]),
-            ),
-          ];
-        }),
-    );
-    return { ...metadata, books: bookMetadata };
+    return adaptToNetworkModel(this.state);
   }
 
   decodeValues(metadata: any): Partial<FormState> {
-    const decode = (key: keyof SavedState, value: any): string =>
-      key in coders
-        ? assertValue(coders[key]).decoder(value)
-        : value.toString();
-    const decodeValue = (key: keyof SavedState, value: any): InputState => {
-      return {
-        ...defaultInputState,
-        value: decode(key, value),
-      };
-    };
-    const exerciseMetadata = Object.fromEntries(
-      Object.entries(metadata)
-        .filter(isSavedEntry)
-        .map(([key, oneOrMany]) => [
-          key,
-          Array.isArray(oneOrMany)
-            ? oneOrMany.map((item) => decodeValue(key, item))
-            : decodeValue(key, oneOrMany),
-        ]),
-    );
-    const books = Object.entries(metadata['books'] ?? {}) as [string, any];
-    const bookMetadata = {
-      books: books.map(([k]) => ({ ...defaultInputState, value: k })),
-      ...Object.fromEntries(
-        bookInputKeys.map((k) => {
-          const value: BookInputState[] = [];
-          books.forEach(([book, values]) => {
-            const valuesByKey = values[k];
-            if (Array.isArray(valuesByKey)) {
-              valuesByKey.forEach((v) =>
-                value.push({
-                  ...defaultInputState,
-                  value: v,
-                  book,
-                }),
-              );
-            } else if (valuesByKey !== undefined) {
-              value.push({ ...defaultInputState, value: valuesByKey, book });
-            }
-          });
-          return [k, value];
-        }),
-      ),
-    };
-    return { ...exerciseMetadata, ...bookMetadata };
+    return adaptToFormModel(metadata);
   }
 
   get isInputValid() {
@@ -475,7 +400,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       ...bookInputs.filter((b) => b.isRequired).map((b) => b.key),
     ];
     const isInputValid = (
-      key: keyof SavedState | keyof BookInputs,
+      key: keyof SingleInputs | keyof InputSets | keyof BookInputs,
       state: InputState | undefined,
     ) => {
       if (state?.isValid === false) {
@@ -490,7 +415,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       return true;
     };
     const isArrayValid = (
-      key: keyof SavedState | keyof BookInputs,
+      key: keyof SingleInputs | keyof InputSets | keyof BookInputs,
       inputSet: InputState[],
     ) => {
       /* istanbul ignore if (not currently utilized) */
