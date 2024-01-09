@@ -4,6 +4,10 @@ import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
 import { CustomBaseError } from './errors';
 import { assertTrue, assertValue } from '../../../../common/src/utils';
+import {
+  CanonicalMetadata,
+  NetworkMetadata,
+} from '../../../../common/src/types';
 import { iterContent, iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
@@ -36,8 +40,8 @@ function unyankAnswers(
   return assertLibrary(mainLibrary).unyankAnswers(publicData, privateData);
 }
 
-function isSolutionPublic(osMeta: any): boolean {
-  return (osMeta['is-solution-public'] ?? 'true') === 'true';
+function isSolutionPublic(osMeta: { is_solution_public?: boolean }): boolean {
+  return (osMeta.is_solution_public ?? false) === true;
 }
 
 function replaceTempImages(content: unknown, pathPrefix: string) {
@@ -70,6 +74,19 @@ function validateContent(content: unknown) {
       );
     }
   });
+}
+
+function mergeMetadata(
+  existingMetadata: Partial<CanonicalMetadata>,
+  newMetadata: NetworkMetadata,
+): CanonicalMetadata {
+  // Remove nickname and any optional fields that do not have a value
+  return Object.fromEntries(
+    Object.entries({
+      ...existingMetadata,
+      ...newMetadata,
+    }).filter(([k, v]) => k !== 'nickname' && v !== null),
+  ) as unknown as CanonicalMetadata;
 }
 
 export default class OSStorage extends H5P.fsImplementations
@@ -144,7 +161,7 @@ export default class OSStorage extends H5P.fsImplementations
     user: H5P.IUser,
     id?: string | undefined,
   ): Promise<string> {
-    const osMeta = content.osMeta;
+    const osMeta: NetworkMetadata = content.osMeta;
     const realId = id ?? assertValue<string>(osMeta.nickname?.trim());
     delete content.osMeta;
     if (realId !== id) {
@@ -152,11 +169,7 @@ export default class OSStorage extends H5P.fsImplementations
         throw new CustomBaseError(`Duplicate id ${realId}`);
       }
     }
-    const newOsMeta = {
-      ...(await this.getOSMeta(realId)),
-      ...osMeta,
-    };
-    delete newOsMeta.nickname;
+    const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
     if (!isSolutionPublic(osMeta)) {
       const [sanitized, privateData] = yankAnswers(
         content,
@@ -211,7 +224,9 @@ export default class OSStorage extends H5P.fsImplementations
     return metadata;
   }
 
-  public async getOSMeta(contentId: string) {
+  public async getOSMeta(
+    contentId: string,
+  ): Promise<Partial<CanonicalMetadata>> {
     const mdPath = path.join(this.contentPath, contentId, METADATA_NAME);
     return fsExtra.existsSync(mdPath) ? await fsExtra.readJSON(mdPath) : {};
   }
