@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from './config';
-import { CustomBaseError } from './errors';
 import { assertTrue, assertValue } from '../../../../common/src/utils';
 import {
   CanonicalMetadata,
@@ -15,7 +14,7 @@ import { H5pError } from '@lumieducation/h5p-server';
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
-const IMG_DIR = 'images';
+const IMG_DIR = 'media';
 
 function assertLibrary(mainLibrary: string) {
   const library = Config.supportedLibraries[mainLibrary];
@@ -44,6 +43,17 @@ function isSolutionPublic(osMeta: { is_solution_public?: boolean }): boolean {
   return (osMeta.is_solution_public ?? false) === true;
 }
 
+// Temp paths are constructed by addDirectoryByMimetype in h5p-server/src/H5PEditor.ts
+// temporaryFileStorage.getFileStream wants paths relative to temp directory
+// See getTemporaryFile in h5p-server/src/H5PAjaxEndpoint.ts for more information
+// Example: http://.../h5p/temp-files/images/image-EJusOvWn.png#tmp -> images/image-EJusOvWn.png
+function toTempName(pathname: string) {
+  const tempPath = '/temp-files/';
+  const tempPathIdx = pathname.indexOf(tempPath);
+  assertTrue(tempPathIdx !== -1, 'Could not find temporary directory in url.');
+  return pathname.slice(tempPathIdx + tempPath.length);
+}
+
 function updateAttachments(content: unknown, pathPrefix: string) {
   const replaced: Array<{ tmpName: string; newName: string }> = [];
   const attachments: string[] = [];
@@ -53,8 +63,7 @@ function updateAttachments(content: unknown, pathPrefix: string) {
       const src = img.getAttribute('src');
       if (src?.endsWith('#tmp') === true) {
         const name = assertValue(img.getAttribute('data-filename'));
-        const { pathname } = new URL(src);
-        const tmpName = `images/${path.basename(pathname)}`; // images prefix hardcoded into h5p-server/src/H5PEditor.ts
+        const tmpName = toTempName(src.slice(0, -4));
         const newName = `${pathPrefix}/${name}`; // Our prefix can be anything
         replaced.push({ tmpName, newName });
         img.removeAttribute('data-filename');
@@ -173,10 +182,10 @@ export default class OSStorage extends H5P.fsImplementations
     const realId = id ?? assertValue<string>(osMeta.nickname?.trim());
     delete content.osMeta;
     if (realId !== id) {
-      if (await this.contentExists(realId)) {
-        throw new CustomBaseError(`Duplicate id ${realId}`);
-      }
+      assertTrue(!(await this.contentExists(realId)), `Duplicate id ${realId}`);
     }
+    // Content id of 0 causes the player to break
+    assertTrue(realId !== '0', 'Content id cannot be 0');
     const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
     const handleImages = async (content: unknown, isPrivate: boolean) => {
       const { replaced, attachments } = updateAttachments(content, IMG_DIR);
