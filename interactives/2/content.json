@@ -65,7 +65,7 @@
         "chosenFeedback": "",
         "notChosenFeedback": ""
       },
-      "text": "<div>A</div>\n\n<div><img alt=\"An image from CORGI\" src=\"images/Screen Shot 2023-04-14 at 8.55.21 AM.png\" style=\"width: 300px; height: 98px;\"/></div>\n"
+      "text": "<div>A</div>\n\n<div><img alt=\"An image from CORGI\" src=\"media/Screen Shot 2023-04-14 at 8.55.21 AM.png\" style=\"width: 300px; height: 98px;\"/></div>\n"
     },
     {
       "correct": false,
