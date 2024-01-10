@@ -44,14 +44,14 @@ function isSolutionPublic(osMeta: { is_solution_public?: boolean }): boolean {
   return (osMeta.is_solution_public ?? false) === true;
 }
 
-function replaceTempImages(content: unknown, pathPrefix: string) {
+function updateAttachments(content: unknown, pathPrefix: string) {
   const replaced: Array<{ tmpName: string; newName: string }> = [];
+  const attachments: string[] = [];
   iterHTML(content, ({ document }) => {
-    document
-      .xpath<Element>('//img[@data-filename][@src]')
-      .filter((img) => img.getAttribute('src')?.endsWith('#tmp') === true)
-      .forEach((img) => {
-        const src = assertValue(img.getAttribute('src'));
+    const images = document.xpath<Element>('//img[@src]');
+    images.forEach((img) => {
+      const src = img.getAttribute('src');
+      if (src?.endsWith('#tmp') === true) {
         const name = assertValue(img.getAttribute('data-filename'));
         const { pathname } = new URL(src);
         const tmpName = `images/${path.basename(pathname)}`; // images prefix hardcoded into h5p-server/src/H5PEditor.ts
@@ -59,9 +59,15 @@ function replaceTempImages(content: unknown, pathPrefix: string) {
         replaced.push({ tmpName, newName });
         img.removeAttribute('data-filename');
         img.setAttribute('src', newName);
-      });
+      }
+    });
+    attachments.push(
+      ...images
+        .map((img) => img.getAttribute('src'))
+        .filter((src): src is string => src != null),
+    );
   });
-  return replaced;
+  return { replaced, attachments };
 }
 
 function validateContent(content: unknown) {
@@ -85,6 +91,8 @@ function mergeMetadata(
     Object.entries({
       ...existingMetadata,
       ...newMetadata,
+      // Always construct this array from scratch
+      attachments: [],
     }).filter(([k, v]) => k !== 'nickname' && v !== null),
   ) as unknown as CanonicalMetadata;
 }
@@ -170,15 +178,19 @@ export default class OSStorage extends H5P.fsImplementations
       }
     }
     const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
+    const handleImages = async (content: unknown, isPrivate: boolean) => {
+      const { replaced, attachments } = updateAttachments(content, IMG_DIR);
+      validateContent(content);
+      newOsMeta.attachments.push(...attachments);
+      await this.moveTempFiles(replaced, realId, user, isPrivate);
+    };
     if (!isSolutionPublic(osMeta)) {
       const [sanitized, privateData] = yankAnswers(
         content,
         metadata.mainLibrary,
       );
       // Replace images in private content
-      const imagesReplaced = replaceTempImages(privateData, IMG_DIR);
-      validateContent(privateData);
-      await this.moveTempFiles(imagesReplaced, realId, user, true);
+      await handleImages(privateData, true);
       await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
       // write sanitized content object to content.json file
@@ -187,10 +199,8 @@ export default class OSStorage extends H5P.fsImplementations
       await this.deletePrivateContent(realId);
     }
     // Replace images in pubic content
-    const imagesReplaced = replaceTempImages(content, IMG_DIR);
-    validateContent(content);
+    await handleImages(content, false);
     await Promise.all([
-      this.moveTempFiles(imagesReplaced, realId, user, false),
       this.writeJSON(realId, CONTENT_NAME, content, false),
       this.writeJSON(realId, H5P_NAME, metadata, false),
       this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
