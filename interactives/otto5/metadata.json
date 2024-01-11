@@ -1,0 +1,27 @@
+{
+  "errata_id": "fedce723679be6da34472b457390e19f9647b96e",
+  "collaborator_solutions": [
+    {
+      "content": "text and numbers",
+      "solution_type": "detailed"
+    },
+    {
+      "content": "numbers",
+      "solution_type": "summary"
+    }
+  ],
+  "is_solution_public": true,
+  "books": [
+    {
+      "name": "stax-astro",
+      "lo": [
+        "11-22-33"
+      ]
+    }
+  ],
+  "blooms": "1",
+  "dok": "1",
+  "assignment_type": "reading",
+  "time": "short",
+  "attachments": []
+}
