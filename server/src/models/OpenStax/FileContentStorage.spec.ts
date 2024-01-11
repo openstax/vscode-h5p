@@ -168,6 +168,23 @@ describe('File Content Storage', () => {
     mockfs.restore();
     expect(result).toMatchSnapshot();
   });
+  it('throws an error if tmp items do not have a name', async () => {
+    const storage = createStorageHarness();
+    await expect(async () => {
+      await storage.addContent(
+        {} as unknown as IContentMetadata,
+        {
+          osMeta: {
+            nickname: 'image-test',
+          },
+          text: `<p>Fill in the missing words</p>
+          <p><img src="http://.../temp-files/images/not-used.png#tmp"/></p>
+          `,
+        },
+        {} as unknown as IUser,
+      );
+    }).rejects.toThrowError(/data-filename/);
+  });
   it('converts invalid searchable values when loading', async () => {
     const storage = createStorageHarness();
     const id = '1234';

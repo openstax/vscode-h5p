@@ -62,9 +62,10 @@ function updateAttachments(content: unknown, pathPrefix: string) {
     images.forEach((img) => {
       const src = img.getAttribute('src');
       if (src?.endsWith('#tmp') === true) {
-        const name = assertValue(img.getAttribute('data-filename'));
+        const name = img.getAttribute('data-filename')?.trim();
         const tmpName = toTempName(src.slice(0, -4));
         const newName = `${pathPrefix}/${name}`; // Our prefix can be anything
+        assertTrue(name !== '' && name != null, 'BUG: data-filename not found');
         replaced.push({ tmpName, newName });
         img.removeAttribute('data-filename');
         img.setAttribute('src', newName);
