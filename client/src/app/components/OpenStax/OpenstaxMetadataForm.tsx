@@ -30,15 +30,11 @@ import {
 } from './constants';
 import { Button } from 'react-bootstrap';
 import Nickname from './Nickname';
-import {
-  assertValue,
-  chunk,
-  isFalsy,
-  randomId,
-} from '../../../../../common/src/utils';
+import { assertValue, chunk, isFalsy } from '../../../../../common/src/utils';
 import DetailedSolution from './DetailedSolution';
 import { adaptToNetworkModel, adaptToFormModel } from './metadata-adaptor';
 import SummarySolution from './SummarySolution';
+import { randomId } from './utils';
 
 type SingleInputs = {
   nickname: InputState;
@@ -369,7 +365,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
         };
         this.setState(decoded);
       } else {
-        const errataId = await randomId();
+        const errataId = await randomId({ maxLength: 7 });
         const errataIdInputState = { ...defaultInputState, value: errataId };
         this.setState({
           nickname: { ...errataIdInputState },
@@ -484,9 +480,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
       };
     };
 
-    const inputHandlerProps = <K extends keyof SingleInputs | keyof BookInputs>(
-      type: K,
-    ) => ({
+    const inputHandlerProps = (type: keyof SingleInputs) => ({
       handleInputChange: (value: string, isValid: boolean = true) =>
         this.setState({ [type]: { value, isValid } }),
       ...this.state[type],
