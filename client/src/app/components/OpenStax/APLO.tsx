@@ -1,4 +1,5 @@
 import { InputSet, InputSetProps } from './InputSet';
+import { patternValidationFactory } from './utils';
 
 const PATTERNS: Record<string, { pattern: RegExp; placeholder: string }> = {
   'stax-apbio': {
@@ -17,10 +18,11 @@ export default function APLO(props: InputSetProps & { book: string }) {
     pattern: /^[A-Z0-9.-]+$/,
     placeholder: '',
   };
+  const validator = patternValidationFactory(pattern, props);
   const subProps = {
     ...props,
     handleInputChange: (index: number, value: string) => {
-      props.handleInputChange(index, value, !!value.match(pattern));
+      props.handleInputChange(index, value, validator(value));
     },
   };
 
