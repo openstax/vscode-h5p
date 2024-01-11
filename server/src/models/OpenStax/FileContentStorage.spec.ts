@@ -3,8 +3,25 @@ import OSStorage from './FileContentStorage';
 import mockfs from 'mock-fs';
 import path from 'path';
 import Config from './config';
+import { NetworkMetadata } from '../../../../common/src/types';
+import { IContentMetadata, IUser } from '@lumieducation/h5p-server';
+import { assertValue } from '../../../../common/src/utils';
 
 const VIRTUAL_ROOT = '/root';
+const CONFIG = new Config(VIRTUAL_ROOT, 'interactives', 'private');
+const PRIVATE_PATH = CONFIG.privateContentDirectory;
+const MOCK_H5P_BASE: IContentMetadata = {
+  title: 'default title',
+  mainLibrary: 'H5P.Blanks',
+  language: 'U',
+  license: '',
+  embedTypes: ['iframe'],
+  preloadedDependencies: [],
+  defaultLanguage: '',
+};
+const MOCK_OSMETA_BASE: Partial<NetworkMetadata> = {
+  is_solution_public: true,
+};
 
 function dirToObj(base: string) {
   const dir: Record<string, any> = {};
@@ -17,32 +34,65 @@ function dirToObj(base: string) {
   return dir;
 }
 
-describe('File Content Storage', () => {
-  const config = new Config(VIRTUAL_ROOT, 'interactives', 'private');
-  const interactivesPath = config.contentDirectory;
-  const privatePath = config.privateContentDirectory;
-  const fakeH5PBase = {
-    mainLibrary: 'something',
-    language: 'U',
-    license: '',
-    embedTypes: ['iframe'],
-    preloadedDependencies: [],
-    defaultLanguage: '',
-  };
+const tryGet = (target: object, p: string | symbol) =>
+  assertValue(Reflect.get(target, p), `Property not found ${String(p)}`);
 
+const createStorageHarness = () => {
+  const mockTempStorage = new Proxy({} as unknown as any, {
+    get(target, p) {
+      switch (p) {
+        case 'getFileStream':
+          return (tmpName: string) => ({
+            pipe(output: fsExtra.WriteStream) {
+              output.write(`<insert contents of ${tmpName}>`);
+              output.end();
+              return output;
+            },
+          });
+      }
+      return tryGet(target, p);
+    },
+  });
+  return new Proxy(new OSStorage(CONFIG, mockTempStorage), {
+    get(target, p) {
+      switch (p) {
+        case 'addContent':
+          return (
+            metadata: IContentMetadata,
+            content: any,
+            user: IUser,
+            id?: string | undefined,
+          ) => {
+            const osMeta = {
+              ...MOCK_OSMETA_BASE,
+              ...(content?.osMeta ?? {}),
+            };
+            return target.addContent(
+              { ...MOCK_H5P_BASE, ...metadata } as unknown as IContentMetadata,
+              { ...content, osMeta },
+              { ...user } as unknown as IUser,
+              id,
+            );
+          };
+      }
+      return tryGet(target, p);
+    },
+  });
+};
+
+describe('File Content Storage', () => {
   beforeEach(() => {
     mockfs({
       [VIRTUAL_ROOT]: {
         ['interactives']: {
           '1': {
             'h5p.json': JSON.stringify({
+              ...MOCK_H5P_BASE,
               title: 'this should be stored in folder 1',
-              ...fakeH5PBase,
             }),
             'content.json': JSON.stringify({}),
             'metadata.json': JSON.stringify({
               extra: 'Something extra',
-              books: ['should-not-appear-in-snapshot'],
             }),
           },
         },
@@ -54,115 +104,82 @@ describe('File Content Storage', () => {
   });
 
   it('saves content as expected', async () => {
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
 
-    // It shoould use this directory since it does not have an h5p file in it
-    fsExtra.ensureDirSync(`${interactivesPath}/2`);
+    // Should use nickname as ID
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 2',
-        } as any,
+        } as unknown as IContentMetadata,
         {
-          osMeta: { books: ['meta-1'], nickname: '2' },
+          osMeta: { nickname: '2' },
         },
-        {} as any,
+        {} as unknown as IUser,
       ),
     ).toBe('2');
-    const osMeta2 = {
-      nickname: '101',
-      books: ['something'],
-    };
-    expect(
-      await storage.addContent(
-        {
-          title: 'this should be stored in folder 101',
-          ...fakeH5PBase,
-        } as any,
-        {
-          this: 'could',
-          literally: 'be',
-          anything: 'because',
-          it: 'is',
-          very: 'loosely',
-          defined: true,
-          osMeta: { ...osMeta2 },
-        },
-        {} as any,
-      ),
-    ).toBe('101');
-    expect(
-      await storage.addContent(
-        {
-          title: 'this should be stored in folder 102',
-          ...fakeH5PBase,
-        } as any,
-        {
-          osMeta: {
-            books: ['meta-2'],
-            nickname: '102',
-          },
-        },
-        {} as any,
-      ),
-    ).toBe('102');
+
+    // Should use id argument
     expect(
       await storage.addContent(
         {
           title: 'this should be stored in folder 1234',
-          ...fakeH5PBase,
-        } as any,
+        } as unknown as IContentMetadata,
         {
           osMeta: {},
         },
-        {} as any,
-        '1234', // should use this id
+        {} as unknown as IUser,
+        '1234',
       ),
     ).toBe('1234');
-    // Modify existing content
+
+    // Modifying existing content should not erase extra metadata
     await storage.addContent(
       {
         title: 'this should be stored in folder 1',
-        ...fakeH5PBase,
-      } as any,
-      { osMeta: { books: ['meta-3'], nickname: '1' } },
-      {} as any,
+      } as unknown as IContentMetadata,
+      {
+        osMeta: {
+          nickname: '1',
+          books: [{ name: 'stax-test', lo: ['1-2-3'] }],
+        },
+      },
+      {} as unknown as IUser,
       '1',
     );
-    expect(await storage.getOSMeta('1')).toStrictEqual({
-      books: ['meta-3'],
+    expect(await storage.getOSMeta('1')).toMatchObject({
       extra: 'Something extra',
     });
-    // title always overwrites nickname
-    expect(await storage.getOSMeta('101')).toStrictEqual({
-      books: osMeta2.books,
-    });
-    expect(await storage.getOSMeta('3')).toStrictEqual({});
-    // When the nickname is not given, the h5p title is used
-    expect(await storage.getOSMeta('102')).toStrictEqual({
-      books: ['meta-2'],
-    });
+
+    // It should try to move images from temporary storage
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        osMeta: {
+          nickname: 'image-test',
+        },
+        text: `<p>Fill in the missing words</p>
+        <p><img data-filename="test.png" src="http://.../temp-files/images/not-used.png#tmp"/></p>
+        `,
+      },
+      {} as unknown as IUser,
+    );
     const result = dirToObj(VIRTUAL_ROOT);
     mockfs.restore();
     expect(result).toMatchSnapshot();
   });
   it('converts invalid searchable values when loading', async () => {
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
     const id = '1234';
     await storage.addContent(
       {
         title: 1234 as any,
         mainLibrary: 5678 as any,
-        language: 'U',
-        license: '',
-        embedTypes: ['iframe'],
-        preloadedDependencies: [],
-        defaultLanguage: '',
-      },
+      } as unknown as IContentMetadata,
       {
         osMeta: {},
       },
-      {} as any,
+      {} as unknown as IUser,
       id,
     );
     const loaded = await storage.getMetadata(id);
@@ -177,32 +194,26 @@ describe('File Content Storage', () => {
           ? 'removes private solutions'
           : 'leaves public solutions'),
       async () => {
-        const storage = new OSStorage(config);
+        const storage = createStorageHarness();
         const h5pContent = {
           fake: 'to make sure it is saved too',
           questions: [
-            `<p>This should ${
-              !isSolutionPublic ? 'not' : ''
-            } appear in the content.json</p>`,
+            `<p>This should${
+              !isSolutionPublic ? ' not ' : ' '
+            }appear in the public folder</p>`,
           ],
         };
         await storage.addContent(
           {
             title: 'this should be stored in folder ' + id,
-            mainLibrary: 'H5P.Blanks',
-            language: 'U',
-            license: '',
-            embedTypes: ['iframe'],
-            preloadedDependencies: [],
-            defaultLanguage: '',
-          },
+          } as unknown as IContentMetadata,
           {
             ...h5pContent,
             osMeta: {
-              'is-solution-public': isSolutionPublic.toString(),
+              is_solution_public: isSolutionPublic,
             },
           },
-          {} as any,
+          {} as unknown as IUser,
           id,
         );
         expect(await storage.getParameters(id)).toStrictEqual(h5pContent);
@@ -213,28 +224,18 @@ describe('File Content Storage', () => {
     );
   });
   it('throws an error when it cannot make solutions private', async () => {
-    const storage = new OSStorage(config);
-    const h5pContent = {
-      fake: 'to make sure it is saved too',
-    };
+    const storage = createStorageHarness();
     await expect(async () => {
       await storage.addContent(
         {
-          title: '',
           mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+        } as unknown as IContentMetadata,
         {
-          ...h5pContent,
           osMeta: {
-            'is-solution-public': 'false',
+            is_solution_public: false,
           },
         },
-        {} as any,
+        {} as unknown as IUser,
         '1234',
       );
     }).rejects.toThrowError(
@@ -242,51 +243,46 @@ describe('File Content Storage', () => {
     );
   });
   it('cleans up orphaned files on error', async () => {
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
     storage.getOSMeta = jest.fn().mockRejectedValue(new Error('TEST'));
     await expect(async () => {
       await storage.addContent(
-        {
-          title: '',
-          mainLibrary: 'H5P.Blanks',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
-        {
-          osMeta: {},
-        },
-        {} as any,
+        {} as unknown as IContentMetadata,
+        {},
+        {} as unknown as IUser,
         '1234',
       );
     }).rejects.toThrowError('TEST');
     expect(await storage.contentExists('1234')).toBe(false);
   });
   it('does not allow duplicate ids', async () => {
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
     await expect(async () => {
       await storage.addContent(
         {
           title: 'this should be stored in folder 1',
-          mainLibrary: 'H5P.Blanks',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+        } as unknown as IContentMetadata,
         {
           osMeta: { nickname: '1' },
         },
-        {} as any,
+        {} as unknown as IUser,
       );
     }).rejects.toThrowError(/.*duplicate.*/i);
     expect(await storage.contentExists('1234')).toBe(false);
   });
+  // Id 0 breaks the player (reason unknown)
+  it('does not allow id 0', async () => {
+    const storage = createStorageHarness();
+    expect(async () => {
+      await storage.addContent(
+        {} as unknown as IContentMetadata,
+        { osMeta: { nickname: '0' } },
+        {} as unknown as IUser,
+      );
+    }).rejects.toThrow(/.*cannot be 0.*/);
+  });
   it('deletes private data when content is deleted', async () => {
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
     const id = '12345';
     const h5pContent = {
       fake: 'to make sure it is saved too',
@@ -295,52 +291,40 @@ describe('File Content Storage', () => {
     await storage.addContent(
       {
         title: 'this should be stored in folder 123456',
-        mainLibrary: 'H5P.Blanks',
-        language: 'U',
-        license: '',
-        embedTypes: ['iframe'],
-        preloadedDependencies: [],
-        defaultLanguage: '',
-      },
+      } as unknown as IContentMetadata,
       {
         ...h5pContent,
         osMeta: {
-          'is-solution-public': 'false',
+          is_solution_public: false,
         },
       },
-      {} as any,
+      {} as unknown as IUser,
       id,
     );
 
     expect(await storage.contentExists(id)).toBe(true);
-    expect(fsExtra.existsSync(`${privatePath}/12345`)).toBe(true);
+    expect(fsExtra.existsSync(`${PRIVATE_PATH}/12345`)).toBe(true);
 
     await storage.deleteContent(id);
     expect(await storage.contentExists(id)).toBe(false);
-    expect(fsExtra.existsSync(`${privatePath}/12345`)).toBe(false);
+    expect(fsExtra.existsSync(`${PRIVATE_PATH}/12345`)).toBe(false);
   });
 
   it('still works when the contentPath does not exist', async () => {
     mockfs({
       [VIRTUAL_ROOT]: {},
     });
-    const storage = new OSStorage(config);
+    const storage = createStorageHarness();
     const expectedId = '1';
     expect(
       await storage.addContent(
         {
           title: `this should be stored in folder ${expectedId}`,
-          mainLibrary: 'H5P.Blanks',
-          language: 'U',
-          license: '',
-          embedTypes: ['iframe'],
-          preloadedDependencies: [],
-          defaultLanguage: '',
-        },
+        } as unknown as IContentMetadata,
         {
           osMeta: { nickname: '1' },
         },
-        {} as any,
+        {} as unknown as IUser,
       ),
     ).toBe('1');
   });

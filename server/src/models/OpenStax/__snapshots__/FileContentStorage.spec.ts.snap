@@ -5,14 +5,13 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   "interactives": {
     "1": {
       "content.json": "{}",
-      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"something","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
-      "metadata.json": "{"extra":"Something extra","books":["should-not-appear-in-snapshot"]}",
+      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"H5P.Blanks","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
+      "metadata.json": "{"extra":"Something extra"}",
     },
     "1234": {
       "content.json": "{
   "fake": "to make sure it is saved too"
-}
-",
+}",
       "h5p.json": "{
   "title": "this should be stored in folder 1234",
   "mainLibrary": "H5P.Blanks",
@@ -23,12 +22,11 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   ],
   "preloadedDependencies": [],
   "defaultLanguage": ""
-}
-",
+}",
       "metadata.json": "{
-  "is-solution-public": "false"
-}
-",
+  "is_solution_public": false,
+  "attachments": []
+}",
     },
   },
   "private": {
@@ -36,10 +34,9 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
       "1234": {
         "content.json": "{
   "questions": [
-    "<p>This should not appear in the content.json</p>"
+    "<p>This should not appear in the public folder</p>"
   ]
-}
-",
+}",
       },
     },
   },
@@ -51,17 +48,16 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   "interactives": {
     "1": {
       "content.json": "{}",
-      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"something","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
-      "metadata.json": "{"extra":"Something extra","books":["should-not-appear-in-snapshot"]}",
+      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"H5P.Blanks","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
+      "metadata.json": "{"extra":"Something extra"}",
     },
     "12345": {
       "content.json": "{
   "fake": "to make sure it is saved too",
   "questions": [
-    "<p>This should  appear in the content.json</p>"
+    "<p>This should appear in the public folder</p>"
   ]
-}
-",
+}",
       "h5p.json": "{
   "title": "this should be stored in folder 12345",
   "mainLibrary": "H5P.Blanks",
@@ -72,12 +68,11 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   ],
   "preloadedDependencies": [],
   "defaultLanguage": ""
-}
-",
+}",
       "metadata.json": "{
-  "is-solution-public": "true"
-}
-",
+  "is_solution_public": true,
+  "attachments": []
+}",
     },
   },
 }
@@ -87,11 +82,10 @@ exports[`File Content Storage saves content as expected 1`] = `
 {
   "interactives": {
     "1": {
-      "content.json": "{}
-",
+      "content.json": "{}",
       "h5p.json": "{
   "title": "this should be stored in folder 1",
-  "mainLibrary": "something",
+  "mainLibrary": "H5P.Blanks",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -99,73 +93,26 @@ exports[`File Content Storage saves content as expected 1`] = `
   ],
   "preloadedDependencies": [],
   "defaultLanguage": ""
-}
-",
+}",
       "metadata.json": "{
   "extra": "Something extra",
+  "is_solution_public": true,
   "books": [
-    "meta-3"
-  ]
-}
-",
-    },
-    "101": {
-      "content.json": "{
-  "this": "could",
-  "literally": "be",
-  "anything": "because",
-  "it": "is",
-  "very": "loosely",
-  "defined": true
-}
-",
-      "h5p.json": "{
-  "title": "this should be stored in folder 101",
-  "mainLibrary": "something",
-  "language": "U",
-  "license": "",
-  "embedTypes": [
-    "iframe"
+    {
+      "name": "stax-test",
+      "lo": [
+        "1-2-3"
+      ]
+    }
   ],
-  "preloadedDependencies": [],
-  "defaultLanguage": ""
-}
-",
-      "metadata.json": "{
-  "books": [
-    "something"
-  ]
-}
-",
-    },
-    "102": {
-      "content.json": "{}
-",
-      "h5p.json": "{
-  "title": "this should be stored in folder 102",
-  "mainLibrary": "something",
-  "language": "U",
-  "license": "",
-  "embedTypes": [
-    "iframe"
-  ],
-  "preloadedDependencies": [],
-  "defaultLanguage": ""
-}
-",
-      "metadata.json": "{
-  "books": [
-    "meta-2"
-  ]
-}
-",
+  "attachments": []
+}",
     },
     "1234": {
-      "content.json": "{}
-",
+      "content.json": "{}",
       "h5p.json": "{
   "title": "this should be stored in folder 1234",
-  "mainLibrary": "something",
+  "mainLibrary": "H5P.Blanks",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -173,24 +120,54 @@ exports[`File Content Storage saves content as expected 1`] = `
   ],
   "preloadedDependencies": [],
   "defaultLanguage": ""
-}
-",
-      "metadata.json": "{}
-",
+}",
+      "metadata.json": "{
+  "is_solution_public": true,
+  "attachments": []
+}",
     },
     "2": {
-      "content.json": "{}
-",
+      "content.json": "{}",
       "h5p.json": "{
-  "title": "this should be stored in folder 2"
-}
-",
+  "title": "this should be stored in folder 2",
+  "mainLibrary": "H5P.Blanks",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}",
       "metadata.json": "{
-  "books": [
-    "meta-1"
+  "is_solution_public": true,
+  "attachments": []
+}",
+    },
+    "image-test": {
+      "content.json": "{
+  "text": "<p>Fill in the missing words</p>\\n        <p><img src=\\"media/test.png\\"/></p>\\n        "
+}",
+      "h5p.json": "{
+  "title": "default title",
+  "mainLibrary": "H5P.Blanks",
+  "language": "U",
+  "license": "",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedDependencies": [],
+  "defaultLanguage": ""
+}",
+      "media": {
+        "test.png": "<insert contents of images/not-used.png>",
+      },
+      "metadata.json": "{
+  "is_solution_public": true,
+  "attachments": [
+    "media/test.png"
   ]
-}
-",
+}",
     },
   },
 }
