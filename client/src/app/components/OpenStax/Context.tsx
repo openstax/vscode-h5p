@@ -3,7 +3,7 @@ import SingleInput from './SingleInput';
 import { SingleInputProps } from './types';
 import { patternValidationFactory } from './utils';
 
-const moduleIdPattern = /^m\d+#\w.*$/;
+const moduleIdPattern = /^m\d+#[A-Z][A-Z0-9-_]*$/i;
 const placeholder = 'm00000#element-id';
 
 export default function Context(props: SingleInputProps) {
