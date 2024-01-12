@@ -134,6 +134,7 @@ export function adaptToFormModel(
       case SUMMARY_SOLUTION_TYPE:
         formState.summary_solution = inputState;
         break;
+      /* istanbul ignore next (This message is here for informational purposes only) */
       default:
         console.warn(`Unknown solution type: "${solution.solution_type}"`);
     }

@@ -326,7 +326,34 @@ describe('File Content Storage', () => {
     expect(await storage.contentExists(id)).toBe(false);
     expect(fsExtra.existsSync(`${PRIVATE_PATH}/12345`)).toBe(false);
   });
-
+  it('Searches for private and public files', async () => {
+    mockfs({
+      [VIRTUAL_ROOT]: {
+        interactives: {
+          '1': {
+            media: {
+              'b.png': '<contents of b.png>',
+            },
+          },
+        },
+        private: {
+          interactives: {
+            '1': {
+              media: {
+                'a.png': '<contents of a.png>',
+              },
+            },
+          },
+        },
+      },
+    });
+    const storage = createStorageHarness();
+    expect(await storage.getFileStats('1', 'media/a.png')).toBeDefined();
+    expect(await storage.getFileStats('1', 'media/b.png')).toBeDefined();
+    await expect(storage.getFileStats('1', 'media/c.png')).rejects.toThrowError(
+      /content-file-missing/,
+    );
+  });
   it('still works when the contentPath does not exist', async () => {
     mockfs({
       [VIRTUAL_ROOT]: {},

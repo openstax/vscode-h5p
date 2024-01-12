@@ -287,7 +287,7 @@ export default class OSStorage extends H5P.fsImplementations
     }
   }
 
-  override async getFileStats(
+  public override async getFileStats(
     id: string,
     filename: string,
   ): Promise<H5P.IFileStats> {
@@ -302,6 +302,7 @@ export default class OSStorage extends H5P.fsImplementations
     return await fsExtra.stat(realPath);
   }
 
+  /* istanbul ignore next (mock-fs does not support streams) */
   public override async getFileStream(
     id: string,
     filename: string,
