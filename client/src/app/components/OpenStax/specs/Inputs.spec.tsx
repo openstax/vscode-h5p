@@ -8,7 +8,7 @@ import LO from '../LO';
 import React from 'react';
 import AACN from '../AACN';
 import { act } from 'react-dom/test-utils';
-import ModuleID from '../ModuleID';
+import Context from '../Context';
 import APLO from '../APLO';
 import { SingleDropdown } from '../SingleDropdown';
 import { range } from '../../../../../../common/src/utils';
@@ -251,7 +251,7 @@ describe('Inputs', () => {
     });
   });
 
-  describe('ap-lo', () => {
+  describe('aplo', () => {
     it('validates values for stax-apbio', () => {
       testInputSetValidation(
         (state) => <APLO {...state} book={'stax-apbio'} />,
@@ -305,27 +305,6 @@ describe('Inputs', () => {
     });
   });
 
-  describe('module-id', () => {
-    it('validates values', () => {
-      testInputSetValidation(
-        (state) => <ModuleID {...state} />,
-        [
-          [
-            ['m00123', true],
-            ['invalid', false],
-            ['m00123#fs-12345', true],
-            ['m00123#', false],
-          ],
-          [
-            ['invalid', false],
-            ['2', false],
-            ['m00012', true],
-          ],
-        ],
-      );
-    });
-  });
-
   describe('aacn', () => {
     it('validates values', () => {
       testSingleInputValidation(
@@ -336,6 +315,22 @@ describe('Inputs', () => {
           ['1.1a', true],
           ['10.9z', true],
           ['10.10a', false],
+        ],
+      );
+    });
+  });
+
+  describe('context', () => {
+    it('validates values', () => {
+      testSingleInputValidation(
+        (state) => <Context {...state} />,
+        [
+          ['m00123', false],
+          ['invalid', false],
+          ['m00123#fs-12345', true],
+          ['m00123#', false],
+          ['m00123#a', true],
+          ['m00123#12-asd', false],
         ],
       );
     });

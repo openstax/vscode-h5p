@@ -489,15 +489,17 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     const bookInputSetHandlerProps = (book: string, type: keyof BookInputs) => {
       const getIdx = (book: string, idx: number, arr: BookInputState[]) => {
         let idxByBook = 0;
+        let realIdx: number | undefined;
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].book === book) {
             if (idxByBook === idx) {
-              return i;
+              realIdx = i;
+              break;
             }
             idxByBook++;
           }
         }
-        return undefined;
+        return assertValue(realIdx);
       };
       const baseProps = inputSetHandlerProps(type);
       return {
@@ -506,9 +508,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           baseProps.handleAddInput({ ...defaultInputState, book });
         },
         handleRemoveInput: (index: number) => {
-          baseProps.handleRemoveInput(
-            assertValue(getIdx(book, index, this.state[type])),
-          );
+          baseProps.handleRemoveInput(getIdx(book, index, this.state[type]));
         },
         handleInputChange: (
           index: number,
@@ -516,7 +516,7 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
           isValid: boolean = true,
         ) => {
           baseProps.handleInputChange(
-            assertValue(getIdx(book, index, this.state[type])),
+            getIdx(book, index, this.state[type]),
             value,
             isValid,
           );

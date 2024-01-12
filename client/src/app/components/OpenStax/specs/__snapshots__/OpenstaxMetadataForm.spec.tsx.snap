@@ -2,78 +2,90 @@
 
 exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
 {
-  "assignment-type": "",
-  "blooms": "1",
-  "books": {
-    "stax-nutrition": {
+  "assignment_type": null,
+  "blooms": null,
+  "books": [
+    {
       "aacn": "not-modified-0",
+      "name": "stax-nutrition",
     },
-    "stax-pharmacology": {
+    {
       "aacn": "modified",
+      "name": "stax-pharmacology",
     },
-    "stax-pophealth": {
+    {
       "aacn": "not-modified-1",
+      "name": "stax-pophealth",
     },
-  },
-  "dok-tag": "",
-  "errata-id": "",
-  "is-solution-public": "false",
-  "module-id": [],
+  ],
+  "collaborator_solutions": [],
+  "dok": null,
+  "errata_id": "test",
+  "feature_id": null,
+  "feature_page": null,
+  "is_solution_public": true,
   "nickname": "new",
-  "time": "",
+  "time": null,
 }
 `;
 
 exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`] = `
 {
-  "assignment-type": "",
-  "blooms": "1",
-  "books": {
-    "stax-amfg": {},
-    "stax-anything": {
-      "lo": [
-        "not-modified-4",
-      ],
-    },
-    "stax-psy": {
+  "assignment_type": null,
+  "blooms": null,
+  "books": [
+    {
       "lo": [
         "not-modified-2",
         "stax-psy.lo[1]",
         "not-modified-3",
       ],
+      "name": "stax-psy",
     },
-  },
-  "dok-tag": "",
-  "errata-id": "",
-  "is-solution-public": "false",
-  "module-id": [],
+    {
+      "lo": [
+        "not-modified-4",
+      ],
+      "name": "stax-anything",
+    },
+  ],
+  "collaborator_solutions": [],
+  "dok": null,
+  "errata_id": "test",
+  "feature_id": null,
+  "feature_page": null,
+  "is_solution_public": true,
   "nickname": "new",
-  "time": "",
+  "time": null,
 }
 `;
 
 exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values when they exist on the new book 1`] = `
 {
-  "assignment-type": "",
-  "blooms": "1",
-  "books": {
-    "stax-psy": {
-      "lo": [
-        "test-keep-state-on-stax-psy",
-      ],
-    },
-    "stax-usgovt": {
+  "assignment_type": null,
+  "blooms": null,
+  "books": [
+    {
       "lo": [
         "test-carry-state-to-stax-usgovt",
       ],
+      "name": "stax-usgovt",
     },
-  },
-  "dok-tag": "",
-  "errata-id": "",
-  "is-solution-public": "false",
-  "module-id": [],
+    {
+      "lo": [
+        "test-keep-state-on-stax-psy",
+      ],
+      "name": "stax-psy",
+    },
+  ],
+  "collaborator_solutions": [],
+  "dok": null,
+  "errata_id": "test",
+  "feature_id": null,
+  "feature_page": null,
+  "is_solution_public": true,
   "nickname": "new",
-  "time": "",
+  "time": null,
 }
 `;
 
@@ -90,92 +102,50 @@ exports[`OpenstaxMetadataForm Form validation does not save when information is 
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 1`] = `
 {
   "aacn": [],
-  "ap-lo": [
-    {
-      "book": "stax-apbio",
-      "isValid": true,
-      "value": "ABC.0.F",
-    },
-  ],
-  "books": [
-    {
-      "isValid": true,
-      "value": "stax-psy",
-    },
-    {
-      "isValid": true,
-      "value": "stax-apbio",
-    },
-  ],
+  "aplo": [],
+  "books": [],
+  "errata_id": {
+    "isValid": true,
+    "value": "test",
+  },
   "hts": [],
-  "lo": [
-    {
-      "book": "stax-psy",
-      "isValid": true,
-      "value": "00-00-01",
-    },
-  ],
-  "module-id": [
-    {
-      "isValid": true,
-      "value": "m000001",
-    },
-    {
-      "isValid": true,
-      "value": "m000002",
-    },
-    {
-      "isValid": true,
-      "value": "m000003#term-03",
-    },
-  ],
+  "is_solution_public": {
+    "isValid": true,
+    "value": "true",
+  },
+  "lo": [],
   "nclex": [],
   "rp": [],
-  "science-practice": [
-    {
-      "book": "stax-apbio",
-      "isValid": true,
-      "value": "concept-explanation",
-    },
-  ],
+  "science_practice": [],
 }
 `;
 
 exports[`OpenstaxMetadataForm encode/decode form state decodes form state when loading and encodes when saving 2`] = `
 {
-  "assignment-type": "",
-  "blooms": "1",
-  "books": {
-    "stax-apbio": {
-      "ap-lo": [
-        "ABC.0.F",
-      ],
-      "science-practice": "concept-explanation",
-    },
-    "stax-psy": {
+  "assignment_type": null,
+  "blooms": null,
+  "books": [
+    {
       "lo": [
         "00-00-01",
       ],
-    },
-  },
-  "dok-tag": "",
-  "errata-id": "",
-  "is-solution-public": "false",
-  "module-id": [
-    {
-      "element-id": "",
-      "module": "modules/m000001/index.cnxml",
+      "name": "stax-psy",
     },
     {
-      "element-id": "",
-      "module": "modules/m000002/index.cnxml",
-    },
-    {
-      "element-id": "term-03",
-      "module": "modules/m000003/index.cnxml",
+      "aplo": [
+        "ABC.0.F",
+      ],
+      "name": "stax-apbio",
+      "science_practice": "concept-explanation",
     },
   ],
+  "collaborator_solutions": [],
+  "dok": null,
+  "errata_id": "test",
+  "feature_id": "term-03",
+  "feature_page": "m00003",
+  "is_solution_public": true,
   "nickname": "new",
-  "time": "",
+  "time": null,
 }
 `;

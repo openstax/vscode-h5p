@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Metadata Adaptor Adapts form data to network model 1`] = `
+{
+  "assignment_type": null,
+  "blooms": null,
+  "books": [],
+  "collaborator_solutions": [],
+  "dok": null,
+  "errata_id": "fffffff",
+  "feature_id": null,
+  "feature_page": null,
+  "is_solution_public": false,
+  "nickname": "test",
+  "time": null,
+}
+`;
+
+exports[`Metadata Adaptor Saves and loads values for books 1`] = `
+{
+  "attachments": [],
+  "books": [
+    {
+      "lo": [
+        "1-2-3",
+      ],
+      "name": "stax-something",
+    },
+    {
+      "aplo": [
+        "4-5-6",
+      ],
+      "name": "stax-apsomething",
+    },
+  ],
+  "collaborator_solutions": [],
+  "errata_id": "fffffff",
+  "is_solution_public": false,
+}
+`;
+
+exports[`Metadata Adaptor Saves and loads values for collaborator solutions 1`] = `
+{
+  "attachments": [],
+  "books": [],
+  "collaborator_solutions": [
+    {
+      "content": "Detailed",
+      "solution_type": "detailed",
+    },
+    {
+      "content": "Summary",
+      "solution_type": "summary",
+    },
+  ],
+  "errata_id": "fffffff",
+  "is_solution_public": false,
+}
+`;
+
+exports[`Metadata Adaptor saves and loads optional values 1`] = `
+{
+  "assignment_type": "something",
+  "attachments": [],
+  "blooms": "1",
+  "books": [],
+  "collaborator_solutions": [],
+  "dok": "1",
+  "errata_id": "fffffff",
+  "feature_id": "fs-12345",
+  "feature_page": "m12345",
+  "is_solution_public": false,
+  "time": "Short",
+}
+`;
