@@ -3,6 +3,7 @@ import { faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { DropdownOption, InputState } from './types';
 import { SingleDropdown } from './SingleDropdown';
 import SingleInput from './SingleInput';
+import { Label } from './Label';
 
 export type InputSetProps<OptionType extends DropdownOption = DropdownOption> =
   {
@@ -34,10 +35,14 @@ export function InputSet<OptionType extends DropdownOption = DropdownOption>({
       <div className="container">
         <div className="row">
           <div className="col-11">
-            <h3>
-              {title}{' '}
-              <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
-            </h3>
+            <Label
+              content={
+                <>
+                  {title}{' '}
+                  <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+                </>
+              }
+            />
           </div>
           <div className="col-1 pt-2" data-control-type={'input-set-add'}>
             <FontAwesomeIcon

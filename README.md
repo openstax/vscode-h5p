@@ -113,11 +113,10 @@ packaged extension and they are provided under the following license:
       this metadata next to the h5p.json and content.json. H5P spec allows
       inclusion of arbitrary json files, so it would be safe to include this in
       the final h5p file too.
-- [x] Custom content fs implementation that can 'hide' private solutions/hints -
-      Maybe different names (not content id)
+- [x] Custom content fs implementation that can 'hide' private solutions/hints
 - [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of
       downloading them
-- [ ] Use labels for field titles instead of headers
+- [x] Use labels for field titles instead of headers
 - [ ] Cleanup tsconfig files
 - [ ] Add preview for collaborator solution fields (Toggle between edit and
       preview)
@@ -126,6 +125,13 @@ packaged extension and they are provided under the following license:
 - [ ] (Maybe) Configure aliases for "common" in server and client (@common/...)
 - [ ] (Maybe) Support audio and video uploads too
 - [ ] POET integration
+
+## Nice to Haves/Future improvements
+
+- When I click the Save button, it gets a checkmark which then disappears. It is
+  a bit confusing that it is the same green in both states, not saved and saved.
+  It would be nice if the save button looked different when there are unsaved
+  changes vs. no unsaved changes. (Requested by Ottó)
 
 ## Known Issues
 

@@ -35,6 +35,7 @@ import DetailedSolution from './DetailedSolution';
 import { adaptToNetworkModel, adaptToFormModel } from './metadata-adaptor';
 import SummarySolution from './SummarySolution';
 import { randomId } from './utils';
+import { Label } from './Label';
 
 type SingleInputs = {
   nickname: InputState;
@@ -614,7 +615,9 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
                   </div>
                 ))}
                 <div className="row">
-                  <div className="col-12 text-center h3">Books</div>
+                  <div className="col-12 text-center">
+                    <Label content={'Books'} />
+                  </div>
                 </div>
                 {bookHandlerProps.inputs.map((bookState, idx) => {
                   const myBook = bookState.value;
