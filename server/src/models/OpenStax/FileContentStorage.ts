@@ -173,6 +173,38 @@ export default class OSStorage extends H5P.fsImplementations
     );
   }
 
+  private async _handleAttachmentsInContent(
+    id: string,
+    content: unknown,
+    user: H5P.IUser,
+    isPrivate: boolean,
+  ) {
+    const { replaced, attachments } = updateAttachments(content, IMG_DIR);
+    validateContent(content);
+    await this.moveTempFiles(replaced, id, user, isPrivate);
+    await Promise.all(
+      attachments.map(async (attachment) => {
+        const location = assertValue(await this._findFilePath(id, attachment));
+        const locationIsPrivate = location.includes(
+          this.privateContentDirectory,
+        );
+        // if its location does not match its visibility
+        if (isPrivate !== locationIsPrivate) {
+          // copy it
+          await this._addFile(
+            id,
+            attachment,
+            fsExtra.createReadStream(location),
+            isPrivate,
+          );
+          // remove the old one
+          await fsExtra.rm(location);
+        }
+      }),
+    );
+    return attachments;
+  }
+
   public override async addContent(
     metadata: H5P.IContentMetadata,
     content: any,
@@ -188,30 +220,41 @@ export default class OSStorage extends H5P.fsImplementations
     // Content id of 0 causes the player to break
     assertTrue(realId !== '0', 'Content id cannot be 0');
     const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
-    const handleImages = async (content: unknown, isPrivate: boolean) => {
-      const { replaced, attachments } = updateAttachments(content, IMG_DIR);
-      validateContent(content);
-      newOsMeta.attachments.push(...attachments);
-      await this.moveTempFiles(replaced, realId, user, isPrivate);
-    };
     if (!isSolutionPublic(osMeta)) {
       const [sanitized, privateData] = yankAnswers(
         content,
         metadata.mainLibrary,
       );
       // Replace images in private content
-      await handleImages(privateData, true);
+      const privateAttachments = await this._handleAttachmentsInContent(
+        realId,
+        privateData,
+        user,
+        true,
+      );
       await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
       // write sanitized content object to content.json file
-      content = sanitized;
+      const publicAttachments = await this._handleAttachmentsInContent(
+        realId,
+        sanitized,
+        user,
+        false,
+      );
+      await this.writeJSON(realId, CONTENT_NAME, sanitized, false);
+      newOsMeta.attachments = publicAttachments.concat(privateAttachments);
     } else {
+      newOsMeta.attachments = await this._handleAttachmentsInContent(
+        realId,
+        content,
+        user,
+        false,
+      );
+      await this.writeJSON(realId, CONTENT_NAME, content, false);
       await this.deletePrivateContent(realId);
     }
-    // Replace images in pubic content
-    await handleImages(content, false);
+
     await Promise.all([
-      this.writeJSON(realId, CONTENT_NAME, content, false),
       this.writeJSON(realId, H5P_NAME, metadata, false),
       this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
     ]);
