@@ -17,6 +17,20 @@
       "port": 16009,
       "restart": true,
       "outFiles": ["${workspaceRoot}/server/out/**/*.ts"]
-    }
+    },
+    {
+      "name": "TS-Node",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-node",
+      "runtimeArgs": [
+        "--transpile-only",
+        "--esm" 
+      ],
+      "program": "${file}",
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
   ]
 }
