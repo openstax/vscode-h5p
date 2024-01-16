@@ -100,21 +100,35 @@ packaged extension and they are provided under the following license:
 
 ## TODO
 
-- [ ] On save, save h5p.json and content.json to the workspace or specified
-      location (partially done, need configuration options)
-- [ ] Public/private switch (determines if answers are saved outside
+- [x] On save, save h5p.json and content.json to the workspace or specified
+      location
+- [x] Public/private switch (determines if answers are saved outside
       content.json or not)
 - [x] Add command to open the manager
 - [ ] Extension settings
 - [x] Bundle extension to vsix
-- [ ] Add tests
+- [x] Add tests
 - [ ] CI/CD
-- [ ] Support for extra openstax metadata with editor. It should be okay to save
+- [x] Support for extra openstax metadata with editor. It should be okay to save
       this metadata next to the h5p.json and content.json. H5P spec allows
       inclusion of arbitrary json files, so it would be safe to include this in
       the final h5p file too.
-- [ ] Custom content fs implementation that can 'hide' private solutions/hints -
+- [x] Custom content fs implementation that can 'hide' private solutions/hints -
       Maybe different names (not content id)
+- [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of downloading them
+- [ ] Use labels for field titles instead of headers
+- [ ] Cleanup tsconfig files
+- [ ] Add preview for collaborator solution fields (Toggle between edit and preview)
+- [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field directly (Would require selecting field from HTML))
+- [ ] (Maybe) Configure aliases for "common" in server and client (@common/...)
+- [ ] (Maybe) Support audio and video uploads too
+- [ ] POET integration
+
+## Known Issues
+
+- Copy and Paste & Replace H5P content buttons do not work
+- H5P edit image button does not work (Tainted canvases may not be exported)
+
 
 ## Authors
 

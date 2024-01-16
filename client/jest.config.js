@@ -7,4 +7,8 @@ module.exports = {
   coverageDirectory: './coverage/',
   collectCoverage: true,
   coverageReporters: ['json'],
+  collectCoverageFrom: [
+    'src/app/components/OpenStax/**/*.ts',
+    'src/app/components/OpenStax/**/*.tsx'
+  ]
 };

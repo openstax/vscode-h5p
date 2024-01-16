@@ -448,6 +448,7 @@ export class H5PEditorComponent extends HTMLElement {
         }
       }
 
+      // Replace all characters with &<character>
       url += window.location.search.replace(/\\?/g, '&');
       console.log('getAjaxUrl', url);
       return url;
@@ -468,8 +469,6 @@ export class H5PEditorComponent extends HTMLElement {
         this,
       );
     }
-
-    console.log(window.H5P.jQuery);
 
     console.log('Editor Model', editorModel.integration.editor);
     H5PEditor.basePath = editorModel.integration.editor!.libraryUrl;
