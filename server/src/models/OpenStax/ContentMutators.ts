@@ -33,7 +33,7 @@ function isHTMLField(field: ContentField): field is HTMLContentField {
   );
 }
 
-function parseAsHTML(value: string): HTMLContent {
+export function parseAsHTML(value: string): HTMLContent {
   const serializer = new XMLSerializer();
   const document = parseXML(`<root>${value}</root>`);
   return {

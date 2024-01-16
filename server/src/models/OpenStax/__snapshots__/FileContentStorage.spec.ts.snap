@@ -24,6 +24,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
+  "collaborator_solutions": [],
   "is_solution_public": false,
   "attachments": []
 }",
@@ -70,6 +71,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
+  "collaborator_solutions": [],
   "is_solution_public": true,
   "attachments": []
 }",
@@ -96,6 +98,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "metadata.json": "{
   "extra": "Something extra",
+  "collaborator_solutions": [],
   "is_solution_public": true,
   "books": [
     {
@@ -122,6 +125,7 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
+  "collaborator_solutions": [],
   "is_solution_public": true,
   "attachments": []
 }",
@@ -140,6 +144,7 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
+  "collaborator_solutions": [],
   "is_solution_public": true,
   "attachments": []
 }",
@@ -163,9 +168,16 @@ exports[`File Content Storage saves content as expected 1`] = `
         "test.png": "<insert contents of images/not-used.png>",
       },
       "metadata.json": "{
+  "collaborator_solutions": [
+    {
+      "content": "<img src=\\"media/detailed.png\\"/>",
+      "solution_type": "detailed"
+    }
+  ],
   "is_solution_public": true,
   "attachments": [
-    "media/test.png"
+    "media/test.png",
+    "media/detailed.png"
   ]
 }",
     },

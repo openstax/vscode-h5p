@@ -20,6 +20,7 @@ const MOCK_H5P_BASE: IContentMetadata = {
   defaultLanguage: '',
 };
 const MOCK_OSMETA_BASE: Partial<NetworkMetadata> = {
+  collaborator_solutions: [],
   is_solution_public: true,
 };
 
@@ -164,6 +165,28 @@ describe('File Content Storage', () => {
       },
       {} as unknown as IUser,
     );
+
+    // It should include attachments
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        osMeta: {
+          nickname: 'image-test',
+          collaborator_solutions: [
+            {
+              content: '<img src="media/detailed.png"/>',
+              solution_type: 'detailed',
+            },
+          ],
+        },
+        text: `<p>Fill in the missing words</p>
+        <p><img src="media/test.png"/></p>
+        `,
+      },
+      {} as unknown as IUser,
+      'image-test',
+    );
+
     const result = dirToObj(VIRTUAL_ROOT);
     mockfs.restore();
     expect(result).toMatchSnapshot();
