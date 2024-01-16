@@ -354,6 +354,64 @@ describe('File Content Storage', () => {
       /content-file-missing/,
     );
   });
+  it('Moves attachments when visibility changes', async () => {
+    mockfs({
+      [VIRTUAL_ROOT]: {
+        interactives: {
+          '1': {
+            media: {},
+          },
+        },
+        private: {
+          interactives: {
+            '1': {
+              ['content.json']: JSON.stringify({
+                text: '<img src="media/a.png"/>',
+              }),
+              media: {
+                'a.png': '<contents of a.png>',
+              },
+            },
+          },
+        },
+      },
+    });
+    const storage = createStorageHarness();
+    const findFilePath = tryGet(storage, '_findFilePath').bind(storage);
+    const image = 'media/a.png';
+    const id = '1';
+    const content = {
+      questions: [`<img src="${image}"/>`],
+      osMeta: {
+        nickname: id,
+        is_solution_public: false,
+      },
+    };
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      content,
+      {} as unknown as IUser,
+      id,
+    );
+    expect(await findFilePath(id, image)).toMatch(
+      new RegExp(`${VIRTUAL_ROOT}/${CONFIG.privatePath}`),
+    );
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        ...content,
+        osMeta: {
+          ...content.osMeta,
+          is_solution_public: true,
+        },
+      },
+      {} as unknown as IUser,
+      id,
+    );
+    expect(await findFilePath(id, image)).toMatch(
+      new RegExp(`${VIRTUAL_ROOT}/${CONFIG.contentPath}`),
+    );
+  });
   it('still works when the contentPath does not exist', async () => {
     mockfs({
       [VIRTUAL_ROOT]: {},
