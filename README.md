@@ -115,11 +115,14 @@ packaged extension and they are provided under the following license:
       the final h5p file too.
 - [x] Custom content fs implementation that can 'hide' private solutions/hints -
       Maybe different names (not content id)
-- [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of downloading them
+- [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of
+      downloading them
 - [ ] Use labels for field titles instead of headers
 - [ ] Cleanup tsconfig files
-- [ ] Add preview for collaborator solution fields (Toggle between edit and preview)
-- [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field directly (Would require selecting field from HTML))
+- [ ] Add preview for collaborator solution fields (Toggle between edit and
+      preview)
+- [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field
+      directly (Would require selecting field from HTML))
 - [ ] (Maybe) Configure aliases for "common" in server and client (@common/...)
 - [ ] (Maybe) Support audio and video uploads too
 - [ ] POET integration
@@ -128,7 +131,6 @@ packaged extension and they are provided under the following license:
 
 - Copy and Paste & Replace H5P content buttons do not work
 - H5P edit image button does not work (Tainted canvases may not be exported)
-
 
 ## Authors
 
