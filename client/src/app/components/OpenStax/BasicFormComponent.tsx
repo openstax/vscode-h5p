@@ -1,3 +1,5 @@
+import { Label } from './Label';
+
 export default function BasicFormComponent({
   title,
   content,
@@ -12,12 +14,16 @@ export default function BasicFormComponent({
       <div className="container">
         <div className="row">
           <div>
-            <h3>
-              {title}{' '}
-              <span style={{ color: 'red' }}>
-                {required ?? false ? '*' : ''}
-              </span>
-            </h3>
+            <Label
+              content={
+                <>
+                  {title}{' '}
+                  <span style={{ color: 'red' }}>
+                    {required ?? false ? '*' : ''}
+                  </span>
+                </>
+              }
+            />
           </div>
         </div>
         <div className="row">{content}</div>

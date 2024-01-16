@@ -215,7 +215,9 @@ describe('OpenstaxMetadataForm', () => {
         Array.from(container.querySelectorAll(SEL_BOOK))[
           bookIdx
         ]?.querySelectorAll('.container') ?? [],
-      ).find((el) => el.querySelector('h3')?.textContent?.indexOf(name) === 0);
+      ).find(
+        (el) => el.querySelector('label')?.textContent?.indexOf(name) === 0,
+      );
       return el === undefined ? undefined : (el as HTMLElement);
     };
     [-1, 1].forEach((inc) => {
