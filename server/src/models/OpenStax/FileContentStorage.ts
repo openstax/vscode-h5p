@@ -7,7 +7,7 @@ import {
   CanonicalMetadata,
   NetworkMetadata,
 } from '../../../../common/src/types';
-import { iterContent, iterHTML } from './ContentMutators';
+import { iterContent, iterHTML, parseAsHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
 
@@ -54,6 +54,12 @@ function toTempName(pathname: string) {
   return pathname.slice(tempPathIdx + tempPath.length);
 }
 
+function getImageAttachments(images: Element[]) {
+  return images
+    .map((img) => img.getAttribute('src')?.trim())
+    .filter((src): src is string => src != null && src !== '');
+}
+
 function updateAttachments(content: unknown, pathPrefix: string) {
   const replaced: Array<{ tmpName: string; newName: string }> = [];
   const attachments: string[] = [];
@@ -71,11 +77,7 @@ function updateAttachments(content: unknown, pathPrefix: string) {
         img.setAttribute('src', newName);
       }
     });
-    attachments.push(
-      ...images
-        .map((img) => img.getAttribute('src'))
-        .filter((src): src is string => src != null),
-    );
+    attachments.push(...getImageAttachments(images));
   });
   return { replaced, attachments };
 }
@@ -242,17 +244,28 @@ export default class OSStorage extends H5P.fsImplementations
         false,
       );
       await this.writeJSON(realId, CONTENT_NAME, sanitized, false);
-      newOsMeta.attachments = publicAttachments.concat(privateAttachments);
+      newOsMeta.attachments.push(...publicAttachments);
+      newOsMeta.attachments.push(...privateAttachments);
     } else {
-      newOsMeta.attachments = await this._handleAttachmentsInContent(
-        realId,
-        content,
-        user,
-        false,
+      newOsMeta.attachments.push(
+        ...(await this._handleAttachmentsInContent(
+          realId,
+          content,
+          user,
+          false,
+        )),
       );
       await this.writeJSON(realId, CONTENT_NAME, content, false);
       await this.deletePrivateContent(realId);
     }
+
+    // Add attachments from collaborator_solutions
+    newOsMeta.collaborator_solutions.forEach((solution) => {
+      const doc = parseAsHTML(solution.content);
+      newOsMeta.attachments.push(
+        ...getImageAttachments(doc.xpath<Element>('//img[@src]')),
+      );
+    });
 
     await Promise.all([
       this.writeJSON(realId, H5P_NAME, metadata, false),
