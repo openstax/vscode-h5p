@@ -5,7 +5,7 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - command: code --install-extension ./vscode-h5p-0.0.13.vsix
+  - command: code --install-extension ./vscode-h5p-0.0.14.vsix
 ports:
   - port: 27149
     visibility: public
