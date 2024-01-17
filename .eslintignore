@@ -7,3 +7,4 @@ server/ckeditor-plugins/**
 **jest.config.js
 **jest-*.js
 **vite.config.js
+h5p-php
