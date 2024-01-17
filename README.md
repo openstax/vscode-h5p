@@ -132,6 +132,9 @@ packaged extension and they are provided under the following license:
   a bit confusing that it is the same green in both states, not saved and saved.
   It would be nice if the save button looked different when there are unsaved
   changes vs. no unsaved changes. (Requested by Ottó)
+- When there is a save error, the save button turns red but it automatically
+  resets after a set duration. If the Save button remains red until error is
+  fixed, I think it is a perfect behaviour. (Requested by Ottó)
 
 ## Known Issues
 

@@ -21,6 +21,7 @@ import {
   faFileDownload,
   faTrashAlt,
   faCopyright,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import H5PPlayerUI from './H5PPlayerUI';
@@ -156,7 +157,7 @@ export default class ContentListEntryComponent extends React.Component<{
                 </Overlay>
                 <Button
                   ref={this.saveButton}
-                  variant="primary"
+                  variant={this.state.saveError ? 'danger' : 'primary'}
                   className={
                     this.state.saving || this.state.loading ? 'disabled' : ''
                   }
@@ -174,6 +175,12 @@ export default class ContentListEntryComponent extends React.Component<{
                   save{' '}
                   {this.state.saved ? (
                     <FontAwesomeIcon icon={faCheck} className="me-2" />
+                  ) : undefined}
+                  {this.state.saveError ? (
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="me-2"
+                    />
                   ) : undefined}
                 </Button>
               </Col>
