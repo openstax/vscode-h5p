@@ -9,6 +9,8 @@ import {
   shallowMerge,
   trueFalseYanker,
 } from './AnswerYankers';
+import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
+import { assertValue } from '../../../../common/src/utils';
 
 type SupportedLibrary = {
   yankAnswers: Yanker;
@@ -16,7 +18,7 @@ type SupportedLibrary = {
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     supportsHTML?: boolean;
-    overrides?: Record<string, Record<string, any>>;
+    override?: (target: ISemanticsEntry, p: string | symbol) => any;
   };
 };
 
@@ -48,12 +50,18 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
-          overrides: {
-            behaviour: {
-              caseSensitive: {
-                default: false,
-              },
-            },
+          override(target, p) {
+            const value = Reflect.get(target, p);
+            if (target.name === 'behaviour' && p === 'fields') {
+              const caseSensitive = assertValue(
+                value.find(
+                  (field: ISemanticsEntry) => field.name === 'caseSensitive',
+                ),
+                'Could not find caseSensitive semantic entry',
+              );
+              caseSensitive.default = false;
+            }
+            return value;
           },
         },
       },
@@ -62,12 +70,18 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
-          overrides: {
-            behaviour: {
-              randomAnswers: {
-                default: false,
-              },
-            },
+          override(target, p) {
+            const value = Reflect.get(target, p);
+            if (target.name === 'behaviour' && p === 'fields') {
+              const randomAnswers = assertValue(
+                value.find(
+                  (field: ISemanticsEntry) => field.name === 'randomAnswers',
+                ),
+                'Could not find randomAnswers semantic entry',
+              );
+              randomAnswers.default = false;
+            }
+            return value;
           },
         },
       },
@@ -75,16 +89,24 @@ export default class Config {
         yankAnswers: questionSetYanker,
         unyankAnswers: questionSetMerge,
         semantics: {
-          overrides: {
-            randomQuestions: {
-              default: false,
-            },
+          override(target, p) {
+            const value = Reflect.get(target, p);
+            if (target.name === 'questions' && p === 'field') {
+              const pattern = /^H5P\.(MultiChoice|Blanks|TrueFalse)/;
+              value.options = value.options.filter(pattern.test.bind(pattern));
+            } else if (target.name === 'randomQuestions' && p === 'default') {
+              return false;
+            }
+            return value;
           },
         },
       },
       'H5P.TrueFalse': {
         yankAnswers: trueFalseYanker,
         unyankAnswers: shallowMerge,
+        semantics: {
+          supportsHTML: true,
+        },
       },
     };
 

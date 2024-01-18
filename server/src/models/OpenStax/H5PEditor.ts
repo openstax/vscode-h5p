@@ -139,28 +139,11 @@ export const alterLibrarySemantics = (
   if (semanticMods?.supportsHTML === true) {
     semanticsCopy = addTags(semanticsCopy, _supportedTags);
   }
-  const overridesForLib = semanticMods?.overrides;
+  const overridesForLib = semanticMods?.override;
   if (overridesForLib !== undefined) {
-    Object.entries(overridesForLib).forEach(([key, overrides]) => {
-      const propertyIdx = semanticsCopy.findIndex((s) => s.name === key);
-      if (propertyIdx !== -1) {
-        const original = assertValue(semanticsCopy[propertyIdx]);
-        if (original.fields) {
-          semanticsCopy[propertyIdx] = {
-            ...original,
-            fields: original.fields.map((f) => ({
-              ...f,
-              ...overrides[f.name],
-            })),
-          };
-        } else {
-          semanticsCopy[propertyIdx] = {
-            ...original,
-            ...overrides,
-          };
-        }
-      }
-    });
+    semanticsCopy = semanticsCopy.map((s) => ({
+      ...new Proxy(JSON.parse(JSON.stringify(s)), { get: overridesForLib }),
+    }));
   }
   return semanticsCopy;
 };
