@@ -47,6 +47,27 @@ will open a new VSCode window with the extension running. Clinking on a
 - Libraries are saved in an append-only tar file
   (`server/out/h5p-libraries.tar.gz`).
 
+## Adding CKEditor plugins
+
+Plugins are included in the h5p-server archive named
+[h5pServerArchiveName](./server/src/models/OpenStax/config.ts) which is created
+by the [postbuild](./server/scripts/postbuild.ts) script.
+
+To add a plugin, there are several steps:
+
+1. Include the plugin repository as a git submodule inside
+   `server/ckeditor-plugins`
+1. Add the plugin path to the `pluginPaths` in
+   [postbuild](./server/scripts/postbuild.ts)
+1. Add a step in the
+   [addons.js editor plugin](./server/static/editor-plugins/addons.js) that adds
+   the plugin to ckeditor config
+1. Run `npm run build` in the repository root. This will, among other things,
+   update the `addons.js` that is served by the H5P server and copy your new
+   plugin into the archive that is extracted when the H5P server starts.
+1. If all went well, you should see you plugin in the list of plugins included
+   when you build the extension, ex: `Including ckeditor plugin "insertpre"`
+
 ## H5P Library Licenses
 
 [H5P.Blanks](https://github.com/h5p/h5p-blanks),
@@ -79,27 +100,52 @@ packaged extension and they are provided under the following license:
 
 ## TODO
 
-- [ ] On save, save h5p.json and content.json to the workspace or specified
-      location (partially done, need configuration options)
-- [ ] Public/private switch (determines if answers are saved outside
+- [x] On save, save h5p.json and content.json to the workspace or specified
+      location
+- [x] Public/private switch (determines if answers are saved outside
       content.json or not)
 - [x] Add command to open the manager
 - [ ] Extension settings
 - [x] Bundle extension to vsix
-- [ ] Add tests
+- [x] Add tests
 - [ ] CI/CD
-- [ ] Support for extra openstax metadata with editor. It should be okay to save
+- [x] Support for extra openstax metadata with editor. It should be okay to save
       this metadata next to the h5p.json and content.json. H5P spec allows
       inclusion of arbitrary json files, so it would be safe to include this in
       the final h5p file too.
-- [ ] Custom content fs implementation that can 'hide' private solutions/hints -
-      Maybe different names (not content id)
+- [x] Custom content fs implementation that can 'hide' private solutions/hints
+- [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of
+      downloading them
+- [x] Use labels for field titles instead of headers
+- [ ] Cleanup tsconfig files
+- [ ] Add preview for collaborator solution fields (Toggle between edit and
+      preview)
+- [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field
+      directly (Would require selecting field from HTML))
+- [ ] (Maybe) Configure aliases for "common" in server and client (@common/...)
+- [ ] (Maybe) Support audio and video uploads too
+- [ ] POET integration
+
+## Nice to Haves/Future improvements
+
+- When I click the Save button, it gets a checkmark which then disappears. It is
+  a bit confusing that it is the same green in both states, not saved and saved.
+  It would be nice if the save button looked different when there are unsaved
+  changes vs. no unsaved changes. (Requested by Ottó)
+- When there is a save error, the save button turns red but it automatically
+  resets after a set duration. If the Save button remains red until error is
+  fixed, I think it is a perfect behaviour. (Requested by Ottó)
+
+## Known Issues
+
+- Copy and Paste & Replace H5P content buttons do not work
+- H5P edit image button does not work (Tainted canvases may not be exported)
 
 ## Authors
 
 - [OpenStax CE-BE](https://github.com/openstax)
-  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
   - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
+  - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
   - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
 
 ## What we still need to know
