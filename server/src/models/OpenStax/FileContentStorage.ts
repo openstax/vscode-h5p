@@ -186,7 +186,10 @@ export default class OSStorage extends H5P.fsImplementations
     await this.moveTempFiles(replaced, id, user, isPrivate);
     await Promise.all(
       attachments.map(async (attachment) => {
-        const location = assertValue(await this._findFilePath(id, attachment));
+        const location = assertValue(
+          await this._findFilePath(id, attachment),
+          `Could not find image: ${attachment}`,
+        );
         const locationIsPrivate = location.includes(
           this.privateContentDirectory,
         );
@@ -214,7 +217,12 @@ export default class OSStorage extends H5P.fsImplementations
     id?: string | undefined,
   ): Promise<string> {
     const osMeta: NetworkMetadata = content.osMeta;
-    const realId = id ?? assertValue<string>(osMeta.nickname?.trim());
+    const realId =
+      id ??
+      assertValue<string>(
+        osMeta.nickname?.trim(),
+        'Missing value for nickname',
+      );
     delete content.osMeta;
     if (realId !== id) {
       assertTrue(!(await this.contentExists(realId)), `Duplicate id ${realId}`);
