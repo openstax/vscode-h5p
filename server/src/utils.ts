@@ -112,7 +112,7 @@ export async function extractArchive(
 
 export class ParseError extends Error {}
 
-export function parseXML(xmlString: string) {
+export function parseToDOM(xmlString: string, mimeType = 'application/xml') {
   const locator = { lineNumber: 0, columnNumber: 0 };
   /* istanbul ignore next */
   const cb = () => {
@@ -130,7 +130,7 @@ export function parseXML(xmlString: string) {
       fatalError: cb,
     },
   });
-  const doc = p.parseFromString(xmlString);
+  const doc = p.parseFromString(xmlString, mimeType);
   return doc;
 }
 
@@ -141,7 +141,7 @@ export function parseBooksXML(booksXmlPath: string): {
   privateRoot: string;
   publicRoot: string;
 } {
-  const doc = parseXML(fs.readFileSync(booksXmlPath, 'utf-8'));
+  const doc = parseToDOM(fs.readFileSync(booksXmlPath, 'utf-8'));
   const select = xpath.useNamespaces({
     bk: 'https://openstax.org/namespaces/book-container',
   });
