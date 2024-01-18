@@ -65,21 +65,23 @@ describe('H5PEditor', () => {
           [fakeLib.machineName]: {
             semantics: {
               supportsHTML: true,
-              overrides: {
-                behaviour: {
-                  enableRetry: {
-                    default:
-                      'This value should appear in the snapshot for enableRetry',
-                  },
-                  otherValueThatIsEdited: {
-                    default:
-                      'This value should appear in the snapshot for otherValueThatIsEdited',
-                  },
-                },
-                rootLevelProperty: {
-                  default:
-                    'This value should appear in the snapshot for rootLevelProperty',
-                },
+              override(target: ISemanticsEntry, p: string | symbol) {
+                const value = Reflect.get(target, p);
+                if (target.name === 'behaviour' && p === 'fields') {
+                  value.find(
+                    (field: ISemanticsEntry) => field.name === 'enableRetry',
+                  ).default =
+                    'This value should appear in the snapshot for enableRetry';
+                  value.find(
+                    (field: ISemanticsEntry) =>
+                      field.name === 'otherValueThatIsEdited',
+                  ).default =
+                    'This value should appear in the snapshot for otherValueThatIsEdited';
+                } else if (target.name === 'rootLevelProperty') {
+                  target.default =
+                    'This value should appear in the snapshot for rootLevelProperty';
+                }
+                return value;
               },
             },
           },
