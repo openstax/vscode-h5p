@@ -38,6 +38,15 @@
 								'data-filename',
 								filename,
 							);
+							img.$.onload = function () {
+								const aspectRatio = this.naturalWidth / this.naturalHeight;
+								const width = 300;
+								const height = Math.round(width / aspectRatio);
+								this.setAttribute(
+									'style',
+									`width: ${width}px; height: ${height}px;`,
+								)
+							}
 							editor.insertElement(img);
 						})();
 						promise
