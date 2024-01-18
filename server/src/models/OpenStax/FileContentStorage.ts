@@ -64,7 +64,7 @@ function updateAttachments(content: unknown, pathPrefix: string) {
   const replaced: Array<{ tmpName: string; newName: string }> = [];
   const attachments: string[] = [];
   iterHTML(content, ({ document }) => {
-    const images = document.xpath<Element>('//img[@src]');
+    const images = document.xpath<Element>('//h:img[@src]');
     images.forEach((img) => {
       const src = img.getAttribute('src');
       if (src?.endsWith('#tmp') === true) {
@@ -271,7 +271,7 @@ export default class OSStorage extends H5P.fsImplementations
     newOsMeta.collaborator_solutions.forEach((solution) => {
       const doc = parseAsHTML(solution.content);
       newOsMeta.attachments.push(
-        ...getImageAttachments(doc.xpath<Element>('//img[@src]')),
+        ...getImageAttachments(doc.xpath<Element>('//h:img[@src]')),
       );
     });
 

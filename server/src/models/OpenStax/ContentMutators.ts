@@ -1,4 +1,4 @@
-import { parseXML } from '../../utils';
+import { parseToDOM } from '../../utils';
 import * as xpath from 'xpath-ts';
 import { XMLSerializer } from '@xmldom/xmldom';
 
@@ -18,7 +18,7 @@ interface HTMLContentField extends ContentField {
 
 export interface HTMLContent {
   document: Document;
-  xpath: <T>(query: string) => T[];
+  xpath: <T>(query: string, nsmap?: Record<string, string>) => T[];
   serialize: () => string;
 }
 
@@ -36,14 +36,19 @@ function isHTMLField(field: ContentField): field is HTMLContentField {
 
 export function parseAsHTML(value: string): HTMLContent {
   const serializer = new XMLSerializer();
-  const document = parseXML(`<root>${value}</root>`);
+  const document = parseToDOM(`<root>${value}</root>`, 'text/html');
   return {
     document,
-    xpath<T>(query: string): T[] {
-      return xpath.select(query, this.document) as T[];
+    xpath<T>(query: string, nsmap?: Record<string, string>): T[] {
+      return xpath.useNamespaces({
+        h: 'http://www.w3.org/1999/xhtml',
+        ...nsmap,
+      })(query, this.document) as T[];
     },
     serialize() {
-      return serializer.serializeToString(this.document).slice(6, -7);
+      const serialized = serializer.serializeToString(this.document);
+      // Slice off <root...> and </root>
+      return serialized.slice(serialized.indexOf('>') + 1, -7);
     },
   };
 }
