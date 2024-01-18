@@ -29,6 +29,7 @@ function isHTMLField(field: ContentField): field is HTMLContentField {
   return (
     name === 'text' ||
     name === 'question' ||
+    name === 'tip' ||
     (parentName === 'questions' && Array.isArray(parent))
   );
 }
