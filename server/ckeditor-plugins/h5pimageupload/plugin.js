@@ -38,7 +38,7 @@
 								'data-filename',
 								filename,
 							);
-							img.$.onload = function () {
+							function setDefaultSize() {
 								const aspectRatio = this.naturalWidth / this.naturalHeight;
 								const width = 300;
 								const height = Math.round(width / aspectRatio);
@@ -46,7 +46,9 @@
 									'style',
 									`width: ${width}px; height: ${height}px;`,
 								)
+								this.removeEventListener('load', setDefaultSize);
 							}
+							img.$.addEventListener('load', setDefaultSize);
 							editor.insertElement(img);
 						})();
 						promise
