@@ -265,7 +265,10 @@ export default class ContentListEntryComponent extends React.Component<{
               saveContentCallback={async (contentId, requestBody) => {
                 requestBody.params.params.osMeta =
                   this.openstaxForm.current?.encodedValues;
-                return this.props.contentService.save(contentId, requestBody);
+                return await this.props.contentService.save(
+                  contentId,
+                  requestBody,
+                );
               }}
               onSaved={this.onSaved}
               onLoaded={this.onEditorLoaded}
