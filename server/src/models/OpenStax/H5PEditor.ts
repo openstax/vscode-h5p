@@ -7,7 +7,8 @@ import {
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
 import Config from './config';
-import { assertValue, unwrap } from '../../../../common/src/utils';
+import { assertValue } from '../../../../common/src/utils';
+import { walkJSON } from './ContentMutators';
 
 const _supportedLibraryNames = Object.keys(Config.supportedLibraries);
 
@@ -112,39 +113,39 @@ const _supportedTags = [
   'html', // This tag is what activates the editor plugin (addons.js)
 ];
 
+type Mutator = (entry: ISemanticsEntry, fqPath: string[]) => void;
+
+function _isSemanticsEntry(obj: unknown): obj is ISemanticsEntry {
+  return obj != null && Object.hasOwn(obj, 'type');
+}
+
+function _addTags(entry: ISemanticsEntry) {
+  if (entry.type === 'text' && entry.widget === 'html') {
+    entry.tags = (entry.tags ?? []).concat(_supportedTags);
+  }
+}
+
 export const alterLibrarySemantics = (
   library: H5P.LibraryName,
   semantics: ISemanticsEntry[],
-  config = Config,
 ) => {
-  const addTags = (semantics: ISemanticsEntry[], tags: string[]) => {
-    return semantics.map((s) => {
-      const copy = { ...s };
-      let ptr = copy;
-      while (ptr.type === 'list') {
-        ptr.field = { ...unwrap(ptr.field) };
-        ptr = ptr.field;
-      }
-      if (ptr.type === 'group') {
-        ptr.fields = addTags(unwrap(ptr.fields), tags);
-      } else if (ptr.type === 'text' && ptr.widget === 'html') {
-        ptr.tags = (ptr.tags ?? []).concat(tags);
-      }
-      return copy;
-    });
-  };
-  let semanticsCopy = [...semantics];
+  const mutations: Mutator[] = [];
+  const semanticsCopy = JSON.parse(JSON.stringify(semantics));
   const semanticMods =
-    config.supportedLibraries[library.machineName]?.semantics;
+    Config.supportedLibraries[library.machineName]?.semantics;
+  const overrideForLib = semanticMods?.override;
   if (semanticMods?.supportsHTML === true) {
-    semanticsCopy = addTags(semanticsCopy, _supportedTags);
+    mutations.push(_addTags);
   }
-  const overridesForLib = semanticMods?.override;
-  if (overridesForLib !== undefined) {
-    semanticsCopy = semanticsCopy.map((s) => ({
-      ...new Proxy(JSON.parse(JSON.stringify(s)), { get: overridesForLib }),
-    }));
+  if (overrideForLib !== undefined) {
+    mutations.push(overrideForLib);
   }
+  walkJSON(semanticsCopy, (field) => {
+    const { type, value, fqPath } = field;
+    if (type === 'object' && _isSemanticsEntry(value)) {
+      mutations.forEach((mut) => mut(value, fqPath));
+    }
+  });
   return semanticsCopy;
 };
 

@@ -7,7 +7,7 @@ import {
   CanonicalMetadata,
   NetworkMetadata,
 } from '../../../../common/src/types';
-import { iterContent, iterHTML, parseAsHTML } from './ContentMutators';
+import { walkJSON, iterHTML, parseAsHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
 
@@ -84,7 +84,7 @@ function updateAttachments(content: unknown, pathPrefix: string) {
 
 function validateContent(content: unknown) {
   const tmpPathPattern = /src="[^"]+?#tmp"/;
-  iterContent(content, (field) => {
+  walkJSON(content, (field) => {
     if (typeof field.value === 'string') {
       assertTrue(
         !tmpPathPattern.test(field.value),

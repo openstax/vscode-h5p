@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as H5P from '@lumieducation/h5p-server';
 import {
   IHubContentTypeWithLocalInfo,
@@ -8,93 +9,114 @@ import Config from './config';
 
 describe('H5PEditor', () => {
   describe('alterLibrarySemantics', () => {
-    // https://docs.lumi.education/advanced-usage/customization#changing-the-semantics-of-individual-libraries
-    // (Note: This function should be immutable...)
-    it('does not mutate semantics', () => {
-      const fakeLib: H5P.LibraryName = {
-        machineName: 'Test',
-        majorVersion: 0,
-        minorVersion: 0,
-      };
-      const fakeSemantics: ISemanticsEntry[] = [
+    const fakeLib: H5P.LibraryName = {
+      machineName: 'Test',
+      majorVersion: 0,
+      minorVersion: 0,
+    };
+    const fakeSemantics: ISemanticsEntry[] = [
+      {
+        name: 'notmodified',
+        type: 'group',
+        default: 'default',
+      },
+    ];
+    const semanticsWithBehavior = (behavior: ISemanticsEntry[]) => {
+      return fakeSemantics.concat([
         {
           name: 'behaviour',
           type: 'group',
-          fields: [
-            {
-              type: 'text',
-              name: 'enableRetry',
-              default: 'default',
-            },
-            {
-              type: 'text',
-              name: 'notEdited',
-              default: 'default',
-            },
-            {
-              type: 'text',
-              name: 'otherValueThatIsEdited',
-              default: 'default',
-            },
-          ],
+          label: 'Behavioural settings',
+          importance: 'low',
+          description:
+            'These options will let you control how the task behaves.',
+          optional: true,
+          fields: behavior,
         },
-        {
-          type: 'text',
-          name: 'rootLevelProperty',
-          default: 'default',
+      ]);
+    };
+
+    const blanksSemantics = semanticsWithBehavior([
+      {
+        type: 'boolean',
+        name: 'caseSensitive',
+        default: 'default',
+      },
+    ]);
+    const multiChoiceSemantics = semanticsWithBehavior([
+      {
+        type: 'text',
+        name: 'randomAnswers',
+        default: 'default',
+      },
+    ]);
+    const questionSetSemantics = fakeSemantics.concat([
+      {
+        type: 'text',
+        name: 'questions',
+        field: {
+          name: 'question',
+          type: 'library',
+          options: ['H5P.MultiChoice 1.16', 'to be filtered out'],
         },
-        {
-          name: '',
-          type: 'group',
-          fields: [
-            {
-              name: '',
-              type: 'list',
-              field: {
-                type: 'text',
-                widget: 'html',
-                name: '',
-                tags: [],
-              },
-            },
-          ],
-        },
-      ];
-      const fakeConfig = {
-        supportedLibraries: {
-          [fakeLib.machineName]: {
-            semantics: {
-              supportsHTML: true,
-              override(target: ISemanticsEntry, p: string | symbol) {
-                const value = Reflect.get(target, p);
-                if (target.name === 'behaviour' && p === 'fields') {
-                  value.find(
-                    (field: ISemanticsEntry) => field.name === 'enableRetry',
-                  ).default =
-                    'This value should appear in the snapshot for enableRetry';
-                  value.find(
-                    (field: ISemanticsEntry) =>
-                      field.name === 'otherValueThatIsEdited',
-                  ).default =
-                    'This value should appear in the snapshot for otherValueThatIsEdited';
-                } else if (target.name === 'rootLevelProperty') {
-                  target.default =
-                    'This value should appear in the snapshot for rootLevelProperty';
-                }
-                return value;
-              },
-            },
-          },
-        },
-      } as unknown as typeof Config;
-      const serialized = JSON.stringify(fakeSemantics);
-      const altered = alterLibrarySemantics(fakeLib, fakeSemantics, fakeConfig);
-      expect(altered).toMatchSnapshot();
-      // Does not modify the original
-      expect(JSON.stringify(fakeSemantics)).toBe(serialized);
-      // Does modify the clone
-      expect(JSON.stringify(altered)).not.toBe(serialized);
+      },
+      {
+        type: 'boolean',
+        name: 'randomQuestions',
+        default: 'default',
+      },
+    ]);
+    const pairs: Array<[H5P.LibraryName, ISemanticsEntry[]]> = [
+      [{ ...fakeLib, machineName: 'H5P.Blanks' }, blanksSemantics],
+      [{ ...fakeLib, machineName: 'H5P.MultiChoice' }, multiChoiceSemantics],
+      [{ ...fakeLib, machineName: 'H5P.QuestionSet' }, questionSetSemantics],
+    ];
+    // https://docs.lumi.education/advanced-usage/customization#changing-the-semantics-of-individual-libraries
+    // (Note: This function should be immutable...)
+    pairs.forEach(([fakeLib, fakeSemantics]) => {
+      it(`does not mutate semantics and alters the correct values (${fakeLib.machineName})`, () => {
+        const serialized = JSON.stringify(fakeSemantics);
+        const altered = alterLibrarySemantics(fakeLib, fakeSemantics);
+        expect(altered).toMatchSnapshot();
+        // Does not modify the original
+        expect(JSON.stringify(fakeSemantics)).toBe(serialized);
+        // Does modify the clone
+        expect(JSON.stringify(altered)).not.toBe(serialized);
+      });
     });
+    const libWithHTML = Object.entries(Config.supportedLibraries)
+      .filter((t) => t[1].semantics?.supportsHTML === true)
+      .map((t) => t[0])[0];
+    if (libWithHTML !== undefined) {
+      it('adds tags', () => {
+        const semanticsWithTags = blanksSemantics.concat([
+          {
+            name: 'tagParent',
+            type: 'group',
+            fields: [
+              {
+                name: '',
+                type: 'list',
+                field: {
+                  type: 'text',
+                  widget: 'html',
+                  name: '',
+                  tags: [],
+                },
+              },
+            ],
+          },
+        ]);
+        const altered = alterLibrarySemantics(
+          { ...fakeLib, machineName: libWithHTML },
+          semanticsWithTags,
+        );
+        expect(
+          altered.find((o: ISemanticsEntry) => o.name === 'tagParent').fields[0]
+            .field.tags.length,
+        ).toBeGreaterThan(0);
+      });
+    }
   });
   describe('H5PEditor class', () => {
     it('is created with the correct values', async () => {

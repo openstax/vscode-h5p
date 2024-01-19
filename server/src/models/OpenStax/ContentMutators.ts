@@ -45,7 +45,7 @@ export function parseAsHTML(value: string): HTMLContent {
   };
 }
 
-export function iterContent(
+export function walkJSON(
   content: unknown,
   handler: (field: ContentField) => void,
 ) {
@@ -85,7 +85,7 @@ export function iterHTML(
     document: HTMLContent;
   }) => void,
 ) {
-  iterContent(content, (field) => {
+  walkJSON(content, (field) => {
     if (isHTMLField(field) && field.parent !== undefined) {
       const document = parseAsHTML(field.value);
       handler({ fieldName: field.name, fqPath: field.fqPath, document });
