@@ -18,7 +18,7 @@ type SupportedLibrary = {
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     supportsHTML?: boolean;
-    override?: (target: ISemanticsEntry, p: string | symbol) => any;
+    override?: (target: ISemanticsEntry) => void;
   };
 };
 
@@ -50,18 +50,17 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
-          override(target, p) {
-            const value = Reflect.get(target, p);
-            if (target.name === 'behaviour' && p === 'fields') {
+          override(entry) {
+            if (entry.name === 'behaviour') {
+              const fields = entry.fields ?? (entry.fields = []);
               const caseSensitive = assertValue(
-                value.find(
+                fields.find(
                   (field: ISemanticsEntry) => field.name === 'caseSensitive',
                 ),
                 'Could not find caseSensitive semantic entry',
               );
-              caseSensitive.default = false;
+              caseSensitive.default = false as unknown as string;
             }
-            return value;
           },
         },
       },
@@ -70,18 +69,17 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
-          override(target, p) {
-            const value = Reflect.get(target, p);
-            if (target.name === 'behaviour' && p === 'fields') {
+          override(entry) {
+            if (entry.name === 'behaviour') {
+              const fields = entry.fields ?? (entry.fields = []);
               const randomAnswers = assertValue(
-                value.find(
+                fields.find(
                   (field: ISemanticsEntry) => field.name === 'randomAnswers',
                 ),
                 'Could not find randomAnswers semantic entry',
               );
-              randomAnswers.default = false;
+              randomAnswers.default = false as unknown as string;
             }
-            return value;
           },
         },
       },
@@ -89,15 +87,23 @@ export default class Config {
         yankAnswers: questionSetYanker,
         unyankAnswers: questionSetMerge,
         semantics: {
-          override(target, p) {
-            const value = Reflect.get(target, p);
-            if (target.name === 'questions' && p === 'field') {
-              const pattern = /^H5P\.(MultiChoice|Blanks|TrueFalse)/;
-              value.options = value.options.filter(pattern.test.bind(pattern));
-            } else if (target.name === 'randomQuestions' && p === 'default') {
-              return false;
+          override(entry) {
+            if (entry.name === 'questions') {
+              const field = assertValue(
+                entry.field,
+                'Could not get questions.field',
+              );
+              const options = assertValue(
+                field.options,
+                'Could not get questions.field.options',
+              );
+              const pattern = new RegExp(
+                `^(${Object.keys(Config.supportedLibraries).join('|')})`,
+              );
+              field.options = options.filter(pattern.test.bind(pattern));
+            } else if (entry.name === 'randomQuestions') {
+              entry.default = false as unknown as string;
             }
-            return value;
           },
         },
       },
