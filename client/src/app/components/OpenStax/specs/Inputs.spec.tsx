@@ -12,6 +12,8 @@ import Context from '../Context';
 import APLO from '../APLO';
 import { SingleDropdown } from '../SingleDropdown';
 import { range } from '../../../../../../common/src/utils';
+import ConfirmationDialog from '../ConfirmationDialog';
+import CollaboratorSolution from '../CollaboratorSolution';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -333,6 +335,75 @@ describe('Inputs', () => {
           ['m00123#12-asd', false],
         ],
       );
+    });
+  });
+
+  describe('confirmation-dialog', () => {
+    const confirmText = 'Yep-mhm';
+    const denyText = 'Nope-nuhuh';
+    [true, false].forEach((confirm) => {
+      const testCase = `${confirm ? 'confirm' : 'deny'} button is clicked`;
+      it(`reports the correct result when - ${testCase}`, () => {
+        const mockHandleResult = jest.fn();
+        const { getByText } = render(
+          <ConfirmationDialog
+            onResult={mockHandleResult}
+            acceptButtonText={confirmText}
+            declineButtonText={denyText}
+            show={true}
+          />,
+        );
+        const button = getByText(confirm ? confirmText : denyText);
+        act(() => fireEvent.click(button));
+        expect(mockHandleResult).toBeCalledTimes(1);
+        expect(mockHandleResult).toHaveBeenCalledWith(confirm);
+      });
+    });
+  });
+
+  describe('collaborator-solutions', () => {
+    const html = '<p>HELLO, I AM HTML</p>';
+    it('properly supports value change', () => {
+      let value = '';
+      let isValid: boolean = true;
+      const props = {
+        title: 'Test',
+        handleInputChange(v: string, i?: boolean) {
+          value = v;
+          isValid = i ?? true;
+        },
+        value,
+        isValid,
+      };
+      const { container } = render(<CollaboratorSolution {...props} />);
+      const textArea = container.querySelector(
+        '[data-control-type="textarea"]',
+      );
+      expect(textArea).toBeTruthy();
+      act(() =>
+        fireEvent.change(textArea!, {
+          target: { value: html },
+        }),
+      );
+      expect(value).toBe(html);
+    });
+    it('supports HTML preview', () => {
+      const props = {
+        value: html,
+        isValid: true,
+        handleInputChange: jest.fn(),
+        title: 'Test',
+      };
+      const { container } = render(<CollaboratorSolution {...props} />);
+      const previewButton = container.querySelector(
+        '[data-control-type="preview-button"]',
+      );
+      expect(previewButton).toBeTruthy();
+      act(() => fireEvent.click(previewButton!));
+      expect(
+        container.querySelector('[data-control-type="textarea"]'),
+      ).toBeFalsy();
+      expect(container.getElementsByTagName('p')[0]).toBeTruthy();
     });
   });
 });
