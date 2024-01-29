@@ -33,7 +33,9 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
       "media": {
         "_questions.png": "",
         "detailed.png": "",
+        "superfluous.png": "",
       },
+      "metadata.json": "{"attachments":["media/superfluous.png"]}",
     },
   },
   "private": {
@@ -86,7 +88,9 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
       "media": {
         "_questions.png": "",
         "detailed.png": "",
+        "superfluous.png": "",
       },
+      "metadata.json": "{"attachments":["media/superfluous.png"]}",
     },
   },
 }
@@ -179,9 +183,15 @@ exports[`File Content Storage saves content as expected 1`] = `
       "media": {
         "_questions.png": "",
         "detailed.png": "",
+        "superfluous.png": "",
         "test.png": "<insert contents of images/not-used.png>",
       },
       "metadata.json": "{
+  "attachments": [
+    "media/test.png",
+    "media/detailed.png",
+    "media/_questions.png"
+  ],
   "collaborator_solutions": [
     {
       "content": "<img src=\\"media/detailed.png\\"/>",
@@ -189,11 +199,6 @@ exports[`File Content Storage saves content as expected 1`] = `
     }
   ],
   "is_solution_public": true,
-  "attachments": [
-    "media/test.png",
-    "media/detailed.png",
-    "media/_questions.png"
-  ],
   "_questions": [
     {
       "content": "<p><img src=\\"media/_questions.png\\"/></p>"

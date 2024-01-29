@@ -100,7 +100,11 @@ describe('File Content Storage', () => {
             media: {
               'detailed.png': '',
               '_questions.png': '',
+              'unreferenced.png': '',
             },
+            'metadata.json': JSON.stringify({
+              attachments: ['media/unreferenced.png'],
+            }),
           },
         },
       },
