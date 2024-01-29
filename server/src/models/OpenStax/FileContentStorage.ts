@@ -7,7 +7,7 @@ import {
   CanonicalMetadata,
   NetworkMetadata,
 } from '../../../../common/src/types';
-import { walkJSON, iterHTML, parseAsHTML } from './ContentMutators';
+import { walkJSON, iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
 
@@ -72,7 +72,9 @@ function updateAttachments(content: unknown, pathPrefix: string) {
         const tmpName = toTempName(src.slice(0, -4));
         const newName = `${pathPrefix}/${name}`; // Our prefix can be anything
         assertTrue(name !== '' && name != null, 'BUG: data-filename not found');
-        replaced.push({ tmpName, newName });
+        if (replaced.findIndex((obj) => obj.newName === newName) === -1) {
+          replaced.push({ tmpName, newName });
+        }
         img.removeAttribute('data-filename');
         img.setAttribute('src', newName);
       }
@@ -185,7 +187,7 @@ export default class OSStorage extends H5P.fsImplementations
     validateContent(content);
     await this.moveTempFiles(replaced, id, user, isPrivate);
     await Promise.all(
-      attachments.map(async (attachment) => {
+      Array.from(attachments).map(async (attachment) => {
         const location = assertValue(
           await this._findFilePath(id, attachment),
           `Could not find image: ${attachment}`,
@@ -267,14 +269,16 @@ export default class OSStorage extends H5P.fsImplementations
       await this.deletePrivateContent(realId);
     }
 
-    // Add attachments from collaborator_solutions
-    newOsMeta.collaborator_solutions.forEach((solution) => {
-      const doc = parseAsHTML(solution.content);
-      newOsMeta.attachments.push(
-        ...getImageAttachments(doc.xpath<Element>('//h:img[@src]')),
-      );
-    });
+    // Add attachments from metadata
+    const metaAttachments = await this._handleAttachmentsInContent(
+      realId,
+      newOsMeta,
+      user,
+      false,
+    );
 
+    newOsMeta.attachments.push(...metaAttachments);
+    newOsMeta.attachments = Array.from(new Set(newOsMeta.attachments));
     await Promise.all([
       this.writeJSON(realId, H5P_NAME, metadata, false),
       this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
