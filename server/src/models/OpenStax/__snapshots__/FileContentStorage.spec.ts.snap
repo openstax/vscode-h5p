@@ -29,6 +29,12 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   "attachments": []
 }",
     },
+    "image-test": {
+      "media": {
+        "_questions.png": "",
+        "detailed.png": "",
+      },
+    },
   },
   "private": {
     "interactives": {
@@ -75,6 +81,12 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   "is_solution_public": true,
   "attachments": []
 }",
+    },
+    "image-test": {
+      "media": {
+        "_questions.png": "",
+        "detailed.png": "",
+      },
     },
   },
 }
@@ -165,6 +177,8 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }",
       "media": {
+        "_questions.png": "",
+        "detailed.png": "",
         "test.png": "<insert contents of images/not-used.png>",
       },
       "metadata.json": "{
@@ -177,7 +191,13 @@ exports[`File Content Storage saves content as expected 1`] = `
   "is_solution_public": true,
   "attachments": [
     "media/test.png",
-    "media/detailed.png"
+    "media/detailed.png",
+    "media/_questions.png"
+  ],
+  "_questions": [
+    {
+      "content": "<p><img src=\\"media/_questions.png\\"/></p>"
+    }
   ]
 }",
     },

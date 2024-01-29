@@ -96,6 +96,12 @@ describe('File Content Storage', () => {
               extra: 'Something extra',
             }),
           },
+          'image-test': {
+            media: {
+              'detailed.png': '',
+              '_questions.png': '',
+            },
+          },
         },
       },
     });
@@ -164,6 +170,7 @@ describe('File Content Storage', () => {
         `,
       },
       {} as unknown as IUser,
+      'image-test',
     );
 
     // It should include attachments
@@ -176,6 +183,11 @@ describe('File Content Storage', () => {
             {
               content: '<img src="media/detailed.png"/>',
               solution_type: 'detailed',
+            },
+          ],
+          _questions: [
+            {
+              content: `<p><img src="media/_questions.png"></p>`,
             },
           ],
         },
@@ -205,6 +217,7 @@ describe('File Content Storage', () => {
           `,
         },
         {} as unknown as IUser,
+        'image-text',
       );
     }).rejects.toThrowError(/data-filename/);
   });
