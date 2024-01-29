@@ -105,8 +105,6 @@ function mergeMetadata(
     Object.entries({
       ...existingMetadata,
       ...newMetadata,
-      // Always construct this array from scratch
-      attachments: [],
     }).filter(([k, v]) => k !== 'nickname' && v !== null),
   ) as unknown as CanonicalMetadata;
 }
@@ -232,6 +230,8 @@ export default class OSStorage extends H5P.fsImplementations
     // Content id of 0 causes the player to break
     assertTrue(realId !== '0', 'Content id cannot be 0');
     const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
+    const oldAttachments = newOsMeta.attachments ?? [];
+    const newAttachments: string[] = [];
     if (!isSolutionPublic(osMeta)) {
       const [sanitized, privateData] = yankAnswers(
         content,
@@ -254,10 +254,10 @@ export default class OSStorage extends H5P.fsImplementations
         false,
       );
       await this.writeJSON(realId, CONTENT_NAME, sanitized, false);
-      newOsMeta.attachments.push(...publicAttachments);
-      newOsMeta.attachments.push(...privateAttachments);
+      newAttachments.push(...publicAttachments);
+      newAttachments.push(...privateAttachments);
     } else {
-      newOsMeta.attachments.push(
+      newAttachments.push(
         ...(await this._handleAttachmentsInContent(
           realId,
           content,
@@ -277,8 +277,21 @@ export default class OSStorage extends H5P.fsImplementations
       false,
     );
 
-    newOsMeta.attachments.push(...metaAttachments);
-    newOsMeta.attachments = Array.from(new Set(newOsMeta.attachments));
+    newAttachments.push(...metaAttachments);
+    const attachmentSet = new Set(newAttachments);
+
+    newOsMeta.attachments = Array.from(attachmentSet);
+    await Promise.all(
+      oldAttachments.map(async (attachment) => {
+        if (!attachmentSet.has(attachment)) {
+          const fullPath = await this._findFilePath(realId, attachment);
+          if (fullPath !== undefined) {
+            await fsExtra.rm(fullPath);
+          }
+        }
+      }),
+    );
+
     await Promise.all([
       this.writeJSON(realId, H5P_NAME, metadata, false),
       this.writeJSON(realId, METADATA_NAME, newOsMeta, false),
