@@ -1,6 +1,5 @@
 import mockfs from 'mock-fs';
 import {
-  download,
   downloadLibraries,
   extractArchive,
   getIps,
@@ -124,40 +123,6 @@ describe('Utility functions', () => {
       ] as any;
       (networkInterfaces as unknown as jest.Mock).mockReturnValue(fakeDevInts);
       expect(getIps(true)).toStrictEqual(['1.2.3.4']);
-    });
-  });
-  describe('download', () => {
-    const downloadsDir = '/Downloads';
-    let mockFetch: jest.Mock;
-
-    beforeEach(() => {
-      mockFetch = fetch as unknown as jest.Mock;
-      mockFetch.mockResolvedValue({
-        body: {
-          pipe(outputStream: fsExtra.WriteStream) {
-            outputStream.write('Something');
-            outputStream.end();
-          },
-          on: jest.fn(),
-        },
-      });
-      setupMockfs({
-        [downloadsDir]: {},
-      });
-    });
-
-    afterEach(() => {
-      mockfs.restore();
-    });
-
-    it('downloads files to the correct location', async () => {
-      const testUrl = 'http://localhost/test-url';
-      const destPath = path.join(downloadsDir, 'test.txt');
-      await download(testUrl, destPath);
-      const result = dirToObj(downloadsDir);
-      mockfs.restore();
-      expect(mockFetch).toBeCalledWith(testUrl);
-      expect(result).toMatchSnapshot();
     });
   });
   describe('parseBooksXML', () => {

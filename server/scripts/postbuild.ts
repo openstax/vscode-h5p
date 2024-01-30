@@ -10,7 +10,7 @@ import fsExtra from 'fs-extra';
 import * as tar from 'tar';
 import { extractArchive } from '../src/utils';
 import path from 'path';
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 import { assertValue } from '../../common/src/utils';
 
 const SERVER_ROOT = path.resolve(__dirname, '..');
@@ -35,6 +35,20 @@ const H5P_EDITOR = createH5PEditor(
 const CKEDITOR_ROOT = path.resolve(TEMP_FOLDER, 'editor', 'ckeditor');
 const CKEDITOR_PLUGINS = path.resolve(CKEDITOR_ROOT, 'plugins');
 
+// Directories that exist in the root of the archive
+const H5P_DIRECTORIES = [
+  'libraries',
+  'temporary-storage',
+  'core',
+  'editor',
+  'user-data',
+  'tmp',
+];
+// Files that exist in the root of the archive
+const H5P_FILES = ['config.json'];
+// Paths that should be kept when creating the archive
+const H5P_PATHS = [...H5P_DIRECTORIES, ...H5P_FILES];
+
 const REGISTRATION_DATA = {
   core_api_version: `${CONFIG.coreApiVersion.major}.${CONFIG.coreApiVersion.minor}`,
   disabled: CONFIG.fetchingDisabled,
@@ -49,15 +63,12 @@ const REGISTRATION_DATA = {
 const USER = new User();
 
 function sh(cmd: string) {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve({ error, stdout, stderr });
-      }
-    });
-  });
+  try {
+    return execSync(cmd).toString('utf-8');
+  } catch (e) {
+    const err = e as { stderr: Buffer; status: number };
+    throw new Error(`Exit ${err.status}: ${err.stderr.toString('utf-8')}`);
+  }
 }
 
 async function downloadH5PLibs() {
@@ -129,7 +140,7 @@ async function downloadH5PLibs() {
   }
 }
 
-async function includePatchedMathtype() {
+function includePatchedMathtype() {
   const mathTypePlugin = `${CKEDITOR_PLUGINS}/ckeditor_wiris`;
   const patchFile = `${__dirname}/mathtype-plugin-js.patch`;
 
@@ -139,7 +150,27 @@ async function includePatchedMathtype() {
     `${NODE_MODULES}/@wiris/mathtype-ckeditor4/`,
     mathTypePlugin,
   );
-  await sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
+  sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
+}
+
+function getMiscPaths() {
+  return [
+    {
+      src: path.resolve(
+        NODE_MODULES,
+        '@lumieducation',
+        'h5p-server',
+        'build',
+        'src',
+        'schemas',
+      ),
+      dst: path.resolve(OUT, 'schemas'),
+    },
+    {
+      src: path.resolve(SERVER_ROOT, 'static'),
+      dst: path.resolve(OUT, 'static'),
+    },
+  ];
 }
 
 function getCKEditorPluginPaths() {
@@ -188,38 +219,37 @@ function getCKEditorPluginPaths() {
   return pluginPaths;
 }
 
-async function copyExtras() {
-  const extras: Array<{ src: string; dst: string }> = [
-    {
-      src: path.resolve(
-        NODE_MODULES,
-        '@lumieducation',
-        'h5p-server',
-        'build',
-        'src',
-        'schemas',
-      ),
-      dst: path.resolve(OUT, 'schemas'),
-    },
-    {
-      src: path.resolve(SERVER_ROOT, 'static'),
-      dst: path.resolve(OUT, 'static'),
-    },
-    ...getCKEditorPluginPaths(),
-  ];
-  await Promise.all(
-    extras.map(async ({ src, dst }) => {
-      console.log(`Copying to output: "${path.relative(SERVER_ROOT, src)}"`);
-      await fsExtra.copy(src, dst);
-    }),
-  );
+function getH5PPaths() {
+  const h5pRoot = path.resolve(SERVER_ROOT, 'h5p-php');
+  const getPaths = (srcPrefix: string, dstPrefix: string) => {
+    return fsExtra
+      .readdirSync(path.resolve(h5pRoot, srcPrefix))
+      .filter((name) => !name.startsWith('.'))
+      .map((name) => ({
+        src: path.resolve(h5pRoot, srcPrefix, name),
+        dst: path.resolve(TEMP_FOLDER, dstPrefix, name),
+      }));
+  };
+  const coreFiles = getPaths('h5p-php-library', 'core');
+  const editorFiles = getPaths('h5p-editor-php-library', 'editor');
+  return coreFiles.concat(editorFiles);
+}
+
+function copyFiles(copyOperations: Array<{ src: string; dst: string }>) {
+  for (const { src, dst } of copyOperations) {
+    const relSrc = path.relative(SERVER_ROOT, src);
+    const relDst =
+      dst.indexOf(TEMP_FOLDER) !== -1 ? path.relative(TEMP_FOLDER, dst) : dst;
+    console.log(`Copying "${relSrc}" -> "${relDst}"`);
+    fsExtra.copySync(src, dst);
+  }
 }
 
 async function createArchive(archiveFile: string, wd: string, files: string[]) {
   const initialDir = process.cwd();
+  // Chdir into wd so the archived file paths are relative to that location
   process.chdir(wd);
   fsExtra.ensureDirSync(path.dirname(archiveFile));
-  // Chdir into wd so the archived file paths are relative to that location
   await tar.c(
     {
       gzip: true,
@@ -237,16 +267,23 @@ async function main() {
       strip: 0,
     });
   }
-  // Modify its contents
-  await Promise.all([
+  const downloadTask =
     process.env['CI_TEST'] === undefined
       ? downloadH5PLibs()
-      : Promise.resolve(),
-    copyExtras(),
-    includePatchedMathtype(),
-  ]);
+      : Promise.resolve();
+  // Modify its contents
+  H5P_DIRECTORIES.forEach((name) =>
+    fsExtra.ensureDirSync(path.resolve(TEMP_FOLDER, name)),
+  );
+  copyFiles([...getMiscPaths(), ...getCKEditorPluginPaths(), ...getH5PPaths()]);
+  includePatchedMathtype();
+  fsExtra.writeFileSync(
+    path.resolve(TEMP_FOLDER, 'config.json'),
+    JSON.stringify(Config.h5pConfig),
+  );
+  await downloadTask;
   // Recreate it
-  await createArchive(ARCHIVE_FILE, TEMP_FOLDER, ['libraries', 'editor']);
+  await createArchive(ARCHIVE_FILE, TEMP_FOLDER, H5P_PATHS);
 }
 
 main()

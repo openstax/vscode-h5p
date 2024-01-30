@@ -66,22 +66,6 @@ export async function fsRemove(folderPath: string) {
   fs.rmSync(folderPath, { recursive: true, force: true });
 }
 
-export async function download(
-  url: string,
-  destinationPath: string,
-): Promise<void> {
-  console.debug(`Downloading ${url} to ${destinationPath}`);
-
-  const fileStream = fs.createWriteStream(destinationPath);
-  const res = await fetch(url);
-  const body = assertValue(res.body);
-  await new Promise((resolve, reject) => {
-    body.pipe(fileStream);
-    body.on('error', reject);
-    fileStream.on('finish', resolve);
-  });
-}
-
 export async function extractArchive(
   path: string,
   destinationFolder: string,

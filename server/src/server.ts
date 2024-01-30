@@ -11,7 +11,7 @@ import {
 import { URI } from 'vscode-uri';
 import * as fsExtra from 'fs-extra';
 
-import { prepareEnvironment, startH5P } from './createH5PServer';
+import { startH5P } from './createH5PServer';
 import Config from './models/OpenStax/config';
 import path from 'path';
 import { parseBooksXML } from './utils';
@@ -71,9 +71,6 @@ connection.onInitialized(() => {
       ).fsPath;
       const config = createRepoConfig(workspaceRoot);
 
-      console.log('Preparing environment for server');
-      await prepareEnvironment(config);
-      console.log('Environment prepared');
       console.log('Starting server');
       await startH5P(config);
       connection.sendNotification('server-ready');

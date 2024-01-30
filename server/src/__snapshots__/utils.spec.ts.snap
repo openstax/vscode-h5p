@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Utility functions download downloads files to the correct location 1`] = `
-{
-  "test.txt": "Something",
-}
-`;
-
 exports[`Utility functions downloadLibrarires installs the correct libraries 1`] = `
 [
   [
