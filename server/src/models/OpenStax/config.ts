@@ -138,7 +138,7 @@ export default class Config {
     },
   };
 
-  public static readonly h5pServerArchiveName = `h5p-server.tar.gz`;
+  public static readonly h5pServerArchiveName = 'h5p-server.tar.gz';
 
   public get contentDirectory() {
     return `${this.workspaceRoot}/${this.contentPath}`;
