@@ -1,4 +1,4 @@
-import * as os from 'os';
+import os from 'os';
 import * as H5P from '@lumieducation/h5p-server';
 import Config from '../src/models/OpenStax/config';
 import User from '../src/models/H5PUser';
@@ -6,7 +6,7 @@ import { createH5PEditor } from '../src/createH5PServer';
 import { machineIdSync } from 'node-machine-id';
 import * as qs from 'qs';
 import fetch from 'node-fetch';
-import fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 import * as tar from 'tar';
 import { extractArchive } from '../src/utils';
 import path from 'path';
@@ -24,10 +24,10 @@ const NODE_MODULES = path.resolve(SERVER_ROOT, 'node_modules');
 const CONFIG = new H5P.H5PConfig(undefined, Config.h5pConfig);
 const H5P_EDITOR = createH5PEditor(
   CONFIG,
-  `${TEMP_FOLDER}/libraries`,
+  path.resolve(TEMP_FOLDER, 'libraries'),
   new Config(TEMP_FOLDER, '', ''),
-  `${TEMP_FOLDER}/temporary-storage`,
-  `${TEMP_FOLDER}/user-data`,
+  path.resolve(TEMP_FOLDER, 'temporary-storage'),
+  path.resolve(TEMP_FOLDER, 'user-data'),
   undefined,
   undefined,
   undefined,
@@ -35,7 +35,7 @@ const H5P_EDITOR = createH5PEditor(
 const CKEDITOR_ROOT = path.resolve(TEMP_FOLDER, 'editor', 'ckeditor');
 const CKEDITOR_PLUGINS = path.resolve(CKEDITOR_ROOT, 'plugins');
 
-// Directories that exist in the root of the archive
+// Directories that exist in the root of the h5p archive
 const H5P_DIRECTORIES = [
   'libraries',
   'temporary-storage',
@@ -44,10 +44,9 @@ const H5P_DIRECTORIES = [
   'user-data',
   'tmp',
 ];
-// Files that exist in the root of the archive
-const H5P_FILES = ['config.json'];
-// Paths that should be kept when creating the archive
-const H5P_PATHS = [...H5P_DIRECTORIES, ...H5P_FILES];
+
+// Paths that should be in the h5p archive
+const H5P_PATHS = [...H5P_DIRECTORIES, 'config.json'];
 
 const REGISTRATION_DATA = {
   core_api_version: `${CONFIG.coreApiVersion.major}.${CONFIG.coreApiVersion.minor}`,
@@ -71,6 +70,29 @@ function sh(cmd: string) {
   }
 }
 
+async function tryInstallLibrary(libraryName: string, tries: number) {
+  try {
+    console.log(`Installing ${libraryName}`);
+    await H5P_EDITOR.installLibraryFromHub(libraryName, USER);
+  } catch (e) {
+    if (tries === 0) {
+      console.error(e);
+      throw new Error(`Could not install "${libraryName}".`);
+    } else {
+      const hi = 5000;
+      const lo = 1000;
+      const waitTime = Math.round(Math.random() * (hi - lo) + lo);
+      console.error(
+        `Could not install "${libraryName}". Retrying in ${
+          waitTime / 1000
+        }s...`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      await tryInstallLibrary(libraryName, tries - 1);
+    }
+  }
+}
+
 async function downloadH5PLibs() {
   console.log('Updating H5P libraries...');
   const response = await fetch(CONFIG.hubContentTypesEndpoint, {
@@ -80,23 +102,23 @@ async function downloadH5PLibs() {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-  const data = (await response.json()).contentTypes;
-  const librariesPath = `${TEMP_FOLDER}/libraries`;
-  fsExtra.ensureDirSync(librariesPath);
+  const manifest = (await response.json()).contentTypes;
+  const librariesPath = path.resolve(TEMP_FOLDER, 'libraries');
+  fs.ensureDirSync(librariesPath);
   const existingLibraries = await Promise.all(
-    fsExtra
+    fs
       .readdirSync(librariesPath, { withFileTypes: true })
       .filter((dirent) => dirent.isDirectory())
       .map(async (dirent) => ({
         name: dirent.name,
-        ...(await fsExtra.readJSON(
-          `${librariesPath}/${dirent.name}/library.json`,
+        ...(await fs.readJSON(
+          path.resolve(librariesPath, dirent.name, 'library.json'),
         )),
       })),
   );
   const toInstall = Object.keys(Config.supportedLibraries).filter(
     (libraryName) => {
-      const lib = data.find((item: any) => item.id === libraryName);
+      const lib = manifest.find((item: any) => item.id === libraryName);
       if (lib == null) {
         throw new Error(`Could not find "${libraryName}"`);
       }
@@ -115,45 +137,24 @@ async function downloadH5PLibs() {
     return;
   }
   for (const libraryName of toInstall) {
-    for (let tries = 3; tries--; tries > 0) {
-      try {
-        console.log(`Installing ${libraryName}`);
-        await H5P_EDITOR.installLibraryFromHub(libraryName, USER);
-        break;
-      } catch (e) {
-        if (tries === 0) {
-          console.error(e);
-          throw new Error(`Could not install "${libraryName}".`);
-        } else {
-          const hi = 5000;
-          const lo = 1000;
-          const waitTime = Math.round(Math.random() * (hi - lo) + lo);
-          console.error(
-            `Could not install "${libraryName}". Retrying in ${
-              waitTime / 1000
-            }s...`,
-          );
-          await new Promise((resolve) => setTimeout(resolve, waitTime));
-        }
-      }
-    }
+    await tryInstallLibrary(libraryName, 3);
   }
 }
 
 function includePatchedMathtype() {
-  const mathTypePlugin = `${CKEDITOR_PLUGINS}/ckeditor_wiris`;
-  const patchFile = `${__dirname}/mathtype-plugin-js.patch`;
+  const mathTypePlugin = path.resolve(CKEDITOR_PLUGINS, 'ckeditor_wiris');
+  const patchFile = path.resolve(__dirname, 'mathtype-plugin-js.patch');
 
   console.log('Patching and including ckeditor_wiris plugin...');
-  fsExtra.ensureDirSync(CKEDITOR_PLUGINS);
-  fsExtra.copySync(
-    `${NODE_MODULES}/@wiris/mathtype-ckeditor4/`,
+  fs.ensureDirSync(CKEDITOR_PLUGINS);
+  fs.copySync(
+    path.resolve(NODE_MODULES, '@wiris', 'mathtype-ckeditor4'),
     mathTypePlugin,
   );
-  sh(`patch "${mathTypePlugin}/plugin.js" "${patchFile}"`);
+  sh(`patch "${path.resolve(mathTypePlugin, 'plugin.js')}" "${patchFile}"`);
 }
 
-function getMiscPaths() {
+function getMiscCopies() {
   return [
     {
       src: path.resolve(
@@ -173,7 +174,7 @@ function getMiscPaths() {
   ];
 }
 
-function getCKEditorPluginPaths() {
+function getCKEditorPluginCopies() {
   const submodulesRoot = path.resolve(SERVER_ROOT, 'ckeditor-plugins');
   const ckEditorRepoPlugins = path.resolve(
     submodulesRoot,
@@ -219,10 +220,10 @@ function getCKEditorPluginPaths() {
   return pluginPaths;
 }
 
-function getH5PPaths() {
+function getH5PCopies() {
   const h5pRoot = path.resolve(SERVER_ROOT, 'h5p-php');
   const getPaths = (srcPrefix: string, dstPrefix: string) => {
-    return fsExtra
+    return fs
       .readdirSync(path.resolve(h5pRoot, srcPrefix))
       .filter((name) => !name.startsWith('.'))
       .map((name) => ({
@@ -235,21 +236,21 @@ function getH5PPaths() {
   return coreFiles.concat(editorFiles);
 }
 
-function copyFiles(copyOperations: Array<{ src: string; dst: string }>) {
-  for (const { src, dst } of copyOperations) {
+function doCopies(copies: Array<{ src: string; dst: string }>) {
+  for (const { src, dst } of copies) {
     const relSrc = path.relative(SERVER_ROOT, src);
     const relDst =
       dst.indexOf(TEMP_FOLDER) !== -1 ? path.relative(TEMP_FOLDER, dst) : dst;
     console.log(`Copying "${relSrc}" -> "${relDst}"`);
-    fsExtra.copySync(src, dst);
+    fs.copySync(src, dst);
   }
 }
 
 async function createArchive(archiveFile: string, wd: string, files: string[]) {
   const initialDir = process.cwd();
-  // Chdir into wd so the archived file paths are relative to that location
   process.chdir(wd);
-  fsExtra.ensureDirSync(path.dirname(archiveFile));
+  fs.ensureDirSync(path.dirname(archiveFile));
+  // Chdir into wd so the archived file paths are relative to that location
   await tar.c(
     {
       gzip: true,
@@ -269,13 +270,14 @@ async function main() {
     process.env['CI_TEST'] === undefined
       ? downloadH5PLibs()
       : Promise.resolve();
-  // Modify its contents
   H5P_DIRECTORIES.forEach((name) =>
-    fsExtra.ensureDirSync(path.resolve(TEMP_FOLDER, name)),
+    fs.ensureDirSync(path.resolve(TEMP_FOLDER, name)),
   );
-  copyFiles([...getMiscPaths(), ...getCKEditorPluginPaths(), ...getH5PPaths()]);
+  doCopies(getH5PCopies());
+  doCopies(getMiscCopies());
+  doCopies(getCKEditorPluginCopies());
   includePatchedMathtype();
-  fsExtra.writeFileSync(
+  fs.writeFileSync(
     path.resolve(TEMP_FOLDER, 'config.json'),
     JSON.stringify(Config.h5pConfig),
   );
@@ -288,7 +290,10 @@ main()
   .catch((err) => {
     throw err;
   })
+  .then(() => {
+    console.log('Build successful!');
+  })
   .finally(() => {
-    console.log('Cleaning up temporary directory...');
-    fsExtra.rmSync(TEMP_FOLDER, { recursive: true, force: true });
+    console.log(`Cleaning up temporary directory... (${TEMP_FOLDER})`);
+    fs.rmSync(TEMP_FOLDER, { recursive: true, force: true });
   });
