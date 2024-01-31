@@ -1,9 +1,7 @@
-import * as os from 'os';
-
+import os from 'os';
+import path from 'path';
 import { Cache, caching } from 'cache-manager';
-
 import * as H5P from '@lumieducation/h5p-server';
-
 import { extractArchive } from './utils';
 import Config from './models/OpenStax/config';
 import OSH5PEditor from './models/OpenStax/H5PEditor';
@@ -80,11 +78,8 @@ export function createH5PEditor(
 export async function startH5P(globalConfig: Config) {
   const tempFolderPath = os.tmpdir() + '/h5p_server';
   await extractArchive(
-    `${__dirname}/${Config.h5pServerArchiveName}`,
-    `${tempFolderPath}`,
-    false,
-    undefined,
-    { strip: 0 },
+    path.resolve(__dirname, Config.h5pServerArchiveName),
+    tempFolderPath,
   );
   // Load the configuration file from the local file system
   const config = await new H5P.H5PConfig(

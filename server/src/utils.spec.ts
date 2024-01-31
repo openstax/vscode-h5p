@@ -1,13 +1,7 @@
 import mockfs from 'mock-fs';
-import {
-  downloadLibraries,
-  extractArchive,
-  getIps,
-  parseBooksXML,
-} from './utils';
+import { extractArchive, getIps, parseBooksXML } from './utils';
 import fsExtra from 'fs-extra';
 import path from 'path';
-import fetch from 'node-fetch';
 import decompress from 'decompress';
 import { networkInterfaces } from 'os';
 
@@ -71,13 +65,16 @@ describe('Utility functions', () => {
       mockfs.restore();
     });
     it('extracts selected files', async () => {
-      await extractArchive('/myzip.zip', testPath, true, ['/test/a.txt']);
+      await extractArchive('/myzip.zip', testPath, {
+        deleteArchive: true,
+        filesToExtract: ['/test/a.txt'],
+      });
       const result = dirToObj(testPath);
       mockfs.restore();
       expect(result).toMatchSnapshot();
     });
     it('extracts all files', async () => {
-      await extractArchive('/myzip.zip', testPath, true);
+      await extractArchive('/myzip.zip', testPath);
       const result = dirToObj(testPath);
       mockfs.restore();
       expect(result).toMatchSnapshot();

@@ -262,10 +262,8 @@ async function createArchive(archiveFile: string, wd: string, files: string[]) {
 
 async function main() {
   // Extract archive if it exists
-  if (fsExtra.pathExistsSync(ARCHIVE_FILE)) {
-    await extractArchive(ARCHIVE_FILE, TEMP_FOLDER, false, undefined, {
-      strip: 0,
-    });
+  if (fs.pathExistsSync(ARCHIVE_FILE)) {
+    await extractArchive(ARCHIVE_FILE, TEMP_FOLDER, { verbose: false });
   }
   const downloadTask =
     process.env['CI_TEST'] === undefined
