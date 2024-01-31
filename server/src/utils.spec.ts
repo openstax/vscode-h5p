@@ -83,35 +83,6 @@ describe('Utility functions', () => {
       expect(result).toMatchSnapshot();
     });
   });
-  describe('downloadLibrarires', () => {
-    let mockFetch: jest.Mock;
-    beforeEach(() => {
-      mockFetch = fetch as unknown as jest.Mock;
-      mockFetch.mockResolvedValue({
-        async json() {
-          return {
-            libraries: [
-              { installed: false, isUpToDate: false, machineName: 'Test.A' },
-              { installed: true, isUpToDate: false, machineName: 'Test.B' },
-              { installed: true, isUpToDate: true, machineName: 'Test.C' },
-            ],
-          };
-        },
-      });
-    });
-    it('installs the correct libraries', async () => {
-      const mockInstall = jest.fn().mockResolvedValue(null);
-      const mockEditor = {
-        installLibraryFromHub: mockInstall,
-      } as any;
-      const testHost = 'my-test-hostname';
-      const testPort = 12345;
-      const testUrl = '/testing';
-      await downloadLibraries(testHost, testPort, testUrl, mockEditor);
-      expect(mockFetch).toBeCalledWith('http://my-test-hostname:12345/testing');
-      expect(mockInstall.mock.calls).toMatchSnapshot();
-    });
-  });
   describe('getIps', () => {
     it('gets localhost by default', () => {
       expect(getIps()).toStrictEqual(['localhost']);

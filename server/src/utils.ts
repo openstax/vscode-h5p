@@ -30,27 +30,6 @@ export function createH5PRouter<EditRequestType, ContentRequestType>(
   return router;
 }
 
-export async function downloadLibraries(
-  hostname: string,
-  port: number,
-  path: string,
-  h5PEditor: H5P.H5PEditor,
-): Promise<any> {
-  console.log('Updating libraries');
-  const res = await (await fetch(`http://${hostname}:${port}${path}`)).json();
-  const user = new User();
-  await Promise.all(
-    res.libraries
-      .filter((lib: any) => isFalsy(lib.installed) || isFalsy(lib.isUpToDate))
-      .map((lib: any) => lib.machineName)
-      .map(async (libraryName: string) => {
-        console.log(`Installing ${libraryName}`);
-        const res = await h5PEditor.installLibraryFromHub(libraryName, user);
-        console.log(res);
-      }),
-  );
-}
-
 export function getIps(external: boolean = false): string[] {
   if (!external) return ['localhost'];
   const interfaces = os.networkInterfaces();
