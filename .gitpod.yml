@@ -6,7 +6,6 @@
 
 tasks:
   - init: npm install && npm run build
-    command: npm run watch
 ports:
   - port: 27149
     visibility: public
