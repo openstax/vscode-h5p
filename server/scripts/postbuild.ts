@@ -32,7 +32,8 @@ const H5P_EDITOR = createH5PEditor(
   undefined,
   undefined,
 );
-const CKEDITOR_ROOT = path.resolve(TEMP_FOLDER, 'editor', 'ckeditor');
+const H5P_EDITOR_PREFIX = 'editor';
+const CKEDITOR_ROOT = path.resolve(TEMP_FOLDER, H5P_EDITOR_PREFIX, 'ckeditor');
 const CKEDITOR_PLUGINS = path.resolve(CKEDITOR_ROOT, 'plugins');
 
 // Directories that exist in the root of the h5p archive
@@ -40,7 +41,7 @@ const H5P_DIRECTORIES = [
   'libraries',
   'temporary-storage',
   'core',
-  'editor',
+  H5P_EDITOR_PREFIX,
   'user-data',
   'tmp',
 ];
@@ -141,6 +142,20 @@ async function downloadH5PLibs() {
   }
 }
 
+function patch(
+  inputFile: string,
+  patchFile: string,
+  options?: { outputFile?: string },
+): void {
+  const args = [];
+  if (options?.outputFile !== undefined) {
+    args.push(`-o "${options.outputFile}"`);
+  }
+  args.push(`"${inputFile}"`);
+  args.push(`"${patchFile}"`);
+  sh(`patch ${args.join(' ')}`);
+}
+
 function includePatchedMathtype() {
   const mathTypePlugin = path.resolve(CKEDITOR_PLUGINS, 'ckeditor_wiris');
   const patchFile = path.resolve(__dirname, 'mathtype-plugin-js.patch');
@@ -151,7 +166,17 @@ function includePatchedMathtype() {
     path.resolve(NODE_MODULES, '@wiris', 'mathtype-ckeditor4'),
     mathTypePlugin,
   );
-  sh(`patch "${path.resolve(mathTypePlugin, 'plugin.js')}" "${patchFile}"`);
+  patch(path.resolve(mathTypePlugin, 'plugin.js'), patchFile);
+}
+
+function patchH5PEditor() {
+  const h5pEditor = path.resolve(TEMP_FOLDER, H5P_EDITOR_PREFIX);
+  const patchFile = path.resolve(__dirname, 'enable-h5p-validation.patch');
+  console.log('Patching h5p editor...');
+  patch(
+    path.resolve(h5pEditor, 'scripts', 'h5peditor-library-selector.js'),
+    patchFile,
+  );
 }
 
 function getMiscCopies() {
@@ -232,7 +257,7 @@ function getH5PCopies() {
       }));
   };
   const coreFiles = getPaths('h5p-php-library', 'core');
-  const editorFiles = getPaths('h5p-editor-php-library', 'editor');
+  const editorFiles = getPaths('h5p-editor-php-library', H5P_EDITOR_PREFIX);
   return coreFiles.concat(editorFiles);
 }
 
@@ -277,6 +302,7 @@ async function main() {
   doCopies(getMiscCopies());
   doCopies(getCKEditorPluginCopies());
   includePatchedMathtype();
+  patchH5PEditor();
   fs.writeFileSync(
     path.resolve(TEMP_FOLDER, 'config.json'),
     JSON.stringify(Config.h5pConfig),
