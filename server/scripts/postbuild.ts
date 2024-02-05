@@ -408,9 +408,7 @@ function getFileHashes(fileOrDirectory: string): Set<string> {
     walkDirectory(fileOrDirectory);
   } else {
     const hash = getFileHash(fileOrDirectory);
-    fileHashes.add(
-      `${path.basename(fileOrDirectory).toLocaleLowerCase()}|${hash}`,
-    );
+    fileHashes.add(`${path.basename(fileOrDirectory).toLowerCase()}|${hash}`);
   }
   return fileHashes;
 }
@@ -608,8 +606,10 @@ async function main() {
   if (fs.pathExistsSync(ARCHIVE_FILE)) {
     await extractArchive(ARCHIVE_FILE, TEMP_FOLDER, { verbose: false });
   }
-  console.log('Updating H5P libraries...');
-  await downloadH5PLibs();
+  if (process.env['CI_TEST'] === undefined) {
+    console.log('Updating H5P libraries...');
+    await downloadH5PLibs();
+  }
   console.log('Copying files...');
   doCopies(context.copyOperations);
   console.log('Writing files...');
