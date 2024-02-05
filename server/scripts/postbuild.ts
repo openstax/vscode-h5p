@@ -524,7 +524,15 @@ async function downloadH5PLibs() {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-  const manifest = (await response.json()).contentTypes;
+  const tryParseJSONResponse = async (response: Response) => {
+    try {
+      return await response.json();
+    } catch (e) {
+      console.error(e);
+      throw new Error('Failed to parse JSON response');
+    }
+  };
+  const manifest = (await tryParseJSONResponse(response)).contentTypes;
   const librariesPath = path.resolve(TEMP_FOLDER, 'libraries');
   fs.ensureDirSync(librariesPath);
   const existingLibraries = await Promise.all(
@@ -563,19 +571,25 @@ async function downloadH5PLibs() {
   }
 }
 
-async function createArchive(archiveFile: string, wd: string, files: string[]) {
+async function createArchive(archiveFile: string, wd: string, paths: string[]) {
   const initialDir = process.cwd();
   process.chdir(wd);
-  fs.ensureDirSync(path.dirname(archiveFile));
-  // Chdir into wd so the archived file paths are relative to that location
-  await tar.c(
-    {
-      gzip: true,
-      file: archiveFile,
-    },
-    files,
-  );
-  process.chdir(initialDir);
+  try {
+    paths.forEach((p) =>
+      assertTrue(fs.existsSync(p), `Missing archive content: "${p}"`),
+    );
+    fs.ensureDirSync(path.dirname(archiveFile));
+    // Chdir into wd so the archived file paths are relative to that location
+    await tar.c(
+      {
+        gzip: true,
+        file: archiveFile,
+      },
+      paths,
+    );
+  } finally {
+    process.chdir(initialDir);
+  }
 }
 
 async function main() {
