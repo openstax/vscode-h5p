@@ -55,19 +55,6 @@ interface Context {
   writeOperations: WriteOperation[];
 }
 
-// Directories that exist in the root of the h5p archive
-const H5P_DIRECTORIES = [
-  'libraries',
-  'temporary-storage',
-  'core',
-  'editor',
-  'user-data',
-  'tmp',
-];
-
-// Paths that should be in the h5p archive
-const H5P_PATHS = [...H5P_DIRECTORIES, 'config.json'];
-
 const TEMP_FOLDER = path.resolve(os.tmpdir(), 'h5p_builder');
 const SERVER_ROOT = path.resolve(__dirname, '..');
 const NODE_MODULES = path.resolve(SERVER_ROOT, 'node_modules');
@@ -100,7 +87,8 @@ const SRC_H5P_EDITOR_ROOT = path.resolve(
   SRC_H5P_ROOT,
   'h5p-editor-php-library',
 );
-const DST_H5P_EDITOR_ROOT = path.resolve(TEMP_FOLDER, 'editor');
+const DST_H5P_EDITOR_NAME = 'editor';
+const DST_H5P_EDITOR_ROOT = path.resolve(TEMP_FOLDER, DST_H5P_EDITOR_NAME);
 const H5P_EDITOR_COPIES = [
   {
     src: [SRC_H5P_EDITOR_ROOT, 'README.md'],
@@ -157,7 +145,8 @@ const H5P_EDITOR_COPIES = [
 ];
 
 const SRC_H5P_PHP_ROOT = path.resolve(SRC_H5P_ROOT, 'h5p-php-library');
-const DST_H5P_PHP_ROOT = path.resolve(TEMP_FOLDER, 'core');
+const DST_H5P_PHP_NAME = 'core';
+const DST_H5P_PHP_ROOT = path.resolve(TEMP_FOLDER, DST_H5P_PHP_NAME);
 const H5P_PHP_COPIES = [
   {
     src: [SRC_H5P_PHP_ROOT, 'LICENSE.txt'],
@@ -221,7 +210,7 @@ const H5P_PHP_COPIES = [
   },
 ];
 
-const DST_CKEDITOR_ROOT = path.resolve(TEMP_FOLDER, 'editor', 'ckeditor');
+const DST_CKEDITOR_ROOT = path.resolve(DST_H5P_EDITOR_ROOT, 'ckeditor');
 const DST_CKEDITOR_PLUGINS = path.resolve(DST_CKEDITOR_ROOT, 'plugins');
 const DST_MATHTYPE_PLUGIN = path.resolve(
   DST_CKEDITOR_PLUGINS,
@@ -332,11 +321,16 @@ const TO_WRITE: WriteDefinition[] = [
   },
 ];
 
+// Paths that should be included in the archive (relative to TEMP_FOLDER)
+const ARCHIVE_PATHS = [
+  DST_H5P_PHP_NAME,
+  DST_H5P_EDITOR_NAME,
+  Config.configName,
+  Config.librariesName,
+];
+
 function preFlight(context: Context) {
-  const h5pDirs = H5P_DIRECTORIES.map((name) =>
-    path.resolve(TEMP_FOLDER, name),
-  );
-  const directories = new Set<string>(h5pDirs);
+  const directories = new Set<string>();
   const handlePath = (src: string, dst: string) => {
     try {
       const stats = fs.statSync(src);
@@ -617,7 +611,7 @@ async function main() {
   console.log('Patching files...');
   doPatches(context.patchOperations);
   console.log('Creating archive...');
-  await createArchive(ARCHIVE_FILE, TEMP_FOLDER, H5P_PATHS);
+  await createArchive(ARCHIVE_FILE, TEMP_FOLDER, ARCHIVE_PATHS);
 }
 
 main()

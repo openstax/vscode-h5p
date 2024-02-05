@@ -83,7 +83,9 @@ export async function startH5P(globalConfig: Config) {
   );
   // Load the configuration file from the local file system
   const config = await new H5P.H5PConfig(
-    new H5P.fsImplementations.JsonStorage(`${tempFolderPath}/config.json`),
+    new H5P.fsImplementations.JsonStorage(
+      `${tempFolderPath}/${Config.configName}`,
+    ),
   ).load();
   const urlGenerator = new H5P.UrlGenerator(config, {
     queryParamGenerator: () => {
@@ -109,7 +111,7 @@ export async function startH5P(globalConfig: Config) {
   // H5P.fs(...).
   const h5pEditor: OSH5PEditor = createH5PEditor(
     config,
-    `${tempFolderPath}/libraries`, // the path on the local disc where libraries should be stored)
+    `${tempFolderPath}/${Config.librariesName}`, // the path on the local disc where libraries should be stored)
 
     globalConfig, // the path on the local disc where content
     // is stored. Only used / necessary if you use the local filesystem
