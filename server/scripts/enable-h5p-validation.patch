@@ -1,0 +1,31 @@
+diff --git a/scripts/h5peditor-library-selector.js b/scripts/h5peditor-library-selector.js
+index 2d4a02c..f66e018 100644
+--- a/scripts/h5peditor-library-selector.js
++++ b/scripts/h5peditor-library-selector.js
+@@ -295,10 +295,10 @@ ns.LibrarySelector.prototype.getParams = function () {
+ 
+   // Only return if all fields has validated.
+-  //var valid = true;
++  var valid = true;
+ 
+   if (this.form.metadataForm.children !== undefined) {
+     for (var i = 0; i < this.form.metadataForm.children.length; i++) {
+       if (this.form.metadataForm.children[i].validate() === false) {
+-        //valid = false;
++        valid = false;
+       }
+     }
+@@ -308,11 +308,10 @@ ns.LibrarySelector.prototype.getParams = function () {
+     for (var i = 0; i < this.form.children.length; i++) {
+       if (this.form.children[i].validate() === false) {
+-        //valid = false;
++        valid = false;
+       }
+     }
+   }
+ 
+-  //return valid ? this.form.params : false;
+-  return this.form.params; // TODO: Switch to the line above when we are able to tell the user where the validation fails
++  return valid ? this.form.params : false;
+ };
+ 

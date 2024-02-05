@@ -10,3 +10,9 @@
 [submodule "server/ckeditor-plugins/BootstrapCK4-Skin"]
 	path = server/ckeditor-plugins/BootstrapCK4-Skin
 	url = https://github.com/Kunstmaan/BootstrapCK4-Skin.git
+[submodule "server/h5p-php/h5p-php-library"]
+	path = server/h5p-php/h5p-php-library
+	url = https://github.com/h5p/h5p-php-library.git
+[submodule "server/h5p-php/h5p-editor-php-library"]
+	path = server/h5p-php/h5p-editor-php-library
+	url = https://github.com/h5p/h5p-editor-php-library.git

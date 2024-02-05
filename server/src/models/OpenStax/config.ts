@@ -138,7 +138,9 @@ export default class Config {
     },
   };
 
-  public static readonly h5pServerArchiveName = `h5p-server.tar.gz`;
+  public static readonly h5pServerArchiveName = 'h5p-server.tar.gz';
+  public static readonly librariesName = 'libraries';
+  public static readonly configName = 'config.json';
 
   public get contentDirectory() {
     return `${this.workspaceRoot}/${this.contentPath}`;
