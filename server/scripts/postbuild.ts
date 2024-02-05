@@ -321,12 +321,13 @@ const TO_WRITE: WriteDefinition[] = [
   },
 ];
 
+const IS_CI_TEST = process.env['CI_TEST'] !== undefined;
 // Paths that should be included in the archive (relative to TEMP_FOLDER)
 const ARCHIVE_PATHS = [
   DST_H5P_PHP_NAME,
   DST_H5P_EDITOR_NAME,
   Config.configName,
-  Config.librariesName,
+  ...(IS_CI_TEST ? [] : [Config.librariesName]),
 ];
 
 function preFlight(context: Context) {
@@ -614,7 +615,7 @@ async function main() {
   if (fs.pathExistsSync(ARCHIVE_FILE)) {
     await extractArchive(ARCHIVE_FILE, TEMP_FOLDER, { verbose: false });
   }
-  if (process.env['CI_TEST'] === undefined) {
+  if (!IS_CI_TEST) {
     console.log('Updating H5P libraries...');
     await downloadH5PLibs();
   }
