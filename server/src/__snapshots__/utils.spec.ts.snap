@@ -1,40 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Utility functions download downloads files to the correct location 1`] = `
-{
-  "test.txt": "Something",
-}
-`;
-
-exports[`Utility functions downloadLibrarires installs the correct libraries 1`] = `
-[
-  [
-    "Test.A",
-    User {
-      "canCreateRestricted": true,
-      "canInstallRecommended": true,
-      "canUpdateAndInstallLibraries": true,
-      "email": "test@openstax.com",
-      "id": "1",
-      "name": "Mock User",
-      "type": "local",
-    },
-  ],
-  [
-    "Test.B",
-    User {
-      "canCreateRestricted": true,
-      "canInstallRecommended": true,
-      "canUpdateAndInstallLibraries": true,
-      "email": "test@openstax.com",
-      "id": "1",
-      "name": "Mock User",
-      "type": "local",
-    },
-  ],
-]
-`;
-
 exports[`Utility functions extractArchive extracts all files 1`] = `
 {
   "a.txt": "",

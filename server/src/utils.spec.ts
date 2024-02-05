@@ -1,14 +1,7 @@
 import mockfs from 'mock-fs';
-import {
-  download,
-  downloadLibraries,
-  extractArchive,
-  getIps,
-  parseBooksXML,
-} from './utils';
+import { extractArchive, getIps, parseBooksXML } from './utils';
 import fsExtra from 'fs-extra';
 import path from 'path';
-import fetch from 'node-fetch';
 import decompress from 'decompress';
 import { networkInterfaces } from 'os';
 
@@ -72,45 +65,19 @@ describe('Utility functions', () => {
       mockfs.restore();
     });
     it('extracts selected files', async () => {
-      await extractArchive('/myzip.zip', testPath, true, ['/test/a.txt']);
+      await extractArchive('/myzip.zip', testPath, {
+        deleteArchive: true,
+        filesToExtract: ['/test/a.txt'],
+      });
       const result = dirToObj(testPath);
       mockfs.restore();
       expect(result).toMatchSnapshot();
     });
     it('extracts all files', async () => {
-      await extractArchive('/myzip.zip', testPath, true);
+      await extractArchive('/myzip.zip', testPath);
       const result = dirToObj(testPath);
       mockfs.restore();
       expect(result).toMatchSnapshot();
-    });
-  });
-  describe('downloadLibrarires', () => {
-    let mockFetch: jest.Mock;
-    beforeEach(() => {
-      mockFetch = fetch as unknown as jest.Mock;
-      mockFetch.mockResolvedValue({
-        async json() {
-          return {
-            libraries: [
-              { installed: false, isUpToDate: false, machineName: 'Test.A' },
-              { installed: true, isUpToDate: false, machineName: 'Test.B' },
-              { installed: true, isUpToDate: true, machineName: 'Test.C' },
-            ],
-          };
-        },
-      });
-    });
-    it('installs the correct libraries', async () => {
-      const mockInstall = jest.fn().mockResolvedValue(null);
-      const mockEditor = {
-        installLibraryFromHub: mockInstall,
-      } as any;
-      const testHost = 'my-test-hostname';
-      const testPort = 12345;
-      const testUrl = '/testing';
-      await downloadLibraries(testHost, testPort, testUrl, mockEditor);
-      expect(mockFetch).toBeCalledWith('http://my-test-hostname:12345/testing');
-      expect(mockInstall.mock.calls).toMatchSnapshot();
     });
   });
   describe('getIps', () => {
@@ -124,40 +91,6 @@ describe('Utility functions', () => {
       ] as any;
       (networkInterfaces as unknown as jest.Mock).mockReturnValue(fakeDevInts);
       expect(getIps(true)).toStrictEqual(['1.2.3.4']);
-    });
-  });
-  describe('download', () => {
-    const downloadsDir = '/Downloads';
-    let mockFetch: jest.Mock;
-
-    beforeEach(() => {
-      mockFetch = fetch as unknown as jest.Mock;
-      mockFetch.mockResolvedValue({
-        body: {
-          pipe(outputStream: fsExtra.WriteStream) {
-            outputStream.write('Something');
-            outputStream.end();
-          },
-          on: jest.fn(),
-        },
-      });
-      setupMockfs({
-        [downloadsDir]: {},
-      });
-    });
-
-    afterEach(() => {
-      mockfs.restore();
-    });
-
-    it('downloads files to the correct location', async () => {
-      const testUrl = 'http://localhost/test-url';
-      const destPath = path.join(downloadsDir, 'test.txt');
-      await download(testUrl, destPath);
-      const result = dirToObj(downloadsDir);
-      mockfs.restore();
-      expect(mockFetch).toBeCalledWith(testUrl);
-      expect(result).toMatchSnapshot();
     });
   });
   describe('parseBooksXML', () => {

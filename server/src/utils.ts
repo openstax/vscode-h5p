@@ -1,10 +1,7 @@
 import * as os from 'os';
 import decompress from 'decompress';
 import fs from 'fs';
-import fetch from 'node-fetch';
 import express from 'express';
-import * as H5P from '@lumieducation/h5p-server';
-import User from './models/H5PUser';
 import { DOMParser } from '@xmldom/xmldom';
 import * as xpath from 'xpath-ts';
 import { assertValue, isFalsy, unwrap } from '../../common/src/utils';
@@ -30,27 +27,6 @@ export function createH5PRouter<EditRequestType, ContentRequestType>(
   return router;
 }
 
-export async function downloadLibraries(
-  hostname: string,
-  port: number,
-  path: string,
-  h5PEditor: H5P.H5PEditor,
-): Promise<any> {
-  console.log('Updating libraries');
-  const res = await (await fetch(`http://${hostname}:${port}${path}`)).json();
-  const user = new User();
-  await Promise.all(
-    res.libraries
-      .filter((lib: any) => isFalsy(lib.installed) || isFalsy(lib.isUpToDate))
-      .map((lib: any) => lib.machineName)
-      .map(async (libraryName: string) => {
-        console.log(`Installing ${libraryName}`);
-        const res = await h5PEditor.installLibraryFromHub(libraryName, user);
-        console.log(res);
-      }),
-  );
-}
-
 export function getIps(external: boolean = false): string[] {
   if (!external) return ['localhost'];
   const interfaces = os.networkInterfaces();
@@ -62,48 +38,42 @@ export function getIps(external: boolean = false): string[] {
   );
 }
 
-export async function fsRemove(folderPath: string) {
+export function fsRemove(folderPath: string) {
   fs.rmSync(folderPath, { recursive: true, force: true });
-}
-
-export async function download(
-  url: string,
-  destinationPath: string,
-): Promise<void> {
-  console.debug(`Downloading ${url} to ${destinationPath}`);
-
-  const fileStream = fs.createWriteStream(destinationPath);
-  const res = await fetch(url);
-  const body = assertValue(res.body);
-  await new Promise((resolve, reject) => {
-    body.pipe(fileStream);
-    body.on('error', reject);
-    fileStream.on('finish', resolve);
-  });
 }
 
 export async function extractArchive(
   path: string,
   destinationFolder: string,
-  deleteArchive: boolean,
-  filesToExtract?: string[],
-  opt: decompress.DecompressOptions = { strip: 1 },
+  options?: {
+    deleteArchive?: boolean;
+    filesToExtract?: string[];
+    decompressOptions?: decompress.DecompressOptions;
+    verbose?: boolean;
+  },
 ): Promise<void> {
+  const {
+    deleteArchive,
+    filesToExtract,
+    decompressOptions = { strip: 0 },
+    verbose = true,
+  } = options ?? {};
   console.log(`Extracting file ${path}`);
   try {
-    const files = await decompress(path, destinationFolder, opt);
-    console.log('Files extracted');
-    if (filesToExtract) {
+    const files = await decompress(path, destinationFolder, decompressOptions);
+    if (filesToExtract !== undefined) {
       files
         .filter((file) => !filesToExtract.includes(file.path))
         .forEach((file) => fsRemove(file.path));
-      filesToExtract.forEach((file) => {
-        console.log(`${destinationFolder}/${file}`);
-      });
-    } else {
-      files.forEach((file) => console.log(`${destinationFolder}/${file.path}`));
     }
-    if (deleteArchive) fsRemove(path);
+    if (verbose) {
+      (filesToExtract ?? files.map((file) => file.path)).forEach((name) => {
+        console.log(`${destinationFolder}/${name}`);
+      });
+    }
+    if (deleteArchive === true) {
+      fsRemove(path);
+    }
   } catch (e) {
     /* istanbul ignore next */
     console.error(e);
