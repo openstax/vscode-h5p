@@ -1,10 +1,10 @@
 {
-  "name": "vscode-h5p",
-  "displayName": "H5P Viewer",
+  "name": "cat",
+  "displayName": "Content Assessment Tool",
   "publisher": "openstax",
   "description": "Visualize H5P files in VS Code",
   "version": "0.0.1",
-  "author": "OpenStax",
+  "author": "openstax",
   "license": "MIT",
   "homepage": "https://openstax.org/",
   "repository": {
