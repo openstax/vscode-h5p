@@ -39,5 +39,5 @@ jq --arg version "$VERSION"  '. + {version: $version}' \
 mv package-with-version.json package.json
 npm install
 npm run clean
-fetch_include_past_h5p
+[ -z "${CLEAN_H5P:-}" ] && fetch_include_past_h5p
 npm run package
