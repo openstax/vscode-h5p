@@ -9,19 +9,60 @@ by Openstax.
 
 ## Getting Started
 
+You can build the extension by running this in the repository root:
+
 ```bash
-git clone https://github.com/openstax/vscode-h5p
-cd vscode-h5p
 npm install
 npm run build
-
 ```
 
-## Run the extension in a new VSCode
+Package the extension to a vsix (installable in vscode/codium) by running:
+
+```bash
+npm run package
+```
+
+Run tests with
+
+```bash
+npm run test
+```
+
+## Launching the editor
+
+The editor can be launched in two ways
+
+1. Opening the submenu in the sidebar labeled 'H5P Editor' and then clicking the
+   'Open H5P Editor' button.
+2. Clicking the 'H5P Editor' button in the top right corner (NOTE: this button
+   is only visible when a file is open).
+
+While the editor is loading, there will be a spinning status indicator in your
+vscode status bar (H5P Editor: Loading).
+
+## Debugging the extension in VSCode
 
 In the VSCode editor, open the debug panel and select `Launch Extension`. This
-will open a new VSCode window with the extension running. Clinking on a
-`H5P zipped file` in the workspace will open the H5P manager.
+will open a new VSCode window with the extension running.
+
+## Debugging the extension in Gitpod
+
+The process of debugging the extension in Gitpod is similar; however, when the
+debug tab opens in your browser, you will need to select a directory to open.
+The extension will fail to launch with a message like 'Could not find workspace
+folder' until you have opened a directory.
+
+## Unit Tests
+
+Ad previously mentioned, you can run unit tests with `npm run test`. Each
+subproject (server and client) has its own test suite that can be run
+individually using `--prefix server` or `--prefix client`.
+
+Code coverage is only presented when you run the full tests suite. The coverage
+is merged with `istanbul-merge`` and reported with `nyc report`. At the time of
+writing this, coverage is reported in text, lcov, and html formats.
+
+The final coverage results are in [coverage](./coverage).
 
 ## Features
 
@@ -118,7 +159,7 @@ packaged extension and they are provided under the following license:
       downloading them
 - [x] Use labels for field titles instead of headers
 - [ ] Cleanup tsconfig files
-- [ ] Add preview for collaborator solution fields (Toggle between edit and
+- [x] Add preview for collaborator solution fields (Toggle between edit and
       preview)
 - [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field
       directly (Would require selecting field from HTML))
