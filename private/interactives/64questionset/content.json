@@ -20,5 +20,27 @@
         "text": "<p>224242424244242</p>\n\n<p><img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
       }
     ]
+  },
+  {
+    "answers": [
+      {
+        "correct": false,
+        "tipsAndFeedback": {
+          "tip": "",
+          "chosenFeedback": "",
+          "notChosenFeedback": ""
+        },
+        "text": "<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>g ygy yv</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td>7887</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>ug y ytyt yt fytf ty</p>\n"
+      },
+      {
+        "correct": true,
+        "tipsAndFeedback": {
+          "tip": "",
+          "chosenFeedback": "",
+          "notChosenFeedback": ""
+        },
+        "text": "<p>1111</p>\n"
+      }
+    ]
   }
 ]
