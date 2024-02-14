@@ -150,10 +150,402 @@
         "extraTitle": "Untitled Multiple Choice"
       },
       "subContentId": "93a5d83d-b8d1-4ccf-be7e-c91b610f1c82"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>1111111<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "trueeeeeee",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "trueeeeeee"
+      },
+      "subContentId": "ab34bf89-0db4-49b7-803e-2d51351b1621"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false,
+          "feedbackOnCorrect": "rw tqwrqwr tqwrt",
+          "feedbackOnWrong": "wrwerwer"
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>111<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "13123 1312312 3123 12",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "13123 1312312 3123 12"
+      },
+      "subContentId": "b94331e7-4684-4ba0-b23c-c88f33f0e329"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "overallFeedback": [
+          {
+            "from": 0,
+            "to": 55,
+            "feedback": "wf wrfewrgergergergreg"
+          },
+          {
+            "from": 56,
+            "to": 100,
+            "feedback": "good"
+          }
+        ],
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "type": "auto",
+          "singlePoint": false,
+          "randomAnswers": false,
+          "showSolutionsRequiresInput": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false,
+          "passPercentage": 100,
+          "showScorePoints": true
+        },
+        "UI": {
+          "checkAnswerButton": "Check",
+          "submitAnswerButton": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgainButton": "Retry",
+          "tipsLabel": "Show tip",
+          "scoreBarLabel": "You got :num out of :total points",
+          "tipAvailable": "Tip available",
+          "feedbackAvailable": "Feedback available",
+          "readFeedback": "Read feedback",
+          "wrongAnswer": "Wrong answer",
+          "correctAnswer": "Correct answer",
+          "shouldCheck": "Should have been checked",
+          "shouldNotCheck": "Should not have been checked",
+          "noInput": "Please answer before viewing the solution",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>erf freg ergreg reg ergerg ewerg <img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n"
+      },
+      "library": "H5P.MultiChoice 1.16",
+      "metadata": {
+        "contentType": "Multiple Choice",
+        "license": "U",
+        "title": "Untitled Multiple Choice 22222",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "Untitled Multiple Choice 22222"
+      },
+      "subContentId": "b1a580d7-dc8b-4d63-be07-dd4f54cd5a4f"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>asdf sfsfsf sf fg sf sdf </p>\n\n<p>sf sfssfgsff sf </p>\n\n<p>sfsf sfgsgfd d<img src=\"media/Screen Shot 2023-03-23 at 2.05.39 PM.png\" style=\"width: 300px; height: 248px;\"/></p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "55555555",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "55555555"
+      },
+      "subContentId": "6ba917c9-9634-4c4e-b21f-d472f28da2a5"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "overallFeedback": [
+          {
+            "from": 0,
+            "to": 100
+          }
+        ],
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "type": "auto",
+          "singlePoint": false,
+          "randomAnswers": false,
+          "showSolutionsRequiresInput": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false,
+          "passPercentage": 100,
+          "showScorePoints": true
+        },
+        "UI": {
+          "checkAnswerButton": "Check",
+          "submitAnswerButton": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgainButton": "Retry",
+          "tipsLabel": "Show tip",
+          "scoreBarLabel": "You got :num out of :total points",
+          "tipAvailable": "Tip available",
+          "feedbackAvailable": "Feedback available",
+          "readFeedback": "Read feedback",
+          "wrongAnswer": "Wrong answer",
+          "correctAnswer": "Correct answer",
+          "shouldCheck": "Should have been checked",
+          "shouldNotCheck": "Should not have been checked",
+          "noInput": "Please answer before viewing the solution",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>asd dsf sdfadfdfsdfsdf <img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n"
+      },
+      "library": "H5P.MultiChoice 1.16",
+      "metadata": {
+        "contentType": "Multiple Choice",
+        "license": "U",
+        "title": "mikus",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "mikus"
+      },
+      "subContentId": "5025c068-a550-40ae-972b-5671f664d674"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "overallFeedback": [
+          {
+            "from": 0,
+            "to": 100
+          }
+        ],
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "type": "auto",
+          "singlePoint": false,
+          "randomAnswers": false,
+          "showSolutionsRequiresInput": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false,
+          "passPercentage": 100,
+          "showScorePoints": true
+        },
+        "UI": {
+          "checkAnswerButton": "Check",
+          "submitAnswerButton": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgainButton": "Retry",
+          "tipsLabel": "Show tip",
+          "scoreBarLabel": "You got :num out of :total points",
+          "tipAvailable": "Tip available",
+          "feedbackAvailable": "Feedback available",
+          "readFeedback": "Read feedback",
+          "wrongAnswer": "Wrong answer",
+          "correctAnswer": "Correct answer",
+          "shouldCheck": "Should have been checked",
+          "shouldNotCheck": "Should not have been checked",
+          "noInput": "Please answer before viewing the solution",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>adf df s fgg sfg <img src=\"media/Screenshot 2023-11-08 at 11.40.31 AM.png\" style=\"width: 300px; height: 435px;\"/></p>\n"
+      },
+      "library": "H5P.MultiChoice 1.16",
+      "metadata": {
+        "contentType": "Multiple Choice",
+        "license": "U",
+        "title": "Untitled Multiple Choice - 55555",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "Untitled Multiple Choice - 55555"
+      },
+      "subContentId": "071964a8-e248-4e4d-95a0-6099f0afae8e"
     }
   ],
   "disableBackwardsNavigation": false,
-  "randomQuestions": false,
+  "randomQuestions": true,
   "endGame": {
     "showResultPage": true,
     "showSolutionButton": true,
@@ -200,5 +592,6 @@
     },
     "width": 2016,
     "height": 1512
-  }
+  },
+  "poolSize": 11
 }
