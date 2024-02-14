@@ -44,6 +44,16 @@
       "minorVersion": 8
     },
     {
+      "machineName": "H5P.Blanks",
+      "majorVersion": 1,
+      "minorVersion": 14
+    },
+    {
+      "machineName": "H5P.TextUtilities",
+      "majorVersion": 1,
+      "minorVersion": 3
+    },
+    {
       "machineName": "H5P.Video",
       "majorVersion": 1,
       "minorVersion": 6
