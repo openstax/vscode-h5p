@@ -1,6 +1,15 @@
 {
   "errata_id": "d8606f9",
-  "collaborator_solutions": [],
+  "collaborator_solutions": [
+    {
+      "content": "éáééááéáéá",
+      "solution_type": "detailed"
+    },
+    {
+      "content": "őűőőéáééáúőűőűő éáéáőúúő",
+      "solution_type": "summary"
+    }
+  ],
   "is_solution_public": false,
   "books": [],
   "attachments": [
