@@ -60,10 +60,7 @@ const SERVER_ROOT = path.resolve(__dirname, '..');
 const NODE_MODULES = path.resolve(SERVER_ROOT, 'node_modules');
 const DST_OUT = path.resolve(SERVER_ROOT, 'out');
 const SRC_H5P_ROOT = path.resolve(SERVER_ROOT, 'h5p-php');
-const ARCHIVE_FILE =
-  process.argv[2] === undefined
-    ? path.resolve(DST_OUT, Config.h5pServerArchiveName)
-    : path.resolve(process.argv[2]);
+const ARCHIVE_FILE = path.resolve(DST_OUT, Config.h5pServerArchiveName);
 
 const MISC_COPIES = [
   {

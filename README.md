@@ -193,3 +193,16 @@ packaged extension and they are provided under the following license:
 
 - What metadata should be added
 - How private solutions will be handled - Probably placeholder values
+
+## Release
+
+Releases are handled by the scripts in the [scripts](./scripts/) directory.
+These scripts were designed to run inside the
+[release-vscode-extension](https://github.com/openstax/ce-pipelines/blob/5a1e0a70d5931bdaa7870bb41f4bc6e2debd551f/pipelines/release-vscode-extension.yml)
+pipeline; however, you could also run them on your local machine with the
+correct credentials.
+
+The [build script](./scripts/build-for-release.sh) tries to fetch the last
+version of the extension from openvsx so that it can include the previous
+versions of the H5P libraries in the new release. You can disable this behavior
+by setting the `CLEAN_H5P` environment variable before running the build.
