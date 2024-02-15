@@ -187,7 +187,7 @@ export default class OSStorage extends H5P.fsImplementations
     await Promise.all(
       attachments.map(async (item) => {
         const paths = await this._findFilePaths(id, item);
-        // if its location does not match its visibility copy it
+        // if its location does not match its visibility, copy it
         const [missing, loc] = isPrivate
           ? [paths.private === undefined, paths.public]
           : [paths.public === undefined, paths.private];
@@ -242,9 +242,9 @@ export default class OSStorage extends H5P.fsImplementations
           true,
         )),
       );
+      // write private data to private content.json file
       await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
-      // write sanitized content object to content.json file
       publicAttachments.push(
         ...(await this._handleAttachmentsInContent(
           realId,
@@ -253,6 +253,7 @@ export default class OSStorage extends H5P.fsImplementations
           false,
         )),
       );
+      // write sanitized content object to content.json file
       await this.writeJSON(realId, CONTENT_NAME, sanitized, false);
     } else {
       publicAttachments.push(

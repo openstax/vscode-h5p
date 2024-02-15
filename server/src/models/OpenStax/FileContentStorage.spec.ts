@@ -530,7 +530,22 @@ describe('File Content Storage', () => {
     expect(paths.public).toBeDefined();
     expect(paths.private).toBeDefined();
 
-    // WHEN: Image is not longer referenced in either location
+    // WHEN: Image is no longer referenced in public content
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        ...baseContent,
+        text: '',
+      },
+      {} as unknown as IUser,
+      id,
+    );
+    // THEN: Image is not in public storage
+    paths = await findFilePaths(id, image);
+    expect(paths.public).not.toBeDefined();
+    expect(paths.private).toBeDefined();
+
+    // WHEN: Image is no longer referenced in either location
     await storage.addContent(
       {} as unknown as IContentMetadata,
       {
