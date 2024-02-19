@@ -185,25 +185,20 @@ export default class OSStorage extends H5P.fsImplementations
     validateContent(content);
     await this.moveTempFiles(replaced, id, user, isPrivate);
     await Promise.all(
-      Array.from(attachments).map(async (attachment) => {
-        const location = assertValue(
-          await this._findFilePath(id, attachment),
-          `Could not find image: ${attachment}`,
-        );
-        const locationIsPrivate = location.includes(
-          this.privateContentDirectory,
-        );
-        // if its location does not match its visibility
-        if (isPrivate !== locationIsPrivate) {
-          // copy it
+      attachments.map(async (item) => {
+        const paths = await this._findFilePaths(id, item);
+        // if its location does not match its visibility, copy it
+        const [missing, loc] = isPrivate
+          ? [paths.private === undefined, paths.public]
+          : [paths.public === undefined, paths.private];
+        if (missing) {
+          const src = assertValue(loc, `Could not find attachment: ${item}`);
           await this._addFile(
             id,
-            attachment,
-            fsExtra.createReadStream(location),
+            item,
+            fsExtra.createReadStream(src),
             isPrivate,
           );
-          // remove the old one
-          await fsExtra.rm(location);
         }
       }),
     );
@@ -231,33 +226,37 @@ export default class OSStorage extends H5P.fsImplementations
     assertTrue(realId !== '0', 'Content id cannot be 0');
     const newOsMeta = mergeMetadata(await this.getOSMeta(realId), osMeta);
     const oldAttachments = newOsMeta.attachments ?? [];
-    const newAttachments: string[] = [];
+    const privateAttachments: string[] = [];
+    const publicAttachments: string[] = [];
     if (!isSolutionPublic(osMeta)) {
       const [sanitized, privateData] = yankAnswers(
         content,
         metadata.mainLibrary,
       );
       // Replace images in private content
-      const privateAttachments = await this._handleAttachmentsInContent(
-        realId,
-        privateData,
-        user,
-        true,
+      privateAttachments.push(
+        ...(await this._handleAttachmentsInContent(
+          realId,
+          privateData,
+          user,
+          true,
+        )),
       );
+      // write private data to private content.json file
       await this.writeJSON(realId, CONTENT_NAME, privateData, true);
 
-      // write sanitized content object to content.json file
-      const publicAttachments = await this._handleAttachmentsInContent(
-        realId,
-        sanitized,
-        user,
-        false,
+      publicAttachments.push(
+        ...(await this._handleAttachmentsInContent(
+          realId,
+          sanitized,
+          user,
+          false,
+        )),
       );
+      // write sanitized content object to content.json file
       await this.writeJSON(realId, CONTENT_NAME, sanitized, false);
-      newAttachments.push(...publicAttachments);
-      newAttachments.push(...privateAttachments);
     } else {
-      newAttachments.push(
+      publicAttachments.push(
         ...(await this._handleAttachmentsInContent(
           realId,
           content,
@@ -270,26 +269,27 @@ export default class OSStorage extends H5P.fsImplementations
     }
 
     // Add attachments from metadata
-    const metaAttachments = await this._handleAttachmentsInContent(
-      realId,
-      newOsMeta,
-      user,
-      false,
+    publicAttachments.push(
+      ...(await this._handleAttachmentsInContent(
+        realId,
+        newOsMeta,
+        user,
+        false,
+      )),
     );
 
-    newAttachments.push(...metaAttachments);
-    const attachmentSet = new Set(newAttachments);
+    for (const name of oldAttachments) {
+      const paths = await this._findFilePaths(realId, name);
+      if (paths.private !== undefined && !privateAttachments.includes(name)) {
+        fsExtra.rmSync(paths.private);
+      }
+      if (paths.public !== undefined && !publicAttachments.includes(name)) {
+        fsExtra.rmSync(paths.public);
+      }
+    }
 
-    newOsMeta.attachments = Array.from(attachmentSet);
-    await Promise.all(
-      oldAttachments.map(async (attachment) => {
-        if (!attachmentSet.has(attachment)) {
-          const fullPath = await this._findFilePath(realId, attachment);
-          if (fullPath !== undefined) {
-            await fsExtra.rm(fullPath);
-          }
-        }
-      }),
+    newOsMeta.attachments = Array.from(
+      new Set(publicAttachments.concat(privateAttachments)),
     );
 
     await Promise.all([
@@ -356,16 +356,19 @@ export default class OSStorage extends H5P.fsImplementations
     }
   }
 
+  private async _findFilePaths(id: string, filename: string) {
+    const pathTuples: [string, string][] = [
+      ['public', path.join(this.contentPath, id, filename)],
+      ['private', path.join(this.privateContentDirectory, id, filename)],
+    ];
+    const paths: Partial<Record<'public' | 'private', string>> =
+      Object.fromEntries(pathTuples.filter((t) => fsExtra.existsSync(t[1])));
+    return paths;
+  }
+
   private async _findFilePath(id: string, filename: string) {
-    const publicPath = path.join(this.contentPath, id, filename);
-    const privatePath = path.join(this.privateContentDirectory, id, filename);
-    if (await fsExtra.exists(publicPath)) {
-      return publicPath;
-    } else if (await fsExtra.exists(privatePath)) {
-      return privatePath;
-    } else {
-      return undefined;
-    }
+    const paths = await this._findFilePaths(id, filename);
+    return paths.public ?? paths.private;
   }
 
   public override async getFileStats(
