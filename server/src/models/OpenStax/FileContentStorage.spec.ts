@@ -85,7 +85,7 @@ describe('File Content Storage', () => {
   beforeEach(() => {
     mockfs({
       [VIRTUAL_ROOT]: {
-        ['interactives']: {
+        interactives: {
           '1': {
             'h5p.json': JSON.stringify({
               ...MOCK_H5P_BASE,
@@ -451,6 +451,115 @@ describe('File Content Storage', () => {
     expect(await findFilePath(id, image)).toMatch(
       new RegExp(`${VIRTUAL_ROOT}/${CONFIG.contentPath}`),
     );
+  });
+  it('correctly handles unreferenced images', async () => {
+    mockfs({
+      [VIRTUAL_ROOT]: {
+        interactives: {
+          '1': {
+            media: {
+              'a.png': '<contents of a.png>',
+            },
+          },
+        },
+        private: {
+          interactives: {
+            '1': {
+              ['content.json']: JSON.stringify({
+                text: '<img src="media/a.png"/>',
+              }),
+              media: {
+                'a.png': '<contents of a.png>',
+              },
+            },
+          },
+        },
+      },
+    });
+    const storage = createStorageHarness();
+    const findFilePaths = tryGet(storage, '_findFilePaths').bind(storage);
+    const image = 'media/a.png';
+    const id = '1';
+    const baseContent = {
+      text: `<img src="${image}"/>`,
+      questions: [`<img src="${image}"/>`],
+      osMeta: {
+        nickname: id,
+        is_solution_public: false,
+      },
+    };
+    let paths: Partial<Record<'public' | 'private', string>>;
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      baseContent,
+      {} as unknown as IUser,
+      id,
+    );
+    // Image should exist in both public and private storage
+    paths = await findFilePaths(id, image);
+    expect(paths.public).toBeDefined();
+    expect(paths.private).toBeDefined();
+
+    // WHEN: Solutions are made public
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        ...baseContent,
+        osMeta: {
+          ...baseContent.osMeta,
+          is_solution_public: true,
+        },
+      },
+      {} as unknown as IUser,
+      id,
+    );
+    // THEN: Only the public storage should contain the image
+    paths = await findFilePaths(id, image);
+    expect(paths.public).toBeDefined();
+    expect(paths.private).not.toBeDefined();
+
+    // WHEN: Solutions are made private again
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      baseContent,
+      {} as unknown as IUser,
+      id,
+    );
+    // THEN: Both public and private storage should contain the image
+    paths = await findFilePaths(id, image);
+    expect(paths.public).toBeDefined();
+    expect(paths.private).toBeDefined();
+
+    // WHEN: Image is no longer referenced in public content
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        ...baseContent,
+        text: '',
+      },
+      {} as unknown as IUser,
+      id,
+    );
+    // THEN: Image is not in public storage
+    paths = await findFilePaths(id, image);
+    expect(paths.public).not.toBeDefined();
+    expect(paths.private).toBeDefined();
+
+    // WHEN: Image is no longer referenced in either location
+    await storage.addContent(
+      {} as unknown as IContentMetadata,
+      {
+        ...baseContent,
+        questions: [''],
+        text: '',
+      },
+      {} as unknown as IUser,
+      id,
+    );
+    // THEN: Image is gone
+    paths = await findFilePaths(id, image);
+    expect(paths.public).not.toBeDefined();
+    expect(paths.private).not.toBeDefined();
   });
   it('still works when the contentPath does not exist', async () => {
     mockfs({
