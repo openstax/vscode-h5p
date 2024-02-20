@@ -219,9 +219,12 @@ const SRC_CKEDITOR_BUNDLED_PLUGINS = path.resolve(
   'ckeditor4',
   'plugins',
 );
-const SRC_BOOTSTRAP_SKIN = path.resolve(
+const SRC_BOOTSTRAP_SKIN_ROOT = path.resolve(
   SRC_CKEDITOR_PLUGINS,
   'BootstrapCK4-Skin',
+);
+const SRC_BOOTSTRAP_SKIN = path.resolve(
+  SRC_BOOTSTRAP_SKIN_ROOT,
   'skins',
   'bootstrapck',
 );
@@ -286,6 +289,10 @@ const CKEDITOR_PLUGIN_COPIES: CopyDefinition[] = [
   {
     src: [SRC_BOOTSTRAP_SKIN, 'icons_hidpi.png'],
     dst: [DST_BOOTSTRAP_SKIN, 'icons_hidpi.png'],
+  },
+  {
+    src: [SRC_BOOTSTRAP_SKIN_ROOT, 'LICENSE'],
+    dst: [DST_BOOTSTRAP_SKIN, 'LICENSE'],
   },
 ];
 
