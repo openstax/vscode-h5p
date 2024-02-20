@@ -5,7 +5,8 @@ Visual Studio Code IDE (Integrated Development Environment). This project is a
 development effort to integrate H5P manipulation into Poet, a library developed
 by Openstax.
 
-`The project is still in its early stages and is not yet ready for production use.`
+The project is still in its early stages. If you find a problem, please create
+an issue.
 
 ## Getting Started
 
@@ -146,28 +147,27 @@ packaged extension and they are provided under the following license:
 - [x] Public/private switch (determines if answers are saved outside
       content.json or not)
 - [x] Add command to open the manager
-- [ ] Extension settings
 - [x] Bundle extension to vsix
 - [x] Add tests
-- [ ] CI/CD
+- [x] CI/CD
 - [x] Support for extra openstax metadata with editor. It should be okay to save
       this metadata next to the h5p.json and content.json. H5P spec allows
       inclusion of arbitrary json files, so it would be safe to include this in
       the final h5p file too.
 - [x] Custom content fs implementation that can 'hide' private solutions/hints
-- [ ] Pack h5p-php-library and h5p-editor-php-library into extension instead of
+- [x] Pack h5p-php-library and h5p-editor-php-library into extension instead of
       downloading them
 - [x] Use labels for field titles instead of headers
-- [ ] Cleanup tsconfig files
 - [x] Add preview for collaborator solution fields (Toggle between edit and
       preview)
-- [ ] (Maybe) Use title as nickname (Problem: Cannot set default value of field
-      directly (Would require selecting field from HTML))
-- [ ] (Maybe) Configure aliases for "common" in server and client (@common/...)
-- [ ] (Maybe) Support audio and video uploads too
+- [ ] Support for public solution subset (only even/odd solutions made private)
+- [ ] Better Icon
 - [ ] POET integration
+- [ ] Cleanup tsconfig files
 
-## Nice to Haves/Future improvements
+## Nice to Haves/Future Improvements
+
+### User-Facing
 
 - When I click the Save button, it gets a checkmark which then disappears. It is
   a bit confusing that it is the same green in both states, not saved and saved.
@@ -176,11 +176,23 @@ packaged extension and they are provided under the following license:
 - When there is a save error, the save button turns red but it automatically
   resets after a set duration. If the Save button remains red until error is
   fixed, I think it is a perfect behaviour. (Requested by Ottó)
+- Use H5P title as nickname (Problem: Cannot set default value of field directly
+  (Would require selecting field from HTML))
+- Support audio and video uploads too
+
+### Developer-Facing
+
+- Configure aliases for "common" in server and client (@common/...) so that the
+  import paths are shorter/easier to understand
+- Maybe update [AnswerYankers](./server/src/models/OpenStax/AnswerYankers.ts) to
+  use the newer [walkJSON](./server/src/models/OpenStax/ContentMutators.ts#L48)
+  to modify content instead of implementing bespoke procedures.
 
 ## Known Issues
 
 - Copy and Paste & Replace H5P content buttons do not work
 - H5P edit image button does not work (Tainted canvases may not be exported)
+- CKEditor dialogs open offscreen (need to scroll up or down to find them)
 
 ## Authors
 
@@ -188,11 +200,6 @@ packaged extension and they are provided under the following license:
   - [Tyler Nullmeier](https://github.com/tylerzeromaster) 🇺🇸
   - [Samuel Klutse](https://samuelklutse.com) 🇹🇬
   - [Chris Kline](https://github.com/ckline-tryptic) 🇺🇸
-
-## What we still need to know
-
-- What metadata should be added
-- How private solutions will be handled - Probably placeholder values
 
 ## Release
 
