@@ -1,0 +1,22 @@
+{
+  "answers": [
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<p>12121<img src=\"media/ottooooooo.jpeg\" style=\"width: 300px; height: 157px;\"/></p>\n"
+    },
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<p><img src=\"media/MIIIIIIIIIIIIIIIMMMMMMM.jpeg\" style=\"width: 300px; height: 225px;\"/>asdadasdasd</p>\n"
+    }
+  ]
+}

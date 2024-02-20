@@ -1,0 +1,22 @@
+{
+  "answers": [
+    {
+      "correct": true,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<p>2222<img src=\"media/Image 2-20-24 at 11.34 AM.jpeg\" style=\"width: 300px; height: 407px;\"/></p>\n"
+    },
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      },
+      "text": "<p><img src=\"media/Image 2-20-24 at 11.42 AM.jpeg\" style=\"width: 300px; height: 271px;\"/>3333</p>\n"
+    }
+  ]
+}

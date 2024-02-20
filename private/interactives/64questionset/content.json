@@ -511,5 +511,30 @@
   },
   {
     "correct": "true"
+  },
+  {
+    "correct": "true"
+  },
+  {
+    "answers": [
+      {
+        "correct": false,
+        "tipsAndFeedback": {
+          "tip": "",
+          "chosenFeedback": "",
+          "notChosenFeedback": ""
+        },
+        "text": "<p>sfsfsdf sf sdf sdf sdf sdf sdf ds</p>\n\n<table align=\"left\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>saasasassasa</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+      },
+      {
+        "correct": false,
+        "tipsAndFeedback": {
+          "tip": "",
+          "chosenFeedback": "",
+          "notChosenFeedback": ""
+        },
+        "text": "<p>ddf sdf sdf sdf<img src=\"media/Image 2-20-24 at 11.34 AM.jpeg\" style=\"width: 300px; height: 407px;\"/></p>\n"
+      }
+    ]
   }
 ]
