@@ -209,6 +209,9 @@ by setting the `CLEAN_H5P` environment variable before running the build.
 
 ## Other Notes
 
-- The MathType editor supports editing MathML source (CTRL+Shift+X) and LaTeX source (CTRL+Shift+L)
-- Some scripts are added to the editor via [H5P customizations](./server/src/models/OpenStax/H5PEditor.ts#L246)
-- Some scripts are added to the player via [H5P customizations](./server/src/createH5PServer.ts#L139)
+- The MathType editor supports editing MathML source (CTRL+Shift+X) and LaTeX
+  source (CTRL+Shift+L)
+- Some scripts are added to the editor via
+  [H5P customizations](./server/src/models/OpenStax/H5PEditor.ts#L246)
+- Some scripts are added to the player via
+  [H5P customizations](./server/src/createH5PServer.ts#L139)
