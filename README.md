@@ -98,7 +98,7 @@ To add a plugin, there are several steps:
 
 1. Include the plugin repository as a git submodule inside
    `server/ckeditor-plugins`
-1. Add the plugin path to the `pluginPaths` in
+1. Add the plugin path to the `CKEDITOR_PLUGIN_COPIES` in
    [postbuild](./server/scripts/postbuild.ts)
 1. Add a step in the
    [addons.js editor plugin](./server/static/editor-plugins/addons.js) that adds
@@ -206,3 +206,9 @@ The [build script](./scripts/build-for-release.sh) tries to fetch the last
 version of the extension from openvsx so that it can include the previous
 versions of the H5P libraries in the new release. You can disable this behavior
 by setting the `CLEAN_H5P` environment variable before running the build.
+
+## Other Notes
+
+- The MathType editor supports editing MathML source (CTRL+Shift+X) and LaTeX source (CTRL+Shift+L)
+- Some scripts are added to the editor via [H5P customizations](./server/src/models/OpenStax/H5PEditor.ts#L246)
+- Some scripts are added to the player via [H5P customizations](./server/src/createH5PServer.ts#L139)

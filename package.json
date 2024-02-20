@@ -3,7 +3,7 @@
   "displayName": "Content Assessment Tool",
   "publisher": "openstax",
   "description": "Visualize H5P files in VS Code",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "openstax",
   "license": "MIT",
   "homepage": "https://openstax.org/",
