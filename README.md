@@ -140,6 +140,10 @@ packaged extension and they are provided under the following license:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
+## H5P PHP Library Changes
+
+This extension uses a modified version of the [h5p-php-library](https://github.com/h5p/h5p-editor-php-library) which is licensed under GNU GPLv3. The modifications are aimed towards reenabling validation of content fields. This feature had previously been disabled seemingly due to fears of ambiguous errors when dealing with deeply nested fields. For more details on what modifications are made, see [enable-h5p-validation.patch](./server/scripts/enable-h5p-validation.patch).
+
 ## TODO
 
 - [x] On save, save h5p.json and content.json to the workspace or specified
