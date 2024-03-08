@@ -121,7 +121,11 @@ function _isSemanticsEntry(obj: unknown): obj is ISemanticsEntry {
 
 function _addTags(entry: ISemanticsEntry) {
   if (entry.type === 'text' && entry.widget === 'html') {
-    entry.tags = (entry.tags ?? []).concat(_supportedTags);
+    const entryTags = entry.tags ?? [];
+    // Avoid duplication (can be a problem with H5P.QuestionSet)
+    if (entryTags.indexOf('html') === -1) {
+      entry.tags = entryTags.concat(_supportedTags);
+    }
   }
 }
 
@@ -137,12 +141,10 @@ export const alterLibrarySemantics = (
     Config.supportedLibraries[library.machineName]?.semantics;
   const overrideForLib = semanticMods?.override;
   const additionalFields = semanticMods?.additionalFields;
-  if (semanticMods?.supportsHTML === true) {
-    mutations.push(_addTags);
-  }
   if (overrideForLib !== undefined) {
     mutations.push(overrideForLib);
   }
+  mutations.push(_addTags);
   if (additionalFields !== undefined) {
     additionalFields.forEach((addField) => {
       const index =
