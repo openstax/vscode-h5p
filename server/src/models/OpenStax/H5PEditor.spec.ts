@@ -84,9 +84,9 @@ describe('H5PEditor', () => {
         expect(JSON.stringify(altered)).not.toBe(serialized);
       });
     });
-    const libWithHTML = Object.entries(Config.supportedLibraries)
-      .filter((t) => t[1].semantics?.supportsHTML === true)
-      .map((t) => t[0])[0];
+    const libWithHTML = Object.entries(Config.supportedLibraries).map(
+      (t) => t[0],
+    )[0];
     if (libWithHTML !== undefined) {
       it('adds tags', () => {
         const semanticsWithTags = blanksSemantics.concat([

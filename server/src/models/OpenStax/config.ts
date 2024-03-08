@@ -17,7 +17,6 @@ interface SupportedLibrary {
   unyankAnswers: Unyanker;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
-    supportsHTML?: boolean;
     /**
      * Alter an existing field. See the semantics.json for the library you
      * wish to alter for more information. When defined, this function will be
@@ -89,7 +88,6 @@ export default class Config {
         yankAnswers: blanksYanker,
         unyankAnswers: shallowMerge,
         semantics: {
-          supportsHTML: true,
           additionalFields: metadataFields,
           override(entry) {
             if (entry.name === 'behaviour') {
@@ -109,7 +107,6 @@ export default class Config {
         yankAnswers: multiChoiceYanker,
         unyankAnswers: shallowMerge,
         semantics: {
-          supportsHTML: true,
           additionalFields: metadataFields,
           override(entry) {
             if (entry.name === 'behaviour') {
@@ -153,7 +150,6 @@ export default class Config {
         yankAnswers: trueFalseYanker,
         unyankAnswers: shallowMerge,
         semantics: {
-          supportsHTML: true,
           additionalFields: metadataFields,
         },
       },
