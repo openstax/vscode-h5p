@@ -111,10 +111,12 @@ describe('H5PEditor', () => {
           { ...fakeLib, machineName: libWithHTML },
           semanticsWithTags,
         );
-        expect(
-          altered.find((o: ISemanticsEntry) => o.name === 'tagParent').fields[0]
-            .field.tags.length,
-        ).toBeGreaterThan(0);
+        const entry = altered.find(
+          (o: ISemanticsEntry) => o.name === 'tagParent',
+        );
+        const field = (entry?.fields ?? [])[0]?.field;
+        expect(field).toBeDefined();
+        expect(field?.tags?.length).toBeGreaterThan(0);
       });
     }
   });
