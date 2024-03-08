@@ -12,15 +12,55 @@ import {
 import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
 import { assertValue } from '../../../../common/src/utils';
 
-type SupportedLibrary = {
+interface SupportedLibrary {
   yankAnswers: Yanker;
   unyankAnswers: Unyanker;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     supportsHTML?: boolean;
+    /**
+     * Alter an existing field. See the semantics.json for the library you
+     * wish to alter for more information. When defined, this function will be
+     * called on each field that exists in the library's semantics.
+     */
     override?: (target: ISemanticsEntry) => void;
+    /**
+     * Add additional fields to a libraries semantics.
+     * You can optionally specify a zero-based index for the new field if you
+     * want some control over where the field appears. The field will be
+     * appended to the end by default.
+     */
+    additionalFields?: AdditionalField[];
   };
+}
+
+interface AdditionalField {
+  index?: number;
+  field: ISemanticsEntry;
+}
+
+const summarySolution: ISemanticsEntry = {
+  name: 'summarySolution',
+  type: 'text',
+  importance: 'medium',
+  optional: true,
+  widget: 'html',
+  label: 'Summary Solution',
 };
+
+const detailedSolution: ISemanticsEntry = {
+  name: 'detailedSolution',
+  type: 'text',
+  importance: 'medium',
+  optional: true,
+  widget: 'html',
+  label: 'Detailed Solution',
+};
+
+const metadataFields: AdditionalField[] = [
+  { field: summarySolution },
+  { field: detailedSolution },
+];
 
 export default class Config {
   public readonly contentPath: string;
@@ -50,6 +90,7 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
+          additionalFields: metadataFields,
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -69,6 +110,7 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
+          additionalFields: metadataFields,
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -112,6 +154,7 @@ export default class Config {
         unyankAnswers: shallowMerge,
         semantics: {
           supportsHTML: true,
+          additionalFields: metadataFields,
         },
       },
     };

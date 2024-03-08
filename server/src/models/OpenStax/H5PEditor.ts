@@ -130,15 +130,27 @@ export const alterLibrarySemantics = (
   semantics: ISemanticsEntry[],
 ) => {
   const mutations: Mutator[] = [];
-  const semanticsCopy = JSON.parse(JSON.stringify(semantics));
+  const semanticsCopy: ISemanticsEntry[] = JSON.parse(
+    JSON.stringify(semantics),
+  );
   const semanticMods =
     Config.supportedLibraries[library.machineName]?.semantics;
   const overrideForLib = semanticMods?.override;
+  const additionalFields = semanticMods?.additionalFields;
   if (semanticMods?.supportsHTML === true) {
     mutations.push(_addTags);
   }
   if (overrideForLib !== undefined) {
     mutations.push(overrideForLib);
+  }
+  if (additionalFields !== undefined) {
+    additionalFields.forEach((addField) => {
+      const index =
+        addField.index === undefined || addField.index > semanticsCopy.length
+          ? semanticsCopy.length
+          : addField.index;
+      semanticsCopy.splice(index, 0, addField.field);
+    });
   }
   walkJSON(semanticsCopy, (field) => {
     const { type, value, fqPath } = field;
