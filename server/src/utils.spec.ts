@@ -1,5 +1,5 @@
 import mockfs from 'mock-fs';
-import { extractArchive, getIps, parseBooksXML } from './utils';
+import { extractArchive, getIps, parseBooksXML, recursiveMerge } from './utils';
 import fsExtra from 'fs-extra';
 import path from 'path';
 import decompress from 'decompress';
@@ -110,6 +110,40 @@ describe('Utility functions', () => {
     it('gets values and sets defaults', () => {
       const booksXml = parseBooksXML('books.xml');
       expect(booksXml).toMatchSnapshot();
+    });
+  });
+  describe('recursiveMerge', () => {
+    it('merges objects', () => {
+      let result = recursiveMerge({ a: 1 }, { b: 2 });
+      expect(result).toStrictEqual({ a: 1, b: 2 });
+      // Keeps rhs when the keys exists in both
+      result = recursiveMerge({ a: 1 }, { a: 2 });
+      expect(result).toStrictEqual({ a: 2 });
+      // Favors non-null
+      result = recursiveMerge({ a: 1 }, { a: null });
+      expect(result).toStrictEqual({ a: 1 });
+      // Deeply merges objects
+      result = recursiveMerge({ a: { b: { c: 1 } } }, { a: { b: { d: 2 } } });
+      expect(result).toStrictEqual({ a: { b: { c: 1, d: 2 } } });
+    });
+    it('merges arrays by index by default', () => {
+      // Keeps rhs when the values exists in both places
+      let result = recursiveMerge([1], [2]);
+      expect(result).toStrictEqual([2]);
+      // Favors non-null
+      result = recursiveMerge([1, null, 3], [null, 2, null]);
+      expect(result).toStrictEqual([1, 2, 3]);
+      // Deeply merges arrays
+      result = recursiveMerge([{ a: { b: 1 } }], [{ a: { c: 2 } }]);
+      expect(result).toStrictEqual([{ a: { b: 1, c: 2 } }]);
+    });
+    it('returns rhs when types do not match, or lhs if rhs is null/undefined', () => {
+      let result = recursiveMerge([1], null);
+      expect(result).toStrictEqual([1]);
+      result = recursiveMerge([1], 'test');
+      expect(result).toStrictEqual('test');
+      result = recursiveMerge([1], undefined);
+      expect(result).toStrictEqual([1]);
     });
   });
 });

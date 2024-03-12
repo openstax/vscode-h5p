@@ -1,12 +1,12 @@
+import { recursiveMerge } from '../../utils';
 import {
   Yanker,
   blanksYanker,
   multiChoiceYanker,
-  questionSetMerge,
-  questionSetYanker,
   shallowMerge,
   trueFalseYanker,
 } from './AnswerYankers';
+import Config from './config';
 
 describe('AnswerYankers', () => {
   const yankByKeyTests: Array<[string, Yanker, string]> = [
@@ -90,12 +90,15 @@ describe('AnswerYankers', () => {
         ],
       };
       const copy = { ...fakeContent };
-      const [publicData, privateData] = questionSetYanker(fakeContent);
+      const questionSetYanker =
+        Config.supportedLibraries['H5P.QuestionSet']?.yankAnswers;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const [publicData, privateData] = questionSetYanker!(fakeContent);
       // No modifications to original
       expect(copy).toStrictEqual(fakeContent);
       expect(publicData).toMatchSnapshot();
       expect(privateData).toMatchSnapshot();
-      expect(questionSetMerge(publicData, privateData)).toStrictEqual(
+      expect(recursiveMerge(publicData, privateData)).toStrictEqual(
         fakeContent,
       );
     });
