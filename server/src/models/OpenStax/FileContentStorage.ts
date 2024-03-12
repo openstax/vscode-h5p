@@ -26,7 +26,7 @@ function assertLibrary(mainLibrary: string) {
 }
 
 function yankAnswers(
-  content: unknown,
+  content: Partial<unknown>,
   mainLibrary: string,
 ): [unknown, unknown] {
   return assertLibrary(mainLibrary).yankAnswers(content);

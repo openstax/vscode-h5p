@@ -1,19 +1,10 @@
 import * as H5P from '@lumieducation/h5p-server';
-import {
-  Unyanker,
-  Yanker,
-  blanksYanker,
-  multiChoiceYanker,
-  questionSetMerge,
-  shallowMerge,
-  trueFalseYanker,
-} from './AnswerYankers';
+import { Yanker, yankByKeysFactory } from './AnswerYankers';
 import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
 import { assertValue } from '../../../../common/src/utils';
 
 interface SupportedLibrary {
   yankAnswers: Yanker;
-  unyankAnswers: Unyanker;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: {
     /**
@@ -84,8 +75,10 @@ export default class Config {
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
       'H5P.Blanks': {
-        yankAnswers: blanksYanker,
-        unyankAnswers: shallowMerge,
+        yankAnswers: yankByKeysFactory(
+          'questions',
+          ...metadataFields.map((f) => f.field.name),
+        ),
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -103,8 +96,10 @@ export default class Config {
         },
       },
       'H5P.MultiChoice': {
-        yankAnswers: multiChoiceYanker,
-        unyankAnswers: shallowMerge,
+        yankAnswers: yankByKeysFactory(
+          'answers',
+          ...metadataFields.map((f) => f.field.name),
+        ),
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -151,7 +146,6 @@ export default class Config {
           }
           return [publicData, privateData];
         },
-        unyankAnswers: questionSetMerge,
         semantics: {
           override(entry) {
             if (entry.name === 'questions') {
@@ -174,8 +168,10 @@ export default class Config {
         },
       },
       'H5P.TrueFalse': {
-        yankAnswers: trueFalseYanker,
-        unyankAnswers: shallowMerge,
+        yankAnswers: yankByKeysFactory(
+          'correct',
+          ...metadataFields.map((f) => f.field.name),
+        ),
         semantics: {
           additionalFields: metadataFields,
         },
