@@ -27,7 +27,6 @@ const MIN_FORM_DATA = {
   errata_id: 'test',
   is_solution_public: true,
   books: [],
-  collaborator_solutions: [],
 };
 
 describe('OpenstaxMetadataForm', () => {

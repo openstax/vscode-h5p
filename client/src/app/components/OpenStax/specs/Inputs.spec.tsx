@@ -13,7 +13,6 @@ import APLO from '../APLO';
 import { SingleDropdown } from '../SingleDropdown';
 import { range } from '../../../../../../common/src/utils';
 import ConfirmationDialog from '../ConfirmationDialog';
-import CollaboratorSolution from '../CollaboratorSolution';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
@@ -358,52 +357,6 @@ describe('Inputs', () => {
         expect(mockHandleResult).toBeCalledTimes(1);
         expect(mockHandleResult).toHaveBeenCalledWith(confirm);
       });
-    });
-  });
-
-  describe('collaborator-solutions', () => {
-    const html = '<p>HELLO, I AM HTML</p>';
-    it('properly supports value change', () => {
-      let value = '';
-      let isValid: boolean = true;
-      const props = {
-        title: 'Test',
-        handleInputChange(v: string, i?: boolean) {
-          value = v;
-          isValid = i ?? true;
-        },
-        value,
-        isValid,
-      };
-      const { container } = render(<CollaboratorSolution {...props} />);
-      const textArea = container.querySelector(
-        '[data-control-type="textarea"]',
-      );
-      expect(textArea).toBeTruthy();
-      act(() =>
-        fireEvent.change(textArea!, {
-          target: { value: html },
-        }),
-      );
-      expect(value).toBe(html);
-    });
-    it('supports HTML preview', () => {
-      const props = {
-        value: html,
-        isValid: true,
-        handleInputChange: jest.fn(),
-        title: 'Test',
-      };
-      const { container } = render(<CollaboratorSolution {...props} />);
-      const previewButton = container.querySelector(
-        '[data-control-type="preview-button"]',
-      );
-      expect(previewButton).toBeTruthy();
-      act(() => fireEvent.click(previewButton!));
-      expect(
-        container.querySelector('[data-control-type="textarea"]'),
-      ).toBeFalsy();
-      expect(container.getElementsByTagName('p')[0]).toBeTruthy();
     });
   });
 });

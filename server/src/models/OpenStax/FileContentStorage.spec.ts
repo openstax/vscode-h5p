@@ -20,7 +20,6 @@ const MOCK_H5P_BASE: IContentMetadata = {
   defaultLanguage: '',
 };
 const MOCK_OSMETA_BASE: Partial<NetworkMetadata> = {
-  collaborator_solutions: [],
   is_solution_public: true,
 };
 
@@ -183,7 +182,7 @@ describe('File Content Storage', () => {
       {
         osMeta: {
           nickname: 'image-test',
-          collaborator_solutions: [
+          _additional_field: [
             {
               content: '<img src="media/detailed.png"/>',
               solution_type: 'detailed',
