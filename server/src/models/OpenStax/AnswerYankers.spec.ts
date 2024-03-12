@@ -1,22 +1,17 @@
 import { recursiveMerge } from '../../utils';
-import {
-  Yanker,
-  blanksYanker,
-  multiChoiceYanker,
-  shallowMerge,
-  trueFalseYanker,
-} from './AnswerYankers';
+import { yankByKeysFactory } from './AnswerYankers';
 import Config from './config';
 
 describe('AnswerYankers', () => {
-  const yankByKeyTests: Array<[string, Yanker, string]> = [
-    ['blanksYanker', blanksYanker, 'questions'],
-    ['multiChoiceYanker', multiChoiceYanker, 'answers'],
-    ['trueFalseYanker', trueFalseYanker, 'correct'],
+  const yankByKeyTests: Array<[string, string]> = [
+    ['blanksYanker', 'questions'],
+    ['multiChoiceYanker', 'answers'],
+    ['trueFalseYanker', 'correct'],
   ];
-  yankByKeyTests.forEach(([name, func, key]) => {
+  yankByKeyTests.forEach(([name, key]) => {
     describe(name, () => {
       it(`yanks ${key} without side effects`, () => {
+        const func = yankByKeysFactory(key);
         // The actual information does not matter
         // We are testing that it pulls out the correct key without side effects
         const fakeContent = {
@@ -35,7 +30,7 @@ describe('AnswerYankers', () => {
         expect('otherInformation' in (privateData as any)).toBe(false);
 
         // Merge them back together
-        expect(shallowMerge(publicData, privateData)).toStrictEqual(
+        expect(recursiveMerge(publicData, privateData)).toStrictEqual(
           fakeContent,
         );
       });
