@@ -15,8 +15,6 @@ const BASE_FORM_STATE: FormState = {
   assignment_type: { ...defaultInputState },
   dok: { ...defaultInputState },
   time: { ...defaultInputState },
-  detailed_solution: { ...defaultInputState },
-  summary_solution: { ...defaultInputState },
   is_solution_public: { ...defaultInputState, value: 'false' },
   books: [],
   aplo: [],
@@ -94,26 +92,6 @@ describe('Metadata Adaptor', () => {
       ...adaptToFormModel(saved),
     };
     // THEN: The books are loaded back into their original state
-    expect(loaded).toMatchObject(state);
-  });
-  it('Saves and loads values for collaborator solutions', () => {
-    // GIVEN: Collaborator Solution values
-    const state: FormState = {
-      ...BASE_FORM_STATE,
-      summary_solution: { ...defaultInputState, value: 'Summary' },
-      detailed_solution: { ...defaultInputState, value: 'Detailed' },
-    };
-    // WHEN: The data is saved
-    const saved = toCanonicalModel(adaptToNetworkModel(state));
-    // THEN: The collaborator solutions are saved as expected
-    expect(saved).toMatchSnapshot();
-
-    // WHEN: The data is loaded
-    const loaded = {
-      ...BASE_FORM_STATE,
-      ...adaptToFormModel(saved),
-    };
-    // THEN: The collaborator solutions are loaded back into their original state
     expect(loaded).toMatchObject(state);
   });
   it('saves and loads optional values', () => {

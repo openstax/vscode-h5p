@@ -13,9 +13,6 @@ import {
 } from './OpenstaxMetadataForm';
 import { BookInputState, InputState } from './types';
 
-const DETAILED_SOLUTION_TYPE = 'detailed';
-const SUMMARY_SOLUTION_TYPE = 'summary';
-
 function isDefined<T>(optional: T | undefined): optional is T {
   return optional !== undefined;
 }
@@ -53,16 +50,6 @@ export function adaptToNetworkModel(formData: FormState): NetworkMetadata {
   return {
     nickname: formData.nickname.value,
     errata_id: formData.errata_id.value,
-    collaborator_solutions: [
-      {
-        content: formData.detailed_solution.value,
-        solution_type: DETAILED_SOLUTION_TYPE,
-      },
-      {
-        content: formData.summary_solution.value,
-        solution_type: SUMMARY_SOLUTION_TYPE,
-      },
-    ].filter((s) => s.content.length > 0),
     is_solution_public: formData['is_solution_public'].value === 'true',
     // Book metadata
     books: getBookMetadata(formData),
@@ -125,20 +112,6 @@ export function adaptToFormModel(
   const formState: Partial<FormState> = canonicalBooksToFormState(
     canonicalMetadata.books,
   );
-  canonicalMetadata.collaborator_solutions.forEach((solution) => {
-    const inputState = toInputState(solution.content);
-    switch (solution.solution_type) {
-      case DETAILED_SOLUTION_TYPE:
-        formState.detailed_solution = inputState;
-        break;
-      case SUMMARY_SOLUTION_TYPE:
-        formState.summary_solution = inputState;
-        break;
-      /* istanbul ignore next (This message is here for informational purposes only) */
-      default:
-        console.warn(`Unknown solution type: "${solution.solution_type}"`);
-    }
-  });
   if (!isFalsy(canonicalMetadata.feature_page)) {
     formState.context = toInputState(
       `${canonicalMetadata.feature_page}#${canonicalMetadata.feature_id}`,

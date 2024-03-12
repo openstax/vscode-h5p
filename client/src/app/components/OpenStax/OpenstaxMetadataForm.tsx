@@ -31,9 +31,7 @@ import {
 import { Button } from 'react-bootstrap';
 import Nickname from './Nickname';
 import { assertValue, chunk, isFalsy } from '../../../../../common/src/utils';
-import DetailedSolution from './DetailedSolution';
 import { adaptToNetworkModel, adaptToFormModel } from './metadata-adaptor';
-import SummarySolution from './SummarySolution';
 import { randomId } from './utils';
 import { Label } from './Label';
 
@@ -45,8 +43,6 @@ type SingleInputs = {
   time: InputState;
   is_solution_public: InputState;
   errata_id: InputState;
-  detailed_solution: InputState;
-  summary_solution: InputState;
   context: InputState;
 };
 
@@ -260,18 +256,6 @@ const exerciseInputs: Array<
     },
   },
   {
-    key: 'detailed_solution',
-    make(inputHandlerFactory) {
-      return <DetailedSolution {...inputHandlerFactory(this.key)} />;
-    },
-  },
-  {
-    key: 'summary_solution',
-    make(inputHandlerFactory) {
-      return <SummarySolution {...inputHandlerFactory(this.key)} />;
-    },
-  },
-  {
     key: 'is_solution_public',
     make(inputHandlerFactory) {
       return (
@@ -331,8 +315,6 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     assignment_type: { ...defaultInputState },
     dok: { ...defaultInputState },
     time: { ...defaultInputState },
-    detailed_solution: { ...defaultInputState },
-    summary_solution: { ...defaultInputState },
     is_solution_public: { ...defaultInputState, value: 'false' },
     books: [],
     aplo: [],

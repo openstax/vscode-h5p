@@ -8,10 +8,6 @@ export interface NetworkMetadata {
   feature_page: string | null;
   feature_id: string | null;
   books: BookMetadata[];
-  collaborator_solutions: Array<{
-    content: string;
-    solution_type: string;
-  }>;
   is_solution_public: boolean;
 }
 
@@ -35,10 +31,6 @@ export interface CanonicalMetadata {
   feature_page?: string;
   feature_id?: string;
   books: BookMetadata[];
-  collaborator_solutions: Array<{
-    content: string;
-    solution_type: string;
-  }>;
   is_solution_public: boolean;
   attachments: string[];
 }
