@@ -4,7 +4,21 @@ import fs from 'fs';
 import express from 'express';
 import { DOMParser } from '@xmldom/xmldom';
 import * as xpath from 'xpath-ts';
-import { assertValue, isFalsy, unwrap } from '../../common/src/utils';
+import {
+  assertTrue,
+  assertValue,
+  isFalsy,
+  unwrap,
+} from '../../common/src/utils';
+
+export interface MergeOptions {
+  customMerge?: (lhs: unknown, rhs: unknown, options?: MergeOptions) => unknown;
+  arrayMerge?: (
+    lhs: unknown[],
+    rhs: unknown[],
+    options?: MergeOptions,
+  ) => unknown[];
+}
 
 /* istanbul ignore next (pure function that depends solely on express) */
 export function createH5PRouter<EditRequestType, ContentRequestType>(
@@ -134,4 +148,57 @@ export function parseBooksXML(booksXmlPath: string): {
     privateRoot: bookVars['PRIVATE_ROOT'] ?? '/private',
     publicRoot: bookVars['PUBLIC_ROOT'] ?? '/interactives',
   };
+}
+
+export function mergeByIndex(
+  lhs: unknown[],
+  rhs: unknown[],
+  options?: MergeOptions,
+) {
+  return Object.values(
+    recursiveMerge(
+      Object.fromEntries(Object.entries(lhs)),
+      Object.fromEntries(Object.entries(rhs)),
+      options,
+    ) as object,
+  );
+}
+
+export function defaultValueMerge(lhs: unknown, rhs: unknown) {
+  return rhs ?? lhs;
+}
+
+export function recursiveMerge(
+  lhs: unknown,
+  rhs: unknown,
+  options?: MergeOptions,
+): unknown {
+  const { arrayMerge = mergeByIndex, customMerge = defaultValueMerge } =
+    options ?? {};
+  if (
+    typeof lhs === 'object' &&
+    typeof rhs === 'object' &&
+    lhs != null &&
+    rhs != null
+  ) {
+    const isArrayL = Array.isArray(lhs);
+    const isArrayR = Array.isArray(rhs);
+    if (isArrayL || isArrayR) {
+      assertTrue(isArrayL && isArrayR, 'Expected two arrays');
+      return arrayMerge(lhs as unknown[], rhs as unknown[], options);
+    } else {
+      const keysL = Object.keys(lhs);
+      const keysR = Object.keys(rhs);
+      const sharedKeys = keysL.filter((k) => keysR.indexOf(k) !== -1);
+      const merged = Object.fromEntries(
+        sharedKeys.map((k) => [
+          k,
+          recursiveMerge(Reflect.get(lhs, k), Reflect.get(rhs, k), options),
+        ]),
+      );
+      return { ...lhs, ...rhs, ...merged };
+    }
+  } else {
+    return customMerge(lhs, rhs, options);
+  }
 }

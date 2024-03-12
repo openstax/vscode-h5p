@@ -30,39 +30,47 @@ exports[`AnswerYankers questionSetYanker yanks private data by subtype 1`] = `
 `;
 
 exports[`AnswerYankers questionSetYanker yanks private data by subtype 2`] = `
-[
-  {
-    "correct": false,
-  },
-  {
-    "answers": [
-      {
+{
+  "questions": [
+    {
+      "params": {
         "correct": false,
-        "text": "<div>3</div>
-",
-        "tipsAndFeedback": {
-          "chosenFeedback": "",
-          "notChosenFeedback": "",
-          "tip": "",
-        },
       },
-      {
-        "correct": true,
-        "text": "<div>4</div>
+    },
+    {
+      "params": {
+        "answers": [
+          {
+            "correct": false,
+            "text": "<div>3</div>
 ",
-        "tipsAndFeedback": {
-          "chosenFeedback": "",
-          "notChosenFeedback": "",
-          "tip": "",
-        },
+            "tipsAndFeedback": {
+              "chosenFeedback": "",
+              "notChosenFeedback": "",
+              "tip": "",
+            },
+          },
+          {
+            "correct": true,
+            "text": "<div>4</div>
+",
+            "tipsAndFeedback": {
+              "chosenFeedback": "",
+              "notChosenFeedback": "",
+              "tip": "",
+            },
+          },
+        ],
       },
-    ],
-  },
-  {
-    "questions": [
-      "<p>What is *true*?</p>
+    },
+    {
+      "params": {
+        "questions": [
+          "<p>What is *true*?</p>
 ",
-    ],
-  },
-]
+        ],
+      },
+    },
+  ],
+}
 `;

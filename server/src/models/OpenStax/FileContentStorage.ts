@@ -10,6 +10,7 @@ import {
 import { walkJSON, iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
+import { recursiveMerge } from '../../utils';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
@@ -29,14 +30,6 @@ function yankAnswers(
   mainLibrary: string,
 ): [unknown, unknown] {
   return assertLibrary(mainLibrary).yankAnswers(content);
-}
-
-function unyankAnswers(
-  publicData: unknown,
-  privateData: unknown,
-  mainLibrary: string,
-): unknown {
-  return assertLibrary(mainLibrary).unyankAnswers(publicData, privateData);
 }
 
 function isSolutionPublic(osMeta: { is_solution_public?: boolean }): boolean {
@@ -327,35 +320,27 @@ export default class OSStorage extends H5P.fsImplementations
     return metadata;
   }
 
+  private async mergeLoad(contentId: string, filename: string) {
+    let merged: Record<string, any> = {};
+    const filePaths = await this._findFilePaths(contentId, filename);
+    const loadOrder = [filePaths.public, filePaths.private];
+    for (const p of loadOrder) {
+      if (p !== undefined) {
+        const content = await fsExtra.readJSON(p);
+        merged = recursiveMerge(merged, content) as Record<string, any>;
+      }
+    }
+    return merged;
+  }
+
   public async getOSMeta(
     contentId: string,
   ): Promise<Partial<CanonicalMetadata>> {
-    const mdPath = path.join(this.contentPath, contentId, METADATA_NAME);
-    return fsExtra.existsSync(mdPath) ? await fsExtra.readJSON(mdPath) : {};
+    return await this.mergeLoad(contentId, METADATA_NAME);
   }
 
-  public override async getParameters(
-    contentId: string,
-    user?: H5P.IUser | undefined,
-  ): Promise<any> {
-    const [content, osMeta] = await Promise.all([
-      super.getParameters(contentId, user),
-      this.getOSMeta(contentId),
-    ]);
-    if (isSolutionPublic(osMeta)) {
-      return content;
-    } else {
-      const privatePath = path.join(
-        this.privateContentDirectory,
-        contentId,
-        CONTENT_NAME,
-      );
-      const [h5pMeta, privateData] = await Promise.all([
-        this.getMetadata(contentId),
-        fsExtra.readJSON(privatePath),
-      ]);
-      return unyankAnswers(content, privateData, h5pMeta.mainLibrary);
-    }
+  public override async getParameters(contentId: string): Promise<any> {
+    return await this.mergeLoad(contentId, CONTENT_NAME);
   }
 
   private async _findFilePaths(id: string, filename: string) {

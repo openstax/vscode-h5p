@@ -5,7 +5,6 @@ import {
   blanksYanker,
   multiChoiceYanker,
   questionSetMerge,
-  questionSetYanker,
   shallowMerge,
   trueFalseYanker,
 } from './AnswerYankers';
@@ -123,7 +122,35 @@ export default class Config {
         },
       },
       'H5P.QuestionSet': {
-        yankAnswers: questionSetYanker,
+        yankAnswers: (content) => {
+          const privateData = { questions: [] };
+          const privateQuestions: Array<{ params: unknown }> =
+            privateData.questions;
+          const publicData = JSON.parse(JSON.stringify(content));
+          const publicQuestions = publicData.questions;
+          for (let i = 0; i < publicQuestions.length; i++) {
+            const q = publicQuestions[i];
+            const library = assertValue<string>(
+              q.library,
+              'Could not get library',
+            );
+            const libraryName = assertValue(
+              library.split(' ')[0],
+              `Could not parse libraryName: ${library}`,
+            );
+            const answerYanker = assertValue(
+              Config.supportedLibraries[libraryName]?.yankAnswers,
+              `Library, "${libraryName}," is unsupported`,
+            );
+            const [pub, priv] = answerYanker(q.params);
+            publicQuestions[i] = {
+              ...q,
+              params: pub,
+            };
+            privateQuestions.push({ params: priv });
+          }
+          return [publicData, privateData];
+        },
         unyankAnswers: questionSetMerge,
         semantics: {
           override(entry) {
