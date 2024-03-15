@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AnswerYankers questionSetYanker yanks private data by subtype 1`] = `
+exports[`questionSetYanker yanks private data by subtype 1`] = `
 {
   "questions": [
     {
@@ -29,7 +29,7 @@ exports[`AnswerYankers questionSetYanker yanks private data by subtype 1`] = `
 }
 `;
 
-exports[`AnswerYankers questionSetYanker yanks private data by subtype 2`] = `
+exports[`questionSetYanker yanks private data by subtype 2`] = `
 {
   "questions": [
     {
