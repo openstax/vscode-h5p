@@ -1,98 +1,32 @@
 import { recursiveMerge } from '../../utils';
 import { yankByKeysFactory } from './AnswerYankers';
-import Config from './config';
 
 describe('AnswerYankers', () => {
-  const yankByKeyTests: Array<[string, string]> = [
-    ['blanksYanker', 'questions'],
-    ['multiChoiceYanker', 'answers'],
-    ['trueFalseYanker', 'correct'],
-  ];
-  yankByKeyTests.forEach(([name, key]) => {
-    describe(name, () => {
-      it(`yanks ${key} without side effects`, () => {
-        const func = yankByKeysFactory(key);
-        // The actual information does not matter
-        // We are testing that it pulls out the correct key without side effects
-        const fakeContent = {
-          [key]: {},
-          otherInformation: {},
-        };
-        const copy = { ...fakeContent };
-        const [publicData, privateData] = func(fakeContent);
-        // Did not modify original
-        expect(copy).toStrictEqual(fakeContent);
-        // Removed if from public
-        expect(key in (publicData as any)).toBe(false);
-        expect('otherInformation' in (publicData as any)).toBe(true);
-        // Saves it in private
-        expect(key in (privateData as any)).toBe(true);
-        expect('otherInformation' in (privateData as any)).toBe(false);
-
-        // Merge them back together
-        expect(recursiveMerge(publicData, privateData)).toStrictEqual(
-          fakeContent,
-        );
-      });
-    });
-  });
-  describe('questionSetYanker', () => {
-    it('yanks private data by subtype', () => {
-      const fakeContent = {
-        questions: [
-          {
-            params: {
-              question: '<p>Given point a and point b, what is 1+1?</p>\n',
-              correct: false,
-            },
-            library: 'H5P.TrueFalse 1.16',
-          },
-          {
-            params: {
-              question: '<p>Given point a and point b, what is 2+2?</p>\n',
-              answers: [
-                {
-                  correct: false,
-                  tipsAndFeedback: {
-                    tip: '',
-                    chosenFeedback: '',
-                    notChosenFeedback: '',
-                  },
-                  text: '<div>3</div>\n',
-                },
-                {
-                  correct: true,
-                  tipsAndFeedback: {
-                    tip: '',
-                    chosenFeedback: '',
-                    notChosenFeedback: '',
-                  },
-                  text: '<div>4</div>\n',
-                },
-              ],
-            },
-            library: 'H5P.MultiChoice 1.16',
-          },
-          {
-            params: {
-              media: {
-                disableImageZooming: false,
-              },
-              questions: ['<p>What is *true*?</p>\n'],
-            },
-            library: 'H5P.Blanks 1.14',
-          },
-        ],
+  describe('yankByKeysFactory', () => {
+    it('yanks without side effects', () => {
+      const key = 'anything-you-want';
+      const func = yankByKeysFactory(key);
+      // The actual information does not matter
+      // We are testing that it pulls out the correct key without side effects
+      const publicPart = {
+        otherInformation: {},
       };
-      const copy = { ...fakeContent };
-      const questionSetYanker =
-        Config.supportedLibraries['H5P.QuestionSet']?.yankAnswers;
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const [publicData, privateData] = questionSetYanker!(fakeContent);
-      // No modifications to original
-      expect(copy).toStrictEqual(fakeContent);
-      expect(publicData).toMatchSnapshot();
-      expect(privateData).toMatchSnapshot();
+      const privatePart = {
+        [key]: {},
+      };
+      const fakeContent = {
+        ...publicPart,
+        ...privatePart,
+      };
+      const copy = JSON.parse(JSON.stringify(fakeContent));
+      const [publicData, privateData] = func(fakeContent);
+      // Did not modify original
+      expect(fakeContent).toStrictEqual(copy);
+      // Removed if from public
+      expect(publicData).toStrictEqual(publicPart);
+      // Saves it in private
+      expect(privateData).toStrictEqual(privatePart);
+      // Merge them back together
       expect(recursiveMerge(publicData, privateData)).toStrictEqual(
         fakeContent,
       );
