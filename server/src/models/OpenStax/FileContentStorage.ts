@@ -222,8 +222,6 @@ export default class OSStorage extends H5P.fsImplementations
     const privateAttachments: string[] = [];
     const publicAttachments: string[] = [];
     if (!isSolutionPublic(osMeta)) {
-      // TODO: Take collaborator solutions out of content and put them
-      // in private metadata.json or content.json
       const [sanitized, privateData] = yankAnswers(
         content,
         metadata.mainLibrary,
