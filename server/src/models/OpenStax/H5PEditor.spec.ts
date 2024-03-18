@@ -6,6 +6,8 @@ import {
 } from '@lumieducation/h5p-server/build/src/types';
 import OSH5PEditor, { alterLibrarySemantics, filterLibs } from './H5PEditor';
 import Config from './config';
+import { walkJSON } from './ContentMutators';
+import { createHash } from 'crypto';
 
 describe('H5PEditor', () => {
   describe('alterLibrarySemantics', () => {
@@ -77,6 +79,21 @@ describe('H5PEditor', () => {
       it(`does not mutate semantics and alters the correct values (${fakeLib.machineName})`, () => {
         const serialized = JSON.stringify(fakeSemantics);
         const altered = alterLibrarySemantics(fakeLib, fakeSemantics);
+        walkJSON(altered, (field) => {
+          if (
+            field.parent != null &&
+            field.type === 'array' &&
+            field.name === 'tags'
+          ) {
+            const value = field.value as string[];
+            const hasher = createHash('sha1');
+            hasher.update(value.join(''));
+            Reflect.set(field.parent, field.name, [
+              'REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST',
+            ]);
+            Reflect.set(field.parent, 'tagsHash', hasher.digest('hex'));
+          }
+        });
         expect(altered).toMatchSnapshot();
         // Does not modify the original
         expect(JSON.stringify(fakeSemantics)).toBe(serialized);
