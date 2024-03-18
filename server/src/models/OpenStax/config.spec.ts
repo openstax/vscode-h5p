@@ -1,5 +1,6 @@
 import { recursiveMerge } from '../../utils';
-import Config from './config';
+import { yankByKeysFactory } from './AnswerYankers';
+import Config, { newSupportedLibrary } from './config';
 
 describe('questionSetYanker', () => {
   it('yanks private data by subtype', () => {
@@ -59,5 +60,53 @@ describe('questionSetYanker', () => {
     expect(publicData).toMatchSnapshot();
     expect(privateData).toMatchSnapshot();
     expect(recursiveMerge(publicData, privateData)).toStrictEqual(fakeContent);
+  });
+});
+
+describe('newSupportedLibrary', () => {
+  it('combines library-specific and general answer yankers', () => {
+    const fakeContent = {
+      a: 1,
+      b: 2,
+      c: 3,
+      d: 4,
+    };
+    // Test combination of additionalFields, privateKeys, and yankAnswers
+    const testLib = newSupportedLibrary({
+      yankAnswers: yankByKeysFactory('b', 'c'),
+      semantics: {
+        additionalFields: [
+          { field: { name: 'a', type: 'text' }, private: true },
+        ],
+      },
+    });
+    const [publicData, privateData] = testLib.yankAnswers(fakeContent);
+    expect(publicData).toStrictEqual({ d: 4 });
+    expect(privateData).toStrictEqual({ a: 1, b: 2, c: 3 });
+  });
+  it('Uses whichever answer yanker is defined', () => {
+    const fakeContent = {
+      a: 1,
+      b: 2,
+      c: 3,
+      d: 4,
+    };
+    // Test combination of additionalFields, privateKeys, and yankAnswers
+    const testLib = newSupportedLibrary({
+      semantics: {
+        additionalFields: [
+          { field: { name: 'a', type: 'text' }, private: true },
+        ],
+      },
+    });
+    let [publicData, privateData] = testLib.yankAnswers(fakeContent);
+    expect(publicData).toStrictEqual({ b: 2, c: 3, d: 4 });
+    expect(privateData).toStrictEqual({ a: 1 });
+    const testLib2 = newSupportedLibrary({
+      yankAnswers: yankByKeysFactory('a'),
+    });
+    [publicData, privateData] = testLib2.yankAnswers(fakeContent);
+    expect(publicData).toStrictEqual({ b: 2, c: 3, d: 4 });
+    expect(privateData).toStrictEqual({ a: 1 });
   });
 });

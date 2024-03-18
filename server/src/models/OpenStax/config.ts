@@ -31,10 +31,6 @@ interface LibraryOptions {
    * Library-specific yanker implementation (will be chained to key yanker)
    */
   yankAnswers?: Yanker;
-  /**
-   * Library-specific keys saved privately when solutions are private
-   */
-  privateKeys?: string[];
 }
 
 interface AdditionalField {
@@ -69,21 +65,19 @@ const metadataFields: AdditionalField[] = [
 export function newSupportedLibrary(
   options?: LibraryOptions,
 ): SupportedLibrary {
-  const privateKeys = options?.privateKeys ?? [];
   const additionalFields = options?.semantics?.additionalFields;
-  if (additionalFields !== undefined) {
-    privateKeys.push(
-      ...additionalFields
-        .filter((f) => f.private === true)
-        .map((f) => f.field.name),
-    );
-  }
-  const keyYanker =
-    privateKeys.length > 0 ? yankByKeysFactory(...privateKeys) : undefined;
+  const additionalFieldsYanker: Yanker | undefined =
+    additionalFields !== undefined && additionalFields.length > 0
+      ? yankByKeysFactory(
+          ...additionalFields
+            .filter((f) => f.private === true)
+            .map((f) => f.field.name),
+        )
+      : undefined;
   const yankAnswers: Yanker | undefined =
-    options?.yankAnswers !== undefined && keyYanker !== undefined
-      ? chain(options.yankAnswers, keyYanker)
-      : keyYanker ?? options?.yankAnswers;
+    options?.yankAnswers !== undefined && additionalFieldsYanker !== undefined
+      ? chain(options.yankAnswers, additionalFieldsYanker)
+      : additionalFieldsYanker ?? options?.yankAnswers;
 
   return {
     semantics: options?.semantics,
@@ -118,7 +112,7 @@ export default class Config {
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
       'H5P.Blanks': newSupportedLibrary({
-        privateKeys: ['questions'],
+        yankAnswers: yankByKeysFactory('questions'),
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -136,7 +130,7 @@ export default class Config {
         },
       }),
       'H5P.MultiChoice': newSupportedLibrary({
-        privateKeys: ['answers'],
+        yankAnswers: yankByKeysFactory('answers'),
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -205,7 +199,7 @@ export default class Config {
         },
       }),
       'H5P.TrueFalse': newSupportedLibrary({
-        privateKeys: ['correct'],
+        yankAnswers: yankByKeysFactory('correct'),
         semantics: {
           additionalFields: metadataFields,
         },
