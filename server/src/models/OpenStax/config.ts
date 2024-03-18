@@ -66,7 +66,9 @@ const metadataFields: AdditionalField[] = [
   { field: detailedSolution, private: true },
 ];
 
-function newSupportedLibrary(options?: LibraryOptions): SupportedLibrary {
+export function newSupportedLibrary(
+  options?: LibraryOptions,
+): SupportedLibrary {
   const privateKeys = options?.privateKeys ?? [];
   const additionalFields = options?.semantics?.additionalFields;
   if (additionalFields !== undefined) {
@@ -76,15 +78,19 @@ function newSupportedLibrary(options?: LibraryOptions): SupportedLibrary {
         .map((f) => f.field.name),
     );
   }
-  const keyYanker = yankByKeysFactory(...privateKeys);
+  const keyYanker =
+    privateKeys.length > 0 ? yankByKeysFactory(...privateKeys) : undefined;
   const yankAnswers: Yanker | undefined =
-    options?.yankAnswers !== undefined
+    options?.yankAnswers !== undefined && keyYanker !== undefined
       ? chain(options.yankAnswers, keyYanker)
-      : keyYanker;
+      : keyYanker ?? options?.yankAnswers;
 
   return {
     semantics: options?.semantics,
-    yankAnswers: yankAnswers,
+    yankAnswers: assertValue(
+      yankAnswers,
+      'BUG: Expected answer yanker, got undefined',
+    ),
   };
 }
 
