@@ -7,7 +7,7 @@ import {
 import * as H5P from '@lumieducation/h5p-server';
 import OSStorage from './FileContentStorage';
 import Config from './config';
-import { assertValue } from '../../../../common/src/utils';
+import { assertTrue, assertValue } from '../../../../common/src/utils';
 import { walkJSON } from './ContentMutators';
 
 const _supportedLibraryNames = Object.keys(Config.supportedLibraries);
@@ -116,7 +116,7 @@ const _supportedTags = [
 type Mutator = (entry: ISemanticsEntry, fqPath: string[]) => void;
 
 function _isSemanticsEntry(obj: unknown): obj is ISemanticsEntry {
-  return obj != null && Object.hasOwn(obj, 'type');
+  return obj != null && Reflect.has(obj, 'type');
 }
 
 function _addTags(entry: ISemanticsEntry) {
@@ -181,19 +181,13 @@ export const alterLibrarySemantics = (
       function the same as the original
 */
 function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
-  const tryPatch = (
-    ptr: any,
-    patch: Record<string, any>,
-    fqPath: string[] = [],
-  ) => {
+  const tryPatch = (ptr: any, patch: Record<string, any>, fqPath: string[]) => {
     for (const [fieldName, value] of Object.entries(patch)) {
       const newPath = [...fqPath, fieldName];
-      if (!Reflect.has(ptr, fieldName)) {
-        /* istanbul ignore next */
-        throw new Error(
-          `"${newPath.join('.')}" cannot be patched because it does not exist.`,
-        );
-      }
+      assertTrue(
+        Reflect.has(ptr, fieldName),
+        `"${newPath.join('.')}" cannot be patched because it does not exist.`,
+      );
       if (Object.prototype.toString.call(value) === '[object Object]') {
         tryPatch(ptr[fieldName], value, newPath);
       } else {
@@ -226,7 +220,7 @@ function monkeyPatchH5PEditor(h5pEditor: OSH5PEditor) {
 
 export function filterLibs(
   libraries: IHubContentTypeWithLocalInfo[],
-  supportedLibraryNames = _supportedLibraryNames,
+  supportedLibraryNames: string[],
 ) {
   const libsByName = Object.fromEntries(
     libraries.map((lib) => [lib.machineName, lib]),
@@ -281,7 +275,7 @@ export default class OSH5PEditor extends H5P.H5PEditor {
     const baseValue = await super.getContentTypeCache(user, language);
     return {
       ...baseValue,
-      libraries: filterLibs(baseValue.libraries),
+      libraries: filterLibs(baseValue.libraries, _supportedLibraryNames),
     };
   }
 }
