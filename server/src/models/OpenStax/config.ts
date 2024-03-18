@@ -1,31 +1,46 @@
 import * as H5P from '@lumieducation/h5p-server';
-import { Yanker, yankByKeysFactory } from './AnswerYankers';
+import { Yanker, chain, yankByKeysFactory } from './AnswerYankers';
 import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
 import { assertValue } from '../../../../common/src/utils';
+
+interface SemanticsOverride {
+  /**
+   * Alter an existing field. See the semantics.json for the library you
+   * wish to alter for more information. When defined, this function will be
+   * called on each field that exists in the library's semantics.
+   */
+  override?: (target: ISemanticsEntry) => void;
+  /**
+   * Add additional fields to a libraries semantics.
+   * You can optionally specify a zero-based index for the new field if you
+   * want some control over where the field appears. The field will be
+   * appended to the end by default.
+   */
+  additionalFields?: AdditionalField[];
+}
 
 interface SupportedLibrary {
   yankAnswers: Yanker;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
-  semantics?: {
-    /**
-     * Alter an existing field. See the semantics.json for the library you
-     * wish to alter for more information. When defined, this function will be
-     * called on each field that exists in the library's semantics.
-     */
-    override?: (target: ISemanticsEntry) => void;
-    /**
-     * Add additional fields to a libraries semantics.
-     * You can optionally specify a zero-based index for the new field if you
-     * want some control over where the field appears. The field will be
-     * appended to the end by default.
-     */
-    additionalFields?: AdditionalField[];
-  };
+  semantics?: SemanticsOverride;
+}
+
+interface LibraryOptions {
+  semantics?: SemanticsOverride;
+  /**
+   * Library-specific yanker implementation (will be chained to key yanker)
+   */
+  yankAnswers?: Yanker;
+  /**
+   * Library-specific keys saved privately when solutions are private
+   */
+  privateKeys?: string[];
 }
 
 interface AdditionalField {
   index?: number;
   field: ISemanticsEntry;
+  private?: boolean;
 }
 
 const summarySolution: ISemanticsEntry = {
@@ -47,9 +62,31 @@ const detailedSolution: ISemanticsEntry = {
 };
 
 const metadataFields: AdditionalField[] = [
-  { field: summarySolution },
-  { field: detailedSolution },
+  { field: summarySolution, private: true },
+  { field: detailedSolution, private: true },
 ];
+
+function newSupportedLibrary(options?: LibraryOptions): SupportedLibrary {
+  const privateKeys = options?.privateKeys ?? [];
+  const additionalFields = options?.semantics?.additionalFields;
+  if (additionalFields !== undefined) {
+    privateKeys.push(
+      ...additionalFields
+        .filter((f) => f.private === true)
+        .map((f) => f.field.name),
+    );
+  }
+  const keyYanker = yankByKeysFactory(...privateKeys);
+  const yankAnswers: Yanker | undefined =
+    options?.yankAnswers !== undefined
+      ? chain(options.yankAnswers, keyYanker)
+      : keyYanker;
+
+  return {
+    semantics: options?.semantics,
+    yankAnswers: yankAnswers,
+  };
+}
 
 export default class Config {
   public readonly contentPath: string;
@@ -74,11 +111,8 @@ export default class Config {
 
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
-      'H5P.Blanks': {
-        yankAnswers: yankByKeysFactory(
-          'questions',
-          ...metadataFields.map((f) => f.field.name),
-        ),
+      'H5P.Blanks': newSupportedLibrary({
+        privateKeys: ['questions'],
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -94,12 +128,9 @@ export default class Config {
             }
           },
         },
-      },
-      'H5P.MultiChoice': {
-        yankAnswers: yankByKeysFactory(
-          'answers',
-          ...metadataFields.map((f) => f.field.name),
-        ),
+      }),
+      'H5P.MultiChoice': newSupportedLibrary({
+        privateKeys: ['answers'],
         semantics: {
           additionalFields: metadataFields,
           override(entry) {
@@ -115,14 +146,34 @@ export default class Config {
             }
           },
         },
-      },
-      'H5P.QuestionSet': {
+      }),
+      'H5P.QuestionSet': newSupportedLibrary({
+        semantics: {
+          override(entry) {
+            if (entry.name === 'questions') {
+              const field = assertValue(
+                entry.field,
+                'Could not get questions.field',
+              );
+              const options = assertValue(
+                field.options,
+                'Could not get questions.field.options',
+              );
+              const pattern = new RegExp(
+                `^(${Object.keys(Config.supportedLibraries).join('|')})`,
+              );
+              field.options = options.filter(pattern.test.bind(pattern));
+            } else if (entry.name === 'randomQuestions') {
+              entry.default = false as unknown as string;
+            }
+          },
+        },
         yankAnswers: (content) => {
           const privateData = { questions: [] };
           const privateQuestions: Array<{ params: unknown }> =
             privateData.questions;
-          const publicData = JSON.parse(JSON.stringify(content));
-          const publicQuestions = publicData.questions;
+          const publicDataCopy = JSON.parse(JSON.stringify(content));
+          const publicQuestions = publicDataCopy.questions;
           for (let i = 0; i < publicQuestions.length; i++) {
             const q = publicQuestions[i];
             const library = assertValue<string>(
@@ -144,38 +195,15 @@ export default class Config {
             };
             privateQuestions.push({ params: priv });
           }
-          return [publicData, privateData];
+          return [publicDataCopy, privateData];
         },
-        semantics: {
-          override(entry) {
-            if (entry.name === 'questions') {
-              const field = assertValue(
-                entry.field,
-                'Could not get questions.field',
-              );
-              const options = assertValue(
-                field.options,
-                'Could not get questions.field.options',
-              );
-              const pattern = new RegExp(
-                `^(${Object.keys(Config.supportedLibraries).join('|')})`,
-              );
-              field.options = options.filter(pattern.test.bind(pattern));
-            } else if (entry.name === 'randomQuestions') {
-              entry.default = false as unknown as string;
-            }
-          },
-        },
-      },
-      'H5P.TrueFalse': {
-        yankAnswers: yankByKeysFactory(
-          'correct',
-          ...metadataFields.map((f) => f.field.name),
-        ),
+      }),
+      'H5P.TrueFalse': newSupportedLibrary({
+        privateKeys: ['correct'],
         semantics: {
           additionalFields: metadataFields,
         },
-      },
+      }),
     };
 
   public static readonly h5pConfig: Partial<H5P.IH5PConfig> = {
