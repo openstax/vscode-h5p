@@ -62,6 +62,15 @@ const metadataFields: AdditionalField[] = [
   { field: detailedSolution, private: true },
 ];
 
+const questionStimulus: ISemanticsEntry = {
+  name: 'questionStimulus',
+  type: 'text',
+  importance: 'medium',
+  optional: true,
+  widget: 'html',
+  label: 'Question Stimulus',
+};
+
 export function newSupportedLibrary(
   options?: LibraryOptions,
 ): SupportedLibrary {
@@ -149,6 +158,7 @@ export default class Config {
       }),
       'H5P.QuestionSet': newSupportedLibrary({
         semantics: {
+          additionalFields: [{ field: questionStimulus, index: 0 }],
           override(entry) {
             if (entry.name === 'questions') {
               const field = assertValue(
