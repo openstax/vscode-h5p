@@ -26,9 +26,14 @@ export const yankByKeysFactory = (...keys: string[]) => {
 };
 
 export const chain =
-  (a: Yanker, b: Yanker): Yanker =>
+  (...yankers: Yanker[]): Yanker =>
   (content) => {
-    const [pub1, priv1] = a(content);
-    const [pub2, priv2] = b(pub1);
-    return [pub2, recursiveMerge(priv1, priv2) as Partial<unknown>];
+    let pub: Partial<unknown> = content;
+    let priv: Partial<unknown> = {};
+    for (const yanker of yankers) {
+      const [publicData, privateData] = yanker(pub);
+      pub = publicData;
+      priv = recursiveMerge(priv, privateData) as Partial<unknown>;
+    }
+    return [pub, priv];
   };

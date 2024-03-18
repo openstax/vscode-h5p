@@ -1,5 +1,5 @@
 import { recursiveMerge } from '../../utils';
-import { yankByKeysFactory } from './AnswerYankers';
+import { chain, yankByKeysFactory } from './AnswerYankers';
 
 describe('AnswerYankers', () => {
   describe('yankByKeysFactory', () => {
@@ -30,6 +30,24 @@ describe('AnswerYankers', () => {
       expect(recursiveMerge(publicData, privateData)).toStrictEqual(
         fakeContent,
       );
+    });
+  });
+  describe('chain', () => {
+    it('chains correctly', () => {
+      const fakeContent = {
+        a: 1,
+        b: 2,
+        c: 3,
+        d: 4,
+      };
+      const [pub, priv] = chain(
+        yankByKeysFactory('a'),
+        yankByKeysFactory('b'),
+        yankByKeysFactory('b'),
+        yankByKeysFactory('c'),
+      )(fakeContent);
+      expect(pub).toStrictEqual({ d: 4 });
+      expect(priv).toStrictEqual({ a: 1, b: 2, c: 3 });
     });
   });
 });
