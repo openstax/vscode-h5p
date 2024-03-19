@@ -39,37 +39,43 @@ interface AdditionalField {
   private?: boolean;
 }
 
-const summarySolution: ISemanticsEntry = {
-  name: 'summarySolution',
+const summarySolution: AdditionalField = {
+  field: {
+    name: 'summarySolution',
+    type: 'text',
+    importance: 'medium',
+    optional: true,
+    widget: 'html',
+    label: 'Summary Solution',
+  },
+  private: true,
+};
+
+const detailedSolution: AdditionalField = {
+  field: {
+    name: 'detailedSolution',
+    type: 'text',
+    importance: 'medium',
+    optional: true,
+    widget: 'html',
+    label: 'Detailed Solution',
+  },
+  private: true,
+};
+
+const questionSetStimulus: ISemanticsEntry = {
+  name: 'questionSetStimulus',
   type: 'text',
   importance: 'medium',
   optional: true,
   widget: 'html',
-  label: 'Summary Solution',
+  label: 'Question Set Stimulus',
 };
 
-const detailedSolution: ISemanticsEntry = {
-  name: 'detailedSolution',
-  type: 'text',
-  importance: 'medium',
-  optional: true,
-  widget: 'html',
-  label: 'Detailed Solution',
-};
-
-const metadataFields: AdditionalField[] = [
-  { field: summarySolution, private: true },
-  { field: detailedSolution, private: true },
+const collaboratorSolutions: AdditionalField[] = [
+  summarySolution,
+  detailedSolution,
 ];
-
-const questionStimulus: ISemanticsEntry = {
-  name: 'questionStimulus',
-  type: 'text',
-  importance: 'medium',
-  optional: true,
-  widget: 'html',
-  label: 'Question Stimulus',
-};
 
 export function newSupportedLibrary(
   options?: LibraryOptions,
@@ -123,7 +129,7 @@ export default class Config {
       'H5P.Blanks': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('questions'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: collaboratorSolutions,
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -141,7 +147,7 @@ export default class Config {
       'H5P.MultiChoice': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('answers'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: collaboratorSolutions,
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -158,7 +164,7 @@ export default class Config {
       }),
       'H5P.QuestionSet': newSupportedLibrary({
         semantics: {
-          additionalFields: [{ field: questionStimulus, index: 0 }],
+          additionalFields: [{ field: questionSetStimulus, index: 0 }],
           override(entry) {
             if (entry.name === 'questions') {
               const field = assertValue(
@@ -211,7 +217,7 @@ export default class Config {
       'H5P.TrueFalse': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('correct'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: collaboratorSolutions,
         },
       }),
     };

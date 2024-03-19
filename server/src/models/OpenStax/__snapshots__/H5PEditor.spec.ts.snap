@@ -102,8 +102,8 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
 [
   {
     "importance": "medium",
-    "label": "Question Stimulus",
-    "name": "questionStimulus",
+    "label": "Question Set Stimulus",
+    "name": "questionSetStimulus",
     "optional": true,
     "tags": [
       "REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST",
