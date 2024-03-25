@@ -10,6 +10,7 @@ describe('questionSetYanker', () => {
           params: {
             question: '<p>Given point a and point b, what is 1+1?</p>\n',
             correct: false,
+            isSolutionPublic: false,
           },
           library: 'H5P.TrueFalse 1.16',
         },
@@ -36,6 +37,7 @@ describe('questionSetYanker', () => {
                 text: '<div>4</div>\n',
               },
             ],
+            isSolutionPublic: true,
           },
           library: 'H5P.MultiChoice 1.16',
         },
@@ -45,6 +47,7 @@ describe('questionSetYanker', () => {
               disableImageZooming: false,
             },
             questions: ['<p>What is *true*?</p>\n'],
+            isSolutionPublic: false,
           },
           library: 'H5P.Blanks 1.14',
         },
@@ -79,6 +82,7 @@ describe('newSupportedLibrary', () => {
           { field: { name: 'a', type: 'text' }, private: true },
         ],
       },
+      isSolutionPublic: () => true,
     });
     const [publicData, privateData] = testLib.yankAnswers(fakeContent);
     expect(publicData).toStrictEqual({ d: 4 });
@@ -98,15 +102,49 @@ describe('newSupportedLibrary', () => {
           { field: { name: 'a', type: 'text' }, private: true },
         ],
       },
+      isSolutionPublic: () => true,
     });
     let [publicData, privateData] = testLib.yankAnswers(fakeContent);
     expect(publicData).toStrictEqual({ b: 2, c: 3, d: 4 });
     expect(privateData).toStrictEqual({ a: 1 });
     const testLib2 = newSupportedLibrary({
       yankAnswers: yankByKeysFactory('a'),
+      isSolutionPublic: () => true,
     });
     [publicData, privateData] = testLib2.yankAnswers(fakeContent);
     expect(publicData).toStrictEqual({ b: 2, c: 3, d: 4 });
     expect(privateData).toStrictEqual({ a: 1 });
+  });
+});
+
+describe('questionSet Is Solution Public', () => {
+  it('is true when all the included quesitons have public solutions', () => {
+    const fakeContent = {
+      questions: [
+        {
+          params: {
+            isSolutionPublic: true,
+          },
+          library: 'H5P.TrueFalse 1.16',
+        },
+        {
+          params: {
+            isSolutionPublic: true,
+          },
+          library: 'H5P.MultiChoice 1.16',
+        },
+        {
+          params: {
+            isSolutionPublic: true,
+          },
+          library: 'H5P.Blanks 1.14',
+        },
+      ],
+    };
+    expect(
+      Config.supportedLibraries['H5P.QuestionSet']?.isSolutionPublic(
+        fakeContent,
+      ),
+    ).toBe(true);
   });
 });
