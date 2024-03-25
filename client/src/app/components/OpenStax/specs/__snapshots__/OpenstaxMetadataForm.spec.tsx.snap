@@ -22,7 +22,6 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
   "errata_id": "test",
   "feature_id": null,
   "feature_page": null,
-  "is_solution_public": true,
   "nickname": "new",
   "time": null,
 }
@@ -52,7 +51,6 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
   "errata_id": "test",
   "feature_id": null,
   "feature_page": null,
-  "is_solution_public": true,
   "nickname": "new",
   "time": null,
 }
@@ -80,7 +78,6 @@ exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values wh
   "errata_id": "test",
   "feature_id": null,
   "feature_page": null,
-  "is_solution_public": true,
   "nickname": "new",
   "time": null,
 }
@@ -106,10 +103,6 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
     "value": "test",
   },
   "hts": [],
-  "is_solution_public": {
-    "isValid": true,
-    "value": "true",
-  },
   "lo": [],
   "nclex": [],
   "rp": [],
@@ -140,7 +133,6 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
   "errata_id": "test",
   "feature_id": "term-03",
   "feature_page": "m00003",
-  "is_solution_public": true,
   "nickname": "new",
   "time": null,
 }

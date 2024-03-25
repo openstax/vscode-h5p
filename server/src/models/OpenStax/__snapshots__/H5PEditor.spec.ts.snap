@@ -46,6 +46,13 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "type": "text",
     "widget": "html",
   },
+  {
+    "default": false,
+    "importance": "medium",
+    "label": "Solution Is Public",
+    "name": "isSolutionPublic",
+    "type": "boolean",
+  },
 ]
 `;
 
@@ -94,6 +101,13 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "tagsHash": "f083f58f413d705db00477ac77e2eab543b21d35",
     "type": "text",
     "widget": "html",
+  },
+  {
+    "default": false,
+    "importance": "medium",
+    "label": "Solution Is Public",
+    "name": "isSolutionPublic",
+    "type": "boolean",
   },
 ]
 `;

@@ -19,9 +19,8 @@ const MOCK_H5P_BASE: IContentMetadata = {
   preloadedDependencies: [],
   defaultLanguage: '',
 };
-const MOCK_OSMETA_BASE: Partial<NetworkMetadata> = {
-  is_solution_public: true,
-};
+const MOCK_OSMETA_BASE: Partial<NetworkMetadata> = {};
+const MOCK_CONTENT_BASE = { isSolutionPublic: true };
 
 function dirToObj(base: string) {
   const dir: Record<string, any> = {};
@@ -69,7 +68,7 @@ const createStorageHarness = () => {
             };
             return target.addContent(
               { ...MOCK_H5P_BASE, ...metadata } as unknown as IContentMetadata,
-              { ...content, osMeta },
+              { ...MOCK_CONTENT_BASE, ...content, osMeta },
               { ...user } as unknown as IUser,
               id,
             );
@@ -230,7 +229,6 @@ describe('File Content Storage', () => {
     await storage.addContent(
       {
         title: 1234 as any,
-        mainLibrary: 5678 as any,
       } as unknown as IContentMetadata,
       {
         osMeta: {},
@@ -258,6 +256,7 @@ describe('File Content Storage', () => {
               !isSolutionPublic ? ' not ' : ' '
             }appear in the public folder</p>`,
           ],
+          isSolutionPublic,
         };
         await storage.addContent(
           {
@@ -265,9 +264,6 @@ describe('File Content Storage', () => {
           } as unknown as IContentMetadata,
           {
             ...h5pContent,
-            osMeta: {
-              is_solution_public: isSolutionPublic,
-            },
           },
           {} as unknown as IUser,
           id,
@@ -287,9 +283,7 @@ describe('File Content Storage', () => {
           mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
         } as unknown as IContentMetadata,
         {
-          osMeta: {
-            is_solution_public: false,
-          },
+          isSolutionPublic: false,
         },
         {} as unknown as IUser,
         '1234',
@@ -350,9 +344,7 @@ describe('File Content Storage', () => {
       } as unknown as IContentMetadata,
       {
         ...h5pContent,
-        osMeta: {
-          is_solution_public: false,
-        },
+        isSolutionPublic: false,
       },
       {} as unknown as IUser,
       id,
@@ -423,12 +415,14 @@ describe('File Content Storage', () => {
       questions: [`<img src="${image}"/>`],
       osMeta: {
         nickname: id,
-        is_solution_public: false,
       },
     };
     await storage.addContent(
       {} as unknown as IContentMetadata,
-      content,
+      {
+        ...content,
+        isSolutionPublic: false,
+      },
       {} as unknown as IUser,
       id,
     );
@@ -439,10 +433,7 @@ describe('File Content Storage', () => {
       {} as unknown as IContentMetadata,
       {
         ...content,
-        osMeta: {
-          ...content.osMeta,
-          is_solution_public: true,
-        },
+        isSolutionPublic: true,
       },
       {} as unknown as IUser,
       id,
@@ -482,9 +473,9 @@ describe('File Content Storage', () => {
     const baseContent = {
       text: `<img src="${image}"/>`,
       questions: [`<img src="${image}"/>`],
+      isSolutionPublic: false,
       osMeta: {
         nickname: id,
-        is_solution_public: false,
       },
     };
     let paths: Partial<Record<'public' | 'private', string>>;
@@ -504,9 +495,9 @@ describe('File Content Storage', () => {
       {} as unknown as IContentMetadata,
       {
         ...baseContent,
+        isSolutionPublic: true,
         osMeta: {
           ...baseContent.osMeta,
-          is_solution_public: true,
         },
       },
       {} as unknown as IUser,

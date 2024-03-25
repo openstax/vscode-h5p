@@ -6,38 +6,13 @@ exports[`questionSetYanker yanks private data by subtype 1`] = `
     {
       "library": "H5P.TrueFalse 1.16",
       "params": {
+        "isSolutionPublic": false,
         "question": "<p>Given point a and point b, what is 1+1?</p>
 ",
       },
     },
     {
       "library": "H5P.MultiChoice 1.16",
-      "params": {
-        "question": "<p>Given point a and point b, what is 2+2?</p>
-",
-      },
-    },
-    {
-      "library": "H5P.Blanks 1.14",
-      "params": {
-        "media": {
-          "disableImageZooming": false,
-        },
-      },
-    },
-  ],
-}
-`;
-
-exports[`questionSetYanker yanks private data by subtype 2`] = `
-{
-  "questions": [
-    {
-      "params": {
-        "correct": false,
-      },
-    },
-    {
       "params": {
         "answers": [
           {
@@ -61,7 +36,34 @@ exports[`questionSetYanker yanks private data by subtype 2`] = `
             },
           },
         ],
+        "isSolutionPublic": true,
+        "question": "<p>Given point a and point b, what is 2+2?</p>
+",
       },
+    },
+    {
+      "library": "H5P.Blanks 1.14",
+      "params": {
+        "isSolutionPublic": false,
+        "media": {
+          "disableImageZooming": false,
+        },
+      },
+    },
+  ],
+}
+`;
+
+exports[`questionSetYanker yanks private data by subtype 2`] = `
+{
+  "questions": [
+    {
+      "params": {
+        "correct": false,
+      },
+    },
+    {
+      "params": null,
     },
     {
       "params": {

@@ -25,7 +25,6 @@ const SEL_BOOK_REM = '[data-control-type="remove-book"]';
 const SEL_BOOK_ADD = '[data-control-type="add-book"]';
 const MIN_FORM_DATA = {
   errata_id: 'test',
-  is_solution_public: true,
   books: [],
 };
 
