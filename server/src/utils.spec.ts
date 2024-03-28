@@ -116,9 +116,8 @@ describe('Utility functions', () => {
     it('merges objects', () => {
       let result = recursiveMerge({ a: 1 }, { b: 2 });
       expect(result).toStrictEqual({ a: 1, b: 2 });
-      // Keeps rhs when the keys exists in both
-      result = recursiveMerge({ a: 1 }, { a: 2 });
-      expect(result).toStrictEqual({ a: 2 });
+      // throws when the keys exists in both
+      expect(() => recursiveMerge({ a: 1 }, { a: 2 })).toThrow(/Cannot merge/);
       // Favors non-null
       result = recursiveMerge({ a: 1 }, { a: null });
       expect(result).toStrictEqual({ a: 1 });
@@ -127,11 +126,10 @@ describe('Utility functions', () => {
       expect(result).toStrictEqual({ a: { b: { c: 1, d: 2 } } });
     });
     it('merges arrays by index by default', () => {
-      // Keeps rhs when the values exists in both places
-      let result = recursiveMerge([1], [2]);
-      expect(result).toStrictEqual([2]);
+      // throws when the values exists in both places
+      expect(() => recursiveMerge([1], [2])).toThrow(/Cannot merge/);
       // Favors non-null
-      result = recursiveMerge([1, null, 3], [null, 2, null]);
+      let result = recursiveMerge([1, null, 3], [null, 2, null]);
       expect(result).toStrictEqual([1, 2, 3]);
       // Deeply merges arrays
       result = recursiveMerge([{ a: { b: 1 } }], [{ a: { c: 2 } }]);
@@ -140,8 +138,7 @@ describe('Utility functions', () => {
     it('returns rhs when types do not match, or lhs if rhs is null/undefined', () => {
       let result = recursiveMerge([1], null);
       expect(result).toStrictEqual([1]);
-      result = recursiveMerge([1], 'test');
-      expect(result).toStrictEqual('test');
+      expect(() => recursiveMerge([1], 'test')).toThrow(/Cannot merge/);
       result = recursiveMerge([1], undefined);
       expect(result).toStrictEqual([1]);
     });
