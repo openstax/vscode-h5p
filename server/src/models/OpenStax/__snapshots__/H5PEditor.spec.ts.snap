@@ -467,6 +467,13 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "type": "text",
     "widget": "html",
   },
+  {
+    "default": false,
+    "importance": "medium",
+    "label": "Supports Free Response",
+    "name": "isFreeResponseSupported",
+    "type": "boolean",
+  },
 ]
 `;
 

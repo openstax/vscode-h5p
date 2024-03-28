@@ -62,6 +62,17 @@ const metadataFields: AdditionalField[] = [
   { field: detailedSolution, private: true },
 ];
 
+const freeResponseCheckbox: AdditionalField = {
+  field: {
+    name: 'isFreeResponseSupported',
+    type: 'boolean',
+    importance: 'medium',
+    default: false as unknown as string,
+    label: 'Supports Free Response',
+  },
+  private: false,
+};
+
 export function newSupportedLibrary(
   options?: LibraryOptions,
 ): SupportedLibrary {
@@ -132,7 +143,7 @@ export default class Config {
       'H5P.MultiChoice': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('answers'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: [...metadataFields, freeResponseCheckbox],
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
