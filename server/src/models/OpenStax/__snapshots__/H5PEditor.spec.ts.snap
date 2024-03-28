@@ -105,6 +105,13 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
   {
     "default": false,
     "importance": "medium",
+    "label": "Supports Free Response",
+    "name": "isFreeResponseSupported",
+    "type": "boolean",
+  },
+  {
+    "default": false,
+    "importance": "medium",
     "label": "Solution Is Public",
     "name": "isSolutionPublic",
     "type": "boolean",
