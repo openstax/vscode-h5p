@@ -50,7 +50,6 @@ export function adaptToNetworkModel(formData: FormState): NetworkMetadata {
   return {
     nickname: formData.nickname.value,
     errata_id: formData.errata_id.value,
-    is_solution_public: formData['is_solution_public'].value === 'true',
     // Book metadata
     books: getBookMetadata(formData),
     // Optional values (null if absent)
@@ -130,8 +129,5 @@ export function adaptToFormModel(
     formState.time = toInputState(canonicalMetadata.time);
   }
   formState.errata_id = toInputState(canonicalMetadata.errata_id);
-  formState.is_solution_public = toInputState(
-    canonicalMetadata.is_solution_public,
-  );
   return formState;
 }

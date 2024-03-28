@@ -426,7 +426,7 @@ function patch(
   patchFile: string,
   options?: PatchOptions,
 ): void {
-  const args = [];
+  const args: string[] = [];
   if (options?.outputFile !== undefined) {
     args.push(`-o "${options.outputFile}"`);
   }

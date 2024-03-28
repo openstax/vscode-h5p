@@ -1,7 +1,10 @@
 import * as H5P from '@lumieducation/h5p-server';
 import { Yanker, chain, yankByKeysFactory } from './AnswerYankers';
 import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
-import { assertValue } from '../../../../common/src/utils';
+import { assertTrue, assertValue } from '../../../../common/src/utils';
+import { QuestionSetQuestion, toQuestionSet } from './helpers';
+
+type GetSolutionIsPublic = (content: Partial<unknown>) => boolean;
 
 interface SemanticsOverride {
   /**
@@ -21,6 +24,7 @@ interface SemanticsOverride {
 
 interface SupportedLibrary {
   yankAnswers: Yanker;
+  isSolutionPublic: GetSolutionIsPublic;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
   semantics?: SemanticsOverride;
 }
@@ -31,6 +35,7 @@ interface LibraryOptions {
    * Library-specific yanker implementation (will be chained to key yanker)
    */
   yankAnswers?: Yanker;
+  isSolutionPublic?: GetSolutionIsPublic;
 }
 
 interface AdditionalField {
@@ -39,32 +44,59 @@ interface AdditionalField {
   private?: boolean;
 }
 
-const summarySolution: ISemanticsEntry = {
-  name: 'summarySolution',
+const summarySolution: AdditionalField = {
+  field: {
+    name: 'summarySolution',
+    type: 'text',
+    importance: 'medium',
+    optional: true,
+    widget: 'html',
+    label: 'Summary Solution',
+  },
+  private: true,
+};
+
+const detailedSolution: AdditionalField = {
+  field: {
+    name: 'detailedSolution',
+    type: 'text',
+    importance: 'medium',
+    optional: true,
+    widget: 'html',
+    label: 'Detailed Solution',
+  },
+  private: true,
+};
+
+const questionSetStimulus: ISemanticsEntry = {
+  name: 'questionSetStimulus',
   type: 'text',
   importance: 'medium',
   optional: true,
   widget: 'html',
-  label: 'Summary Solution',
+  label: 'Question Set Stimulus',
 };
 
-const detailedSolution: ISemanticsEntry = {
-  name: 'detailedSolution',
-  type: 'text',
-  importance: 'medium',
-  optional: true,
-  widget: 'html',
-  label: 'Detailed Solution',
+const publicSolution: AdditionalField = {
+  field: {
+    name: 'isSolutionPublic',
+    type: 'boolean',
+    importance: 'medium',
+    default: false as unknown as string,
+    label: 'Solution Is Public',
+  },
+  private: false,
 };
 
-const metadataFields: AdditionalField[] = [
-  { field: summarySolution, private: true },
-  { field: detailedSolution, private: true },
+const collaboratorSolutions: AdditionalField[] = [
+  summarySolution,
+  detailedSolution,
 ];
 
 export function newSupportedLibrary(
   options?: LibraryOptions,
 ): SupportedLibrary {
+  // Implement private fields
   const additionalFields = options?.semantics?.additionalFields;
   const additionalFieldsYanker: Yanker | undefined =
     additionalFields !== undefined && additionalFields.length > 0
@@ -79,13 +111,44 @@ export function newSupportedLibrary(
       ? chain(options.yankAnswers, additionalFieldsYanker)
       : additionalFieldsYanker ?? options?.yankAnswers;
 
+  // Implement public solutions checkbox
+  const solutionIsPublicGetters: GetSolutionIsPublic[] = [];
+  if (options?.isSolutionPublic !== undefined) {
+    solutionIsPublicGetters.push(options.isSolutionPublic);
+  }
+  if (
+    additionalFields !== undefined &&
+    additionalFields.some((f) => f.field.name === publicSolution.field.name)
+  ) {
+    solutionIsPublicGetters.push(
+      (content) => Reflect.get(content, publicSolution.field.name) === true,
+    );
+  }
+  assertTrue(
+    solutionIsPublicGetters.length !== 0,
+    'BUG: Expected at least one isSolutionPublic implementation',
+  );
+
   return {
     semantics: options?.semantics,
     yankAnswers: assertValue(
       yankAnswers,
       'BUG: Expected answer yanker, got undefined',
     ),
+    isSolutionPublic: (content) =>
+      solutionIsPublicGetters.every((getter) => getter(content)),
   };
+}
+
+function getLibraryForQuestion(q: QuestionSetQuestion): SupportedLibrary {
+  const libraryName = assertValue(
+    q.library?.split(' ')[0],
+    'Could not get library name',
+  );
+  return assertValue(
+    Config.supportedLibraries[libraryName],
+    `Library, "${libraryName}," is unsupported`,
+  );
 }
 
 export default class Config {
@@ -114,7 +177,7 @@ export default class Config {
       'H5P.Blanks': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('questions'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: [...collaboratorSolutions, publicSolution],
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -132,7 +195,7 @@ export default class Config {
       'H5P.MultiChoice': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('answers'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: [...collaboratorSolutions, publicSolution],
           override(entry) {
             if (entry.name === 'behaviour') {
               const fields = entry.fields ?? (entry.fields = []);
@@ -149,6 +212,7 @@ export default class Config {
       }),
       'H5P.QuestionSet': newSupportedLibrary({
         semantics: {
+          additionalFields: [{ field: questionSetStimulus, index: 0 }],
           override(entry) {
             if (entry.name === 'questions') {
               const field = assertValue(
@@ -168,40 +232,37 @@ export default class Config {
             }
           },
         },
+        isSolutionPublic: (content) =>
+          toQuestionSet(content).questions.every((q) =>
+            getLibraryForQuestion(q).isSolutionPublic(q.params),
+          ),
         yankAnswers: (content) => {
+          const copy = JSON.parse(JSON.stringify(content));
+          const publicData = toQuestionSet(copy);
           const privateData = { questions: [] };
           const privateQuestions: Array<{ params: unknown }> =
             privateData.questions;
-          const publicDataCopy = JSON.parse(JSON.stringify(content));
-          const publicQuestions = publicDataCopy.questions;
-          for (let i = 0; i < publicQuestions.length; i++) {
-            const q = publicQuestions[i];
-            const library = assertValue<string>(
-              q.library,
-              'Could not get library',
-            );
-            const libraryName = assertValue(
-              library.split(' ')[0],
-              `Could not parse libraryName: ${library}`,
-            );
-            const answerYanker = assertValue(
-              Config.supportedLibraries[libraryName]?.yankAnswers,
-              `Library, "${libraryName}," is unsupported`,
-            );
-            const [pub, priv] = answerYanker(q.params);
-            publicQuestions[i] = {
-              ...q,
-              params: pub,
-            };
-            privateQuestions.push({ params: priv });
-          }
-          return [publicDataCopy, privateData];
+          publicData.questions = publicData.questions.map((q) => {
+            const libraryConfig = getLibraryForQuestion(q);
+            if (libraryConfig.isSolutionPublic(q.params)) {
+              privateQuestions.push({ params: null });
+              return q;
+            } else {
+              const [pub, priv] = libraryConfig.yankAnswers(q.params);
+              privateQuestions.push({ params: priv });
+              return {
+                ...q,
+                params: pub,
+              };
+            }
+          });
+          return [publicData, privateData];
         },
       }),
       'H5P.TrueFalse': newSupportedLibrary({
         yankAnswers: yankByKeysFactory('correct'),
         semantics: {
-          additionalFields: metadataFields,
+          additionalFields: [...collaboratorSolutions, publicSolution],
         },
       }),
     };

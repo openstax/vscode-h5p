@@ -25,17 +25,6 @@ function assertLibrary(mainLibrary: string) {
   throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
 }
 
-function yankAnswers(
-  content: Partial<unknown>,
-  mainLibrary: string,
-): [unknown, unknown] {
-  return assertLibrary(mainLibrary).yankAnswers(content);
-}
-
-function isSolutionPublic(osMeta: { is_solution_public?: boolean }): boolean {
-  return (osMeta.is_solution_public ?? false) === true;
-}
-
 // Temp paths are constructed by addDirectoryByMimetype in h5p-server/src/H5PEditor.ts
 // temporaryFileStorage.getFileStream wants paths relative to temp directory
 // See getTemporaryFile in h5p-server/src/H5PAjaxEndpoint.ts for more information
@@ -221,11 +210,9 @@ export default class OSStorage extends H5P.fsImplementations
     const oldAttachments = newOsMeta.attachments ?? [];
     const privateAttachments: string[] = [];
     const publicAttachments: string[] = [];
-    if (!isSolutionPublic(osMeta)) {
-      const [sanitized, privateData] = yankAnswers(
-        content,
-        metadata.mainLibrary,
-      );
+    const library = assertLibrary(metadata.mainLibrary);
+    if (!library.isSolutionPublic(content)) {
+      const [sanitized, privateData] = library.yankAnswers(content);
       // Replace images in private content
       privateAttachments.push(
         ...(await this._handleAttachmentsInContent(
@@ -310,10 +297,11 @@ export default class OSStorage extends H5P.fsImplementations
   ): Promise<H5P.IContentMetadata> {
     const metadata = await super.getMetadata(contentId, user);
     if ((typeof metadata.title as unknown) !== 'string') {
-      metadata.title = metadata.title.toString();
+      metadata.title = String(metadata.title);
     }
+    /* istanbul ignore if (should not happen) */
     if ((typeof metadata.mainLibrary as unknown) !== 'string') {
-      metadata.mainLibrary = metadata.mainLibrary.toString();
+      metadata.mainLibrary = String(metadata.mainLibrary);
     }
     return metadata;
   }

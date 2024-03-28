@@ -9,7 +9,6 @@ exports[`Metadata Adaptor Adapts form data to network model 1`] = `
   "errata_id": "fffffff",
   "feature_id": null,
   "feature_page": null,
-  "is_solution_public": false,
   "nickname": "test",
   "time": null,
 }
@@ -33,7 +32,6 @@ exports[`Metadata Adaptor Saves and loads values for books 1`] = `
     },
   ],
   "errata_id": "fffffff",
-  "is_solution_public": false,
 }
 `;
 
@@ -47,7 +45,6 @@ exports[`Metadata Adaptor saves and loads optional values 1`] = `
   "errata_id": "fffffff",
   "feature_id": "fs-12345",
   "feature_page": "m12345",
-  "is_solution_public": false,
   "time": "Short",
 }
 `;

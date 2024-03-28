@@ -14,7 +14,6 @@ import Context from './Context';
 import APLO from './APLO';
 import Time from './Time';
 import { IContentService } from '../../services/ContentService';
-import PublicCheckbox from './PublicCheckbox';
 import HistoricalThinking from './HistoricalThinking';
 import ReasoningProcess from './ReasoningProcess';
 import SciencePractice from './SciencePractice';
@@ -41,7 +40,6 @@ type SingleInputs = {
   assignment_type: InputState;
   dok: InputState;
   time: InputState;
-  is_solution_public: InputState;
   errata_id: InputState;
   context: InputState;
 };
@@ -255,17 +253,6 @@ const exerciseInputs: Array<
       );
     },
   },
-  {
-    key: 'is_solution_public',
-    make(inputHandlerFactory) {
-      return (
-        <PublicCheckbox
-          {...inputHandlerFactory(this.key)}
-          required={this.isRequired}
-        />
-      );
-    },
-  },
 ];
 
 const EXERCISE_INPUT_KEYS: Set<keyof SingleInputs | keyof InputSets> = new Set(
@@ -315,7 +302,6 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
     assignment_type: { ...defaultInputState },
     dok: { ...defaultInputState },
     time: { ...defaultInputState },
-    is_solution_public: { ...defaultInputState, value: 'false' },
     books: [],
     aplo: [],
     lo: [],

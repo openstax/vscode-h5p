@@ -10,6 +10,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
     },
     "1234": {
       "content.json": "{
+  "isSolutionPublic": false,
   "fake": "to make sure it is saved too"
 }",
       "h5p.json": "{
@@ -24,7 +25,6 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
-  "is_solution_public": false,
   "attachments": []
 }",
     },
@@ -61,6 +61,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
     },
     "12345": {
       "content.json": "{
+  "isSolutionPublic": true,
   "fake": "to make sure it is saved too",
   "questions": [
     "<p>This should appear in the public folder</p>"
@@ -78,7 +79,6 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
-  "is_solution_public": true,
   "attachments": []
 }",
     },
@@ -98,7 +98,9 @@ exports[`File Content Storage saves content as expected 1`] = `
 {
   "interactives": {
     "1": {
-      "content.json": "{}",
+      "content.json": "{
+  "isSolutionPublic": true
+}",
       "h5p.json": "{
   "title": "this should be stored in folder 1",
   "mainLibrary": "H5P.Blanks",
@@ -112,7 +114,6 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "metadata.json": "{
   "extra": "Something extra",
-  "is_solution_public": true,
   "books": [
     {
       "name": "stax-test",
@@ -125,7 +126,9 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
     },
     "1234": {
-      "content.json": "{}",
+      "content.json": "{
+  "isSolutionPublic": true
+}",
       "h5p.json": "{
   "title": "this should be stored in folder 1234",
   "mainLibrary": "H5P.Blanks",
@@ -138,12 +141,13 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
-  "is_solution_public": true,
   "attachments": []
 }",
     },
     "2": {
-      "content.json": "{}",
+      "content.json": "{
+  "isSolutionPublic": true
+}",
       "h5p.json": "{
   "title": "this should be stored in folder 2",
   "mainLibrary": "H5P.Blanks",
@@ -156,12 +160,12 @@ exports[`File Content Storage saves content as expected 1`] = `
   "defaultLanguage": ""
 }",
       "metadata.json": "{
-  "is_solution_public": true,
   "attachments": []
 }",
     },
     "image-test": {
       "content.json": "{
+  "isSolutionPublic": true,
   "text": "<p>Fill in the missing words</p>\\n        <p><img src=\\"media/test.png\\"/></p>\\n        "
 }",
       "h5p.json": "{
@@ -186,7 +190,6 @@ exports[`File Content Storage saves content as expected 1`] = `
     "media/detailed.png",
     "media/_questions.png"
   ],
-  "is_solution_public": true,
   "_additional_field": [
     {
       "content": "<img src=\\"media/detailed.png\\"/>",

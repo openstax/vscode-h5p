@@ -15,7 +15,6 @@ const BASE_FORM_STATE: FormState = {
   assignment_type: { ...defaultInputState },
   dok: { ...defaultInputState },
   time: { ...defaultInputState },
-  is_solution_public: { ...defaultInputState, value: 'false' },
   books: [],
   aplo: [],
   lo: [],
