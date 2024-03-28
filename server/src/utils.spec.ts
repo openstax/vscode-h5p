@@ -135,7 +135,7 @@ describe('Utility functions', () => {
       result = recursiveMerge([{ a: { b: 1 } }], [{ a: { c: 2 } }]);
       expect(result).toStrictEqual([{ a: { b: 1, c: 2 } }]);
     });
-    it('returns rhs when types do not match, or lhs if rhs is null/undefined', () => {
+    it('returns rhs when types do not match and one value is null/undefined', () => {
       let result = recursiveMerge([1], null);
       expect(result).toStrictEqual([1]);
       expect(() => recursiveMerge([1], 'test')).toThrow(/Cannot merge/);
