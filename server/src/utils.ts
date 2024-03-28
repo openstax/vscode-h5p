@@ -165,6 +165,9 @@ export function mergeByIndex(
 }
 
 export function defaultValueMerge(lhs: unknown, rhs: unknown) {
+  if (lhs != null && rhs != null) {
+    throw new Error(`Cannot merge values: ${lhs} and ${rhs}`);
+  }
   return rhs ?? lhs;
 }
 
