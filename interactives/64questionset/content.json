@@ -4127,6 +4127,118 @@
         "extraTitle": "m9m1"
       },
       "subContentId": "3ce279e9-417e-4837-ac75-ecb62aaf327c"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>éáőűú9őűóúő9űőü-</p>\n\n<p><img src=\"media/Image 4-1-24 at 11.15 AM.jpeg\" style=\"width: 300px; height: 171px;\"/></p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "Untitled True/False Questionü111",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "Untitled True/False Questionü111"
+      },
+      "subContentId": "2edad04a-37a5-4bbd-bd46-8baf157e43bd"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>áééáláéléál űő űú őűúőű őűúő. </p>\n\n<p> űú űúő űú őűú őűúő űő űúő </p>\n\n<p> ű úűú őűú őűú őű</p>\n\n<p><img src=\"media/Image 3-25-24 at 2.12 PM.jpeg\" style=\"width: 300px; height: 145px;\"/><img src=\"media/Image 3-25-24 at 2.08 PM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "Untitled True/False Question - űúőűűúőűúőűőűúőűúüóöü",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "Untitled True/False Question - űúőűűúőűúőűőűúőűúüóöü"
+      },
+      "subContentId": "2e1547d8-a623-416e-9489-8715bcb58a21"
     }
   ],
   "disableBackwardsNavigation": false,

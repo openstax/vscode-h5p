@@ -21,7 +21,9 @@
             },
             "text": "<p>224242424244242</p>\n\n<p><img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "<p>bcvx cxvb cvb cxvb. cvb </p>\n\n<p>cvxb</p>\n\n<p> c</p>\n\n<p>b </p>\n\n<p>cb cb</p>\n\n<p> fdgh vbn</p>\n\n<p>hgf</p>\n\n<p> jvb</p>\n\n<p>nm fg</p>\n\n<p>h gfh jdgfj <img src=\"media/Image 4-1-24 at 9.56 AM.jpeg\" style=\"width: 300px; height: 189px;\"/></p>\n",
+        "detailedSolution": "<p>det det det det det</p>\n\n<p>23 25 25234 145 345 1346 </p>\n\n<p><img src=\"media/Image 4-1-24 at 11.15 AM.jpeg\" style=\"width: 300px; height: 171px;\"/></p>\n"
       }
     },
     {
@@ -45,17 +47,23 @@
             },
             "text": "<p>1111</p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -88,12 +96,16 @@
             },
             "text": "<p>dg ewr gwe gwegweg<img src=\"media/Screen Shot 2022-06-22 at 9.36.44 AM.png\" style=\"width: 300px; height: 162px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -117,7 +129,9 @@
             },
             "text": "<p>11111<img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -141,7 +155,9 @@
             },
             "text": "<p>1331 1312 123 13123 123 1231231</p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -174,12 +190,16 @@
             },
             "text": "<p>1<img src=\"media/Screenshot 2023-04-21 at 1.06.31 PM.png\" style=\"width: 300px; height: 312px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -187,62 +207,86 @@
         "questions": [
           "<p>1111</p>\n",
           "<p>2222<img src=\"media/Screen Shot 2023-01-11 at 9.09.32 AM.png\" style=\"width: 300px; height: 185px;\"/></p>\n"
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -266,47 +310,65 @@
             },
             "text": "<p>5433322<img src=\"media/Screen Shot 2023-03-23 at 2.05.39 PM.png\" style=\"width: 300px; height: 248px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -330,42 +392,58 @@
             },
             "text": "<p>24234 23423 4234234 2<img src=\"media/Screen Shot 2022-06-22 at 9.36.44 AM.png\" style=\"width: 300px; height: 162px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -389,27 +467,37 @@
             },
             "text": "<p>m mb mnbmn<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -433,27 +521,37 @@
             },
             "text": "<p> ss sf sf s sf s sg fg <img src=\"media/Screenshot 2023-10-27 at 9.21.43 AM.png\" style=\"width: 300px; height: 67px;\"/></p>\n\n<p><img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -486,22 +584,30 @@
             },
             "text": "<p>df sfg fg fsg sgsd</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>fg gfgdfg df d</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -525,27 +631,37 @@
             },
             "text": "<p>sf sf sf sdg sdgs dh sdh sdbh dgh sdhs dh sdh sdgh </p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -569,17 +685,23 @@
             },
             "text": "<p>áááéőúőúűőúűő<img src=\"media/Screen Shot 2023-01-11 at 9.09.32 AM.png\" style=\"width: 300px; height: 185px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -603,17 +725,23 @@
             },
             "text": "<p> jhkhkhkjhkj hkjh kjhkjh<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "false"
+        "correct": "false",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -637,17 +765,23 @@
             },
             "text": "<p>d gdg dg dgdgd<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
       "params": {
-        "correct": "true"
+        "correct": "true",
+        "summarySolution": "",
+        "detailedSolution": ""
       }
     },
     {
@@ -671,7 +805,23 @@
             },
             "text": "<p>ddf sdf sdf sdf<img src=\"media/Image 2-20-24 at 11.34 AM.jpeg\" style=\"width: 300px; height: 407px;\"/></p>\n"
           }
-        ]
+        ],
+        "summarySolution": "",
+        "detailedSolution": ""
+      }
+    },
+    {
+      "params": {
+        "correct": "false",
+        "summarySolution": "<p>111<img src=\"media/Image 4-1-24 at 11.06 AM.jpeg\" style=\"width: 300px; height: 124px;\"/></p>\n",
+        "detailedSolution": "<p><img src=\"media/Image 4-1-24 at 9.56 AM.jpeg\" style=\"width: 300px; height: 189px;\"/>xcvx vx xvxvx</p>\n\n<p>b xcbx bcvb </p>\n\n<p>cvb cv bxcvbcvxn </p>\n"
+      }
+    },
+    {
+      "params": {
+        "correct": "true",
+        "summarySolution": "<p> gdfg dfg dfgiáéoéü9ü-óüó-</p>\n\n<p><img src=\"media/Image 3-25-24 at 9.43 AM.jpeg\" style=\"width: 300px; height: 159px;\"/></p>\n",
+        "detailedSolution": "<p><img src=\"media/Image 3-25-24 at 9.44 AM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>éá</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>éáéáéáéáéá</td>\n\t\t\t<td>őűúőűőűúő</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>éááé</td>\n\t\t\t<td>óüöóüöóüöóöó</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
       }
     }
   ]
