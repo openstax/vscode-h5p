@@ -39,7 +39,8 @@ function toTempName(pathname: string) {
 function getImageAttachments(images: Element[]) {
   return images
     .map((img) => img.getAttribute('src')?.trim())
-    .filter((src): src is string => src != null && src !== '');
+    .filter((src): src is string => src != null && src !== '')
+    .filter((src) => !src.startsWith('http'));
 }
 
 function updateAttachments(content: unknown, pathPrefix: string) {
