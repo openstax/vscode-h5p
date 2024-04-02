@@ -15,7 +15,7 @@
           {
             "correct": false,
             "tipsAndFeedback": {
-              "tip": "<p>guguy 8 7tn7t76t88 t8gyg</p>\n\n<p> ygug guygu g</p>\n",
+              "tip": "",
               "chosenFeedback": "<p>yug g 7 g ug ug ug g</p>\n",
               "notChosenFeedback": "<p>yt t yt yt ug ug. ytft</p>\n"
             },
@@ -822,6 +822,29 @@
         "correct": "true",
         "summarySolution": "<p> gdfg dfg dfgiáéoéü9ü-óüó-</p>\n\n<p><img src=\"media/Image 3-25-24 at 9.43 AM.jpeg\" style=\"width: 300px; height: 159px;\"/></p>\n",
         "detailedSolution": "<p><img src=\"media/Image 3-25-24 at 9.44 AM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>éá</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>éáéáéáéáéá</td>\n\t\t\t<td>őűúőűőűúő</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>éááé</td>\n\t\t\t<td>óüöóüöóüöóöó</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+      }
+    },
+    {
+      "params": {
+        "correct": "true",
+        "summarySolution": "<p>űúőűúőűúőáééáüóüóüóü</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>öüöóüöó</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p><img src=\"media/Image 3-25-24 at 9.42 AM.jpeg\" style=\"width: 300px; height: 153px;\"/></p>\n",
+        "detailedSolution": "<p>őűúőűúőűőűúőúűüóüóóüóüó</p>\n\n<p>űúűúű</p>\n\n<p>áéáéáéáéá</p>\n\n<p><img src=\"media/Image 3-15-24 at 3.58 PM.jpeg\" style=\"width: 300px; height: 163px;\"/></p>\n\n<p>űúőűúőűúőűú őűúő űúő űő űúő űú őűú őűő űú </p>\n\n<p><u><em><strong>űú űúő űú őáé áá áé áé áéá é</strong></em></u></p>\n\n<p>- úőúőőő</p>\n\n<p><a href=\"https://www.ujszo.com\" target=\"_blank\">https://www.ujszo.com</a></p>\n"
+      }
+    },
+    {
+      "params": {
+        "questions": [
+          "<p>*words...*</p>\n"
+        ],
+        "summarySolution": "<p>dfg dfg </p>\n\n<p>dfg df</p>\n\n<p>g dfg</p>\n",
+        "detailedSolution": "<p>gdg dfg df</p>\n\n<p>dgf dfg d</p>\n"
+      }
+    },
+    {
+      "params": {
+        "correct": "true",
+        "summarySolution": "<p>s fsdf sdf dsf s</p>\n\n<p><img src=\"media/Image 3-18-24 at 11.29 AM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n",
+        "detailedSolution": "<p><img src=\"media/Image 3-14-24 at 12.44 PM.jpeg\" style=\"width: 300px; height: 168px;\"/></p>\n"
       }
     }
   ]
