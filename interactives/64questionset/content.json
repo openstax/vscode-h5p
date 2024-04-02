@@ -4420,6 +4420,159 @@
         "extraTitle": "igaz, gaz, az, a"
       },
       "subContentId": "f00c563b-5556-4977-b539-e6678bb488e2"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {}
+          },
+          "disableImageZooming": false
+        },
+        "overallFeedback": [
+          {
+            "from": 0,
+            "to": 100
+          }
+        ],
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "type": "auto",
+          "singlePoint": false,
+          "randomAnswers": false,
+          "showSolutionsRequiresInput": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false,
+          "passPercentage": 100,
+          "showScorePoints": true
+        },
+        "UI": {
+          "checkAnswerButton": "Check",
+          "submitAnswerButton": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgainButton": "Retry",
+          "tipsLabel": "Show tip",
+          "scoreBarLabel": "You got :num out of :total points",
+          "tipAvailable": "Tip available",
+          "feedbackAvailable": "Feedback available",
+          "readFeedback": "Read feedback",
+          "wrongAnswer": "Wrong answer",
+          "correctAnswer": "Correct answer",
+          "shouldCheck": "Should have been checked",
+          "shouldNotCheck": "Should not have been checked",
+          "noInput": "Please answer before viewing the solution",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p>tű</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><munder><mi>lim</mi><mrow><maction actiontype=\"argument\"><mrow></mrow></maction><mo>→</mo><mo>∞</mo></mrow></munder><mn>1</mn><mo>/</mo><mi>x</mi><mo> </mo><mo>=</mo><mo> </mo><mi>y</mi></math></td>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></mfenced><mo> </mo><mo>=</mo><mo> </mo><msqrt><msup><mi>x</mi><mn>3</mn></msup></msqrt></math></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mi>x</mi></mfenced><mo> </mo><mo>=</mo><mo> </mo><mn>1</mn></math></td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+      },
+      "library": "H5P.MultiChoice 1.16",
+      "metadata": {
+        "contentType": "Multiple Choice",
+        "license": "U",
+        "title": "többes",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "többes"
+      },
+      "subContentId": "fcd795fa-e7b8-4d92-9f5f-b4b8c02f74ae"
+    },
+    {
+      "params": {
+        "media": {
+          "type": {
+            "params": {
+              "decorative": false,
+              "contentName": "Image",
+              "expandImage": "Expand Image",
+              "minimizeImage": "Minimize Image",
+              "file": {
+                "path": "images/image-AnkVrgZT.jpeg",
+                "mime": "image/jpeg",
+                "copyright": {
+                  "license": "U"
+                },
+                "width": 1015,
+                "height": 560
+              },
+              "alt": "Bud Spencer",
+              "title": "Pedersoni"
+            },
+            "library": "H5P.Image 1.1",
+            "metadata": {
+              "contentType": "Image",
+              "license": "U",
+              "title": "Untitled Image",
+              "authors": [],
+              "changes": []
+            },
+            "subContentId": "43efe9c8-f453-4016-ac8a-5630e15acb53"
+          },
+          "disableImageZooming": false
+        },
+        "behaviour": {
+          "enableRetry": true,
+          "enableSolutionsButton": true,
+          "enableCheckButton": true,
+          "confirmCheckDialog": false,
+          "confirmRetryDialog": false,
+          "autoCheck": false
+        },
+        "l10n": {
+          "trueText": "True",
+          "falseText": "False",
+          "score": "You got @score of @total points",
+          "checkAnswer": "Check",
+          "submitAnswer": "Submit",
+          "showSolutionButton": "Show solution",
+          "tryAgain": "Retry",
+          "wrongAnswerMessage": "Wrong answer",
+          "correctAnswerMessage": "Correct answer",
+          "scoreBarLabel": "You got :num out of :total points",
+          "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+          "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+          "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+        },
+        "confirmCheck": {
+          "header": "Finish ?",
+          "body": "Are you sure you wish to finish ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Finish"
+        },
+        "confirmRetry": {
+          "header": "Retry ?",
+          "body": "Are you sure you wish to retry ?",
+          "cancelLabel": "Cancel",
+          "confirmLabel": "Confirm"
+        },
+        "question": "<p> dfgdfgd</p>\n\n<p>g dfg df546 456 gfb hfg</p>\n\n<p>h fg</p>\n\n<p>h gf</p>\n\n<p>h </p>\n"
+      },
+      "library": "H5P.TrueFalse 1.8",
+      "metadata": {
+        "contentType": "True/False Question",
+        "license": "U",
+        "title": "tücsök",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "tücsök"
+      },
+      "subContentId": "bd6ebc39-3832-4f01-9e94-6061ca589063"
     }
   ],
   "disableBackwardsNavigation": false,

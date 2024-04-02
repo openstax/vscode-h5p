@@ -15,9 +15,9 @@
           {
             "correct": false,
             "tipsAndFeedback": {
-              "tip": "",
+              "tip": "<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mroot><mrow><mn>1</mn><mo>/</mo><mi>x</mi><mo> </mo><mo>+</mo><mo> </mo><mn>1</mn><mo>/</mo><mi>y</mi></mrow><mi>z</mi></mroot><mo> </mo><mo>=</mo><mo> </mo><msup><mi>y</mi><mn>2</mn></msup></math></p>\n\n<p><img src=\"media/Image 3-14-24 at 12.43 PM.jpeg\" style=\"width: 300px; height: 165px;\"/></p>\n",
               "chosenFeedback": "<p>yug g 7 g ug ug ug g</p>\n",
-              "notChosenFeedback": "<p>yt t yt yt ug ug. ytft</p>\n"
+              "notChosenFeedback": "<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><msubsup><mo>∫</mo><mo>∞</mo><mn>1</mn></msubsup><mn>1</mn><mo>/</mo><mi>x</mi><mo> </mo><mo>+</mo><mo> </mo><msubsup><mo>∫</mo><mn>1</mn><mrow><mo>-</mo><mn>1</mn></mrow></msubsup><mi>x</mi><mo>/</mo><mn>2</mn><mo> </mo><mo>=</mo><mo> </mo><mi>y</mi><msqrt><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup></msqrt></math></p>\n"
             },
             "text": "<p>224242424244242</p>\n\n<p><img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
           }
@@ -845,6 +845,39 @@
         "correct": "true",
         "summarySolution": "<p>s fsdf sdf dsf s</p>\n\n<p><img src=\"media/Image 3-18-24 at 11.29 AM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n",
         "detailedSolution": "<p><img src=\"media/Image 3-14-24 at 12.44 PM.jpeg\" style=\"width: 300px; height: 168px;\"/></p>\n"
+      }
+    },
+    {
+      "params": {
+        "answers": [
+          {
+            "correct": false,
+            "tipsAndFeedback": {
+              "tip": "",
+              "chosenFeedback": "",
+              "notChosenFeedback": ""
+            },
+            "text": "<p><img src=\"media/Image 4-1-24 at 11.06 AM.jpeg\" style=\"width: 300px; height: 124px;\"/></p>\n\n<p>1</p>\n"
+          },
+          {
+            "correct": true,
+            "tipsAndFeedback": {
+              "tip": "",
+              "chosenFeedback": "",
+              "notChosenFeedback": ""
+            },
+            "text": "<p>2</p>\n\n<p><img src=\"media/Image 2-1-24 at 9.17 AM.jpeg\" style=\"width: 300px; height: 369px;\"/></p>\n"
+          }
+        ],
+        "summarySolution": "<p>31231231 13 123 123 12</p>\n\n<p>ac afa sf adsf f sdf sdfs dfsdfsdfsdfs sdf sdfds</p>\n\n<p>s sf sffsf s</p>\n",
+        "detailedSolution": "<p>1413414</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>fsdf dsf</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><img src=\"media/Image 2-27-24 at 3.43 PM.jpeg\" style=\"width: 30px; height: 24px;\"/></td>\n\t\t\t<td>d vdfvxbv bdgdfgdfg dfg dfg dfg dfg d</td>\n\t\t\t<td> ffgsg gs</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td><img src=\"media/Image 1-31-24 at 4.02 PM.jpeg\" style=\"width: 75px; height: 39px;\"/></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td>c cvv</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td>\n\t\t\t<p>234234 234 234 24 24 23</p>\n\n\t\t\t<p>5 435 353535 35 </p>\n\t\t\t</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+      }
+    },
+    {
+      "params": {
+        "correct": "true",
+        "summarySolution": "<p><img src=\"media/Image 11-20-23 at 12.40 PM.jpeg\" style=\"width: 300px; height: 300px;\"/></p>\n",
+        "detailedSolution": "<p>cccv </p>\n"
       }
     }
   ]
