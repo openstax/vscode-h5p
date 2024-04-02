@@ -11,7 +11,21 @@
     }
   ],
   "is_solution_public": false,
-  "books": [],
+  "books": [
+    {
+      "name": "stax-astro",
+      "lo": [
+        "11-22-33"
+      ]
+    },
+    {
+      "name": "stax-algtrig",
+      "lo": [
+        "44-55-66",
+        "99-00-11"
+      ]
+    }
+  ],
   "attachments": [
     "media/362904114_659199262775349_3754034295457994345_n.jpg",
     "media/363039069_645834313919629_2359581970377214442_n.jpg",
@@ -52,6 +66,7 @@
     "media/Image 4-1-24 at 11.15 AM.jpeg",
     "media/Image 3-25-24 at 2.12 PM.jpeg",
     "media/Image 3-25-24 at 2.08 PM.jpeg",
+    "media/Image 11-20-23 at 12.40 PM.jpeg",
     "media/Image 3-14-24 at 12.43 PM.jpeg",
     "media/Image 4-1-24 at 9.56 AM.jpeg",
     "media/Screen Shot 2022-07-18 at 2.01.31 PM (2).png",
@@ -67,7 +82,11 @@
     "media/Image 2-1-24 at 9.17 AM.jpeg",
     "media/Image 2-27-24 at 3.43 PM.jpeg",
     "media/Image 1-31-24 at 4.02 PM.jpeg",
-    "media/Image 11-20-23 at 12.40 PM.jpeg"
+    "media/Image 1-10-24 at 3.48 PM.jpeg",
+    "media/Image 4-21-23 at 1.11 PM.jpeg",
+    "media/Image 10-10-23 at 4.20 PM.jpeg",
+    "media/Image 2-7-23 at 1.23 PM.jpeg",
+    "media/Image 5-19-23 at 10.05 AM.jpeg"
   ],
   "blooms": "3",
   "dok": "4",

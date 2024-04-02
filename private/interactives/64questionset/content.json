@@ -879,6 +879,32 @@
         "summarySolution": "<p><img src=\"media/Image 11-20-23 at 12.40 PM.jpeg\" style=\"width: 300px; height: 300px;\"/></p>\n",
         "detailedSolution": "<p>cccv </p>\n"
       }
+    },
+    {
+      "params": {
+        "answers": [
+          {
+            "correct": true,
+            "tipsAndFeedback": {
+              "tip": "<p><img src=\"media/Image 1-10-24 at 3.48 PM.jpeg\" style=\"width: 300px; height: 176px;\"/></p>\n",
+              "chosenFeedback": "<p><img src=\"media/Image 4-21-23 at 1.11 PM.jpeg\" style=\"width: 300px; height: 218px;\"/></p>\n",
+              "notChosenFeedback": "<p>v dbxb xcb </p>\n"
+            },
+            "text": "<p>m101</p>\n\n<p><img src=\"media/Image 10-10-23 at 4.20 PM.jpeg\" style=\"width: 300px; height: 290px;\"/></p>\n"
+          },
+          {
+            "correct": false,
+            "tipsAndFeedback": {
+              "tip": "",
+              "chosenFeedback": "",
+              "notChosenFeedback": ""
+            },
+            "text": "<p>b1<img src=\"media/Image 2-7-23 at 1.23 PM.jpeg\" style=\"width: 300px; height: 294px;\"/></p>\n"
+          }
+        ],
+        "summarySolution": "<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>1</td>\n\t\t\t<td>2</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>3</td>\n\t\t\t<td>64</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>0</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "detailedSolution": "<p><img src=\"media/Image 5-19-23 at 10.05 AM.jpeg\" style=\"width: 300px; height: 324px;\"/></p>\n"
+      }
     }
   ]
 }
