@@ -56,5 +56,6 @@
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
   },
-  "question": "<p>12121<img src=\"media/Image 2-12-24 at 10.29 AM.jpeg\" style=\"width: 300px; height: 90px;\"/></p>\n"
+  "question": "<p>12121<img src=\"media/Image 2-12-24 at 10.29 AM.jpeg\" style=\"width: 300px; height: 90px;\"/></p>\n",
+  "isSolutionPublic": false
 }

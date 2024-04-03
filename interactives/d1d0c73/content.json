@@ -785,5 +785,6 @@
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
   },
-  "question": "<p>11111<img src=\"media/Image 2-2-24 at 1.11 PM.jpeg\" style=\"width: 300px; height: 169px;\"/></p>\n"
+  "question": "<p>11111<img src=\"media/Image 2-2-24 at 1.11 PM.jpeg\" style=\"width: 300px; height: 169px;\"/></p>\n",
+  "isSolutionPublic": true
 }

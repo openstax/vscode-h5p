@@ -66,7 +66,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>utut utu tutu u<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>utut utu tutu u<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -138,7 +139,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>hghgfy<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/>fytfytfyyy yf ytf ytf ytf ytfytfytf</p>\n\n<p>yg g ytfy ytf</p>\n\n<p> </p>\n"
+        "question": "<p>hghgfy<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/>fytfytfyyy yf ytf ytf ytf ytfytfytf</p>\n\n<p>yg g ytfy ytf</p>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -194,7 +196,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>1111111<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>1111111<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -252,7 +255,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>111<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n"
+        "question": "<p>111<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -330,7 +334,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>erf freg ergreg reg ergerg ewerg <img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n"
+        "question": "<p>erf freg ergreg reg ergerg ewerg <img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -386,7 +391,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>asdf sfsfsf sf fg sf sdf </p>\n\n<p>sf sfssfgsff sf </p>\n\n<p>sfsf sfgsgfd d<img src=\"media/Screen Shot 2023-03-23 at 2.05.39 PM.png\" style=\"width: 300px; height: 248px;\"/></p>\n"
+        "question": "<p>asdf sfsfsf sf fg sf sdf </p>\n\n<p>sf sfssfgsff sf </p>\n\n<p>sfsf sfgsgfd d<img src=\"media/Screen Shot 2023-03-23 at 2.05.39 PM.png\" style=\"width: 300px; height: 248px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -458,7 +464,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>asd dsf sdfadfdfsdfsdf <img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n"
+        "question": "<p>asd dsf sdfadfdfsdfsdf <img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -530,7 +537,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>adf df s fgg sfg <img src=\"media/Screenshot 2023-11-08 at 11.40.31 AM.png\" style=\"width: 300px; height: 435px;\"/></p>\n"
+        "question": "<p>adf df s fgg sfg <img src=\"media/Screenshot 2023-11-08 at 11.40.31 AM.png\" style=\"width: 300px; height: 435px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -602,7 +610,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>sdf asdf ssfg sfg sfdg <img src=\"media/Screen Shot 2022-11-29 at 5.37.09 PM.png\" style=\"width: 300px; height: 690px;\"/></p>\n"
+        "question": "<p>sdf asdf ssfg sfg sfdg <img src=\"media/Screen Shot 2022-11-29 at 5.37.09 PM.png\" style=\"width: 300px; height: 690px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -658,7 +667,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> fs<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/>fg sfg sfg fg fg dfg dfg fsg fg</p>\n\n<p> </p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>f sf</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>dfg dg dg dg dg dgd gdgd fg d</td>\n\t\t\t<td> sf f g</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> sfsf s</td>\n\t\t\t<td> fgfgfsg fg g fg g fg dfg fdg</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p> fs<img src=\"media/363039069_645834313919629_2359581970377214442_n.jpg\" style=\"width: 300px; height: 225px;\"/>fg sfg sfg fg fg dfg dfg fsg fg</p>\n\n<p> </p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>f sf</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>dfg dg dg dg dg dgd gdgd fg d</td>\n\t\t\t<td> sf f g</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> sfsf s</td>\n\t\t\t<td> fgfgfsg fg g fg g fg dfg fdg</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -727,7 +737,8 @@
           "body": "Are you sure you wish to retry ?",
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
-        }
+        },
+        "isSolutionPublic": false
       },
       "library": "H5P.Blanks 1.14",
       "metadata": {
@@ -783,7 +794,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> rrw rw wr rw rw<img src=\"media/Screen Shot 2022-07-18 at 10.20.57 AM.png\" style=\"width: 300px; height: 204px;\"/></p>\n"
+        "question": "<p> rrw rw wr rw rw<img src=\"media/Screen Shot 2022-07-18 at 10.20.57 AM.png\" style=\"width: 300px; height: 204px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -839,7 +851,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>f fdg er gg<img src=\"media/Screenshot 2023-05-31 at 11.13.52 AM.png\" style=\"width: 300px; height: 138px;\"/></p>\n"
+        "question": "<p>f fdg er gg<img src=\"media/Screenshot 2023-05-31 at 11.13.52 AM.png\" style=\"width: 300px; height: 138px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -929,7 +942,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> r wergfer gwerg wer gewrwe</p>\n"
+        "question": "<p> r wergfer gwerg wer gewrwe</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -985,7 +999,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>üóüóúűpáéüáéőáőüá<img src=\"media/Image 6-23-23 at 9.52 AM.jpg\" style=\"width: 300px; height: 154px;\"/></p>\n"
+        "question": "<p>üóüóúűpáéüáéőáőüá<img src=\"media/Image 6-23-23 at 9.52 AM.jpg\" style=\"width: 300px; height: 154px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1041,7 +1056,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>-,.Á-á-áá-őúő-<img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n"
+        "question": "<p>-,.Á-á-áá-őúő-<img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1097,7 +1113,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>űűűááíííí</p>\n\n<p><img src=\"media/Screenshot 2023-10-19 at 12.47.48 PM.png\" style=\"width: 300px; height: 175px;\"/></p>\n\n<p>999</p>\n\n<p><img src=\"media/Screenshot 2023-11-02 at 3.26.18 PM.png\" style=\"width: 300px; height: 201px;\"/></p>\n"
+        "question": "<p>űűűááíííí</p>\n\n<p><img src=\"media/Screenshot 2023-10-19 at 12.47.48 PM.png\" style=\"width: 300px; height: 175px;\"/></p>\n\n<p>999</p>\n\n<p><img src=\"media/Screenshot 2023-11-02 at 3.26.18 PM.png\" style=\"width: 300px; height: 201px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1153,7 +1170,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>8768v6876g868768h8 68 686 86876 8</p>\n\n<p><img src=\"media/Screenshot 2023-12-18 at 12.37.51 PM.png\" style=\"width: 300px; height: 158px;\"/></p>\n"
+        "question": "<p>8768v6876g868768h8 68 686 86876 8</p>\n\n<p><img src=\"media/Screenshot 2023-12-18 at 12.37.51 PM.png\" style=\"width: 300px; height: 158px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1209,7 +1227,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>uiu ohiuh ihkjh kjh kjh</p>\n\n<p>kjh. hkjh kjhkjh kjhjk</p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n"
+        "question": "<p>uiu ohiuh ihkjh kjh kjh</p>\n\n<p>kjh. hkjh kjhkjh kjhjk</p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1265,7 +1284,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>kj hkj hbjmjh hhhjhhhkh kjh kjhkjh kjhjhkj kjh kj hkjh kjhkjh kjhk</p>\n\n<p><img src=\"media/Screenshot 2023-10-27 at 9.21.43 AM.png\" style=\"width: 300px; height: 67px;\"/></p>\n"
+        "question": "<p>kj hkj hbjmjh hhhjhhhkh kjh kjhkjh kjhjhkj kjh kj hkjh kjhkjh kjhk</p>\n\n<p><img src=\"media/Screenshot 2023-10-27 at 9.21.43 AM.png\" style=\"width: 300px; height: 67px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1321,7 +1341,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>99öööö<img src=\"media/Screenshot 2023-10-26 at 9.14.44 AM.png\" style=\"width: 300px; height: 243px;\"/></p>\n"
+        "question": "<p>99öööö<img src=\"media/Screenshot 2023-10-26 at 9.14.44 AM.png\" style=\"width: 300px; height: 243px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1377,7 +1398,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> hkh khkh khkjh kj hkjh kjhkjh</p>\n\n<p><img src=\"media/Screenshot 2023-03-29 at 4.10.44 PM.png\" style=\"width: 300px; height: 180px;\"/></p>\n"
+        "question": "<p> hkh khkh khkjh kj hkjh kjhkjh</p>\n\n<p><img src=\"media/Screenshot 2023-03-29 at 4.10.44 PM.png\" style=\"width: 300px; height: 180px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1449,7 +1471,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>jh jhg jgjgjh</p>\n\n<p>8798b98798797 7 879</p>\n\n<p><img src=\"media/Screen Shot 2023-02-17 at 11.39.01 AM.png\" style=\"width: 300px; height: 212px;\"/></p>\n"
+        "question": "<p>jh jhg jgjgjh</p>\n\n<p>8798b98798797 7 879</p>\n\n<p><img src=\"media/Screen Shot 2023-02-17 at 11.39.01 AM.png\" style=\"width: 300px; height: 212px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -1505,7 +1528,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>nmnmnmnmnm<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>nmnmnmnmnm<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1561,7 +1585,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>áé.--,-,-,-.áééáééáéáéáűúőúőúűó<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n"
+        "question": "<p>áé.--,-,-,-.áééáééáéáéáűúőúőúűó<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1617,7 +1642,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>jh gjgjggjhg hj gjh g<img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>jh gjgjggjhg hj gjh g<img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1673,7 +1699,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>jhg jhg</p>\n\n<p><img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n\n<p>Book repo indexes:</p>\n\n<p> </p>\n\n<p>REPO: osbooks-college-algebra-bundle - LIST INDEX: 0</p>\n\n<p>REPO: osbooks-university-physics-bundle - LIST INDEX: 1</p>\n\n<p>REPO: osbooks-business-law - LIST INDEX: 2</p>\n\n<p>REPO: osbooks-principles-of-management-bundle - LIST INDEX: 3</p>\n\n<p>REPO: osbooks-statistics - LIST INDEX: 4</p>\n\n<p>REPO: osbooks-writing-guide - LIST INDEX: 5</p>\n\n<p>REPO: osbooks-introduction-anthropology - LIST INDEX: 6</p>\n\n<p>REPO: osbooks-workplace-software-skills - LIST INDEX: 7</p>\n\n<p>REPO: osbooks-contemporary-mathematics - LIST INDEX: 8</p>\n\n<p>REPO: osbooks-introduction-computer-science - LIST INDEX: 9</p>\n\n<p>REPO: osbooks-introduccion-estadistica-bundle - LIST INDEX: 10</p>\n\n<p>REPO: osbooks-introduction-political-science - LIST INDEX: 11</p>\n\n<p>REPO: osbooks-world-history - LIST INDEX: 12</p>\n\n<p>REPO: osbooks-introduction-philosophy - LIST INDEX: 13</p>\n\n<p>REPO: osbooks-principles-finance - LIST INDEX: 14</p>\n\n<p>REPO: osbooks-introductory-statistics-bundle - LIST INDEX: 15</p>\n\n<p>REPO: osbooks-calculo-bundle - LIST INDEX: 16</p>\n\n<p>REPO: osbooks-precalculo - LIST INDEX: 17</p>\n\n<p>REPO: osbooks-calculus-bundle - LIST INDEX: 18</p>\n\n<p>REPO: osbooks-fisica-universitaria-bundle - LIST INDEX: 19</p>\n\n<p>REPO: osbooks-college-physics-bundle - LIST INDEX: 20</p>\n\n<p>REPO: osbooks-us-history - LIST INDEX: 21</p>\n\n<p>REPO: osbooks-college-success-bundle - LIST INDEX: 22</p>\n\n<p>REPO: osbooks-introduction-business - LIST INDEX: 23</p>\n\n<p>REPO: osbooks-business-ethics - LIST INDEX: 24</p>\n\n<p>REPO: osbooks-introduction-intellectual-property - LIST INDEX: 25</p>\n\n<p>REPO: osbooks-microbiology - LIST INDEX: 26</p>\n\n<p>REPO: osbooks-biology-bundle - LIST INDEX: 27</p>\n\n<p>REPO: osbooks-principles-accounting-bundle - LIST INDEX: 28</p>\n\n<p>REPO: osbooks-astronomy - LIST INDEX: 29</p>\n\n<p>REPO: osbooks-physics - LIST INDEX: 30</p>\n\n<p>REPO: osbooks-anatomy-physiology - LIST INDEX: 31</p>\n\n<p>REPO: osbooks-entrepreneurship - LIST INDEX: 32</p>\n\n<p>REPO: osbooks-chemistry-bundle - LIST INDEX: 33</p>\n\n<p>REPO: osbooks-principles-economics-bundle - LIST INDEX: 34</p>\n\n<p>REPO: osbooks-psychology - LIST INDEX: 35</p>\n\n<p>REPO: osbooks-prealgebra-bundle - LIST INDEX: 36</p>\n\n<p>REPO: osbooks-introduction-sociology - LIST INDEX: 37</p>\n\n<p>REPO: osbooks-american-government - LIST INDEX: 38</p>\n\n<p>REPO: osbooks-quimica-bundle - LIST INDEX: 39</p>\n\n<p>REPO: osbooks-introduction-python-programming - LIST INDEX: 40</p>\n\n<p>REPO: osbooks-principles-marketing - LIST INDEX: 41</p>\n\n<p>REPO: osbooks-organic-chemistry - LIST INDEX: 42</p>\n\n<p>REPO: osbooks-nursing-external-bundle - LIST INDEX: 43</p>\n\n<p>REPO: osbooks-nursing-internal-bundle - LIST INDEX: 44</p>\n\n<p>REPO: osbooks-neuroscience - LIST INDEX: 45</p>\n\n<p>REPO: osbooks-foundations-of-information-systems - LIST INDEX: 46</p>\n\n<p>REPO: osbooks-lifespan-development - LIST INDEX: 47</p>\n\n<p> </p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p>jhg jhg</p>\n\n<p><img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n\n<p>Book repo indexes:</p>\n\n<p> </p>\n\n<p>REPO: osbooks-college-algebra-bundle - LIST INDEX: 0</p>\n\n<p>REPO: osbooks-university-physics-bundle - LIST INDEX: 1</p>\n\n<p>REPO: osbooks-business-law - LIST INDEX: 2</p>\n\n<p>REPO: osbooks-principles-of-management-bundle - LIST INDEX: 3</p>\n\n<p>REPO: osbooks-statistics - LIST INDEX: 4</p>\n\n<p>REPO: osbooks-writing-guide - LIST INDEX: 5</p>\n\n<p>REPO: osbooks-introduction-anthropology - LIST INDEX: 6</p>\n\n<p>REPO: osbooks-workplace-software-skills - LIST INDEX: 7</p>\n\n<p>REPO: osbooks-contemporary-mathematics - LIST INDEX: 8</p>\n\n<p>REPO: osbooks-introduction-computer-science - LIST INDEX: 9</p>\n\n<p>REPO: osbooks-introduccion-estadistica-bundle - LIST INDEX: 10</p>\n\n<p>REPO: osbooks-introduction-political-science - LIST INDEX: 11</p>\n\n<p>REPO: osbooks-world-history - LIST INDEX: 12</p>\n\n<p>REPO: osbooks-introduction-philosophy - LIST INDEX: 13</p>\n\n<p>REPO: osbooks-principles-finance - LIST INDEX: 14</p>\n\n<p>REPO: osbooks-introductory-statistics-bundle - LIST INDEX: 15</p>\n\n<p>REPO: osbooks-calculo-bundle - LIST INDEX: 16</p>\n\n<p>REPO: osbooks-precalculo - LIST INDEX: 17</p>\n\n<p>REPO: osbooks-calculus-bundle - LIST INDEX: 18</p>\n\n<p>REPO: osbooks-fisica-universitaria-bundle - LIST INDEX: 19</p>\n\n<p>REPO: osbooks-college-physics-bundle - LIST INDEX: 20</p>\n\n<p>REPO: osbooks-us-history - LIST INDEX: 21</p>\n\n<p>REPO: osbooks-college-success-bundle - LIST INDEX: 22</p>\n\n<p>REPO: osbooks-introduction-business - LIST INDEX: 23</p>\n\n<p>REPO: osbooks-business-ethics - LIST INDEX: 24</p>\n\n<p>REPO: osbooks-introduction-intellectual-property - LIST INDEX: 25</p>\n\n<p>REPO: osbooks-microbiology - LIST INDEX: 26</p>\n\n<p>REPO: osbooks-biology-bundle - LIST INDEX: 27</p>\n\n<p>REPO: osbooks-principles-accounting-bundle - LIST INDEX: 28</p>\n\n<p>REPO: osbooks-astronomy - LIST INDEX: 29</p>\n\n<p>REPO: osbooks-physics - LIST INDEX: 30</p>\n\n<p>REPO: osbooks-anatomy-physiology - LIST INDEX: 31</p>\n\n<p>REPO: osbooks-entrepreneurship - LIST INDEX: 32</p>\n\n<p>REPO: osbooks-chemistry-bundle - LIST INDEX: 33</p>\n\n<p>REPO: osbooks-principles-economics-bundle - LIST INDEX: 34</p>\n\n<p>REPO: osbooks-psychology - LIST INDEX: 35</p>\n\n<p>REPO: osbooks-prealgebra-bundle - LIST INDEX: 36</p>\n\n<p>REPO: osbooks-introduction-sociology - LIST INDEX: 37</p>\n\n<p>REPO: osbooks-american-government - LIST INDEX: 38</p>\n\n<p>REPO: osbooks-quimica-bundle - LIST INDEX: 39</p>\n\n<p>REPO: osbooks-introduction-python-programming - LIST INDEX: 40</p>\n\n<p>REPO: osbooks-principles-marketing - LIST INDEX: 41</p>\n\n<p>REPO: osbooks-organic-chemistry - LIST INDEX: 42</p>\n\n<p>REPO: osbooks-nursing-external-bundle - LIST INDEX: 43</p>\n\n<p>REPO: osbooks-nursing-internal-bundle - LIST INDEX: 44</p>\n\n<p>REPO: osbooks-neuroscience - LIST INDEX: 45</p>\n\n<p>REPO: osbooks-foundations-of-information-systems - LIST INDEX: 46</p>\n\n<p>REPO: osbooks-lifespan-development - LIST INDEX: 47</p>\n\n<p> </p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1729,7 +1756,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> hgjgjhgjhg jghj<img src=\"media/Screen Shot 2022-06-22 at 9.36.44 AM.png\"/></p>\n"
+        "question": "<p> hgjgjhgjhg jghj<img src=\"media/Screen Shot 2022-06-22 at 9.36.44 AM.png\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1785,7 +1813,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> jhgjh gjg gj<img src=\"media/Screen Shot 2022-05-02 at 4.06.14 PM.png\" style=\"width: 300px; height: 136px;\"/></p>\n"
+        "question": "<p> jhgjh gjg gj<img src=\"media/Screen Shot 2022-05-02 at 4.06.14 PM.png\" style=\"width: 300px; height: 136px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1841,7 +1870,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>h jgjgjgjh jh jgjh<img src=\"media/Screen Shot 2022-12-02 at 12.25.10 PM.png\" style=\"width: 300px; height: 138px;\"/></p>\n\n<p><img src=\"media/Screen Shot 2022-11-08 at 5.00.54 PM.png\" style=\"width: 300px; height: 960px;\"/></p>\n"
+        "question": "<p>h jgjgjgjh jh jgjh<img src=\"media/Screen Shot 2022-12-02 at 12.25.10 PM.png\" style=\"width: 300px; height: 138px;\"/></p>\n\n<p><img src=\"media/Screen Shot 2022-11-08 at 5.00.54 PM.png\" style=\"width: 300px; height: 960px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1897,7 +1927,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>xxcbvxvxv<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n"
+        "question": "<p>xxcbvxvxv<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -1969,7 +2000,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>xcvxcvxcvxcvcxv<img src=\"media/Screenshot 2023-05-31 at 11.13.52 AM.png\" style=\"width: 300px; height: 138px;\"/></p>\n"
+        "question": "<p>xcvxcvxcvxcvcxv<img src=\"media/Screenshot 2023-05-31 at 11.13.52 AM.png\" style=\"width: 300px; height: 138px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -2025,7 +2057,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>kjh jh j hkj<img src=\"media/Screenshot 2023-10-19 at 12.47.48 PM.png\" style=\"width: 300px; height: 175px;\"/></p>\n"
+        "question": "<p>kjh jh j hkj<img src=\"media/Screenshot 2023-10-19 at 12.47.48 PM.png\" style=\"width: 300px; height: 175px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2081,7 +2114,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>,nbnb mnm bmnbm bpúőűáé.-.-,-,-,-,űúűúőűúőúű</p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n"
+        "question": "<p>,nbnb mnm bmnbm bpúőűáé.-.-,-,-,-,űúűúőűúőúű</p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2137,7 +2171,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>é</p>\n\n<p>á-.,-.,-.,-.,-.,-.,-.őúő</p>\n\n<p>áéáé-.,-<img src=\"media/Screenshot 2023-11-08 at 11.40.31 AM.png\" style=\"width: 300px; height: 435px;\"/></p>\n"
+        "question": "<p>é</p>\n\n<p>á-.,-.,-.,-.,-.,-.,-.őúő</p>\n\n<p>áéáé-.,-<img src=\"media/Screenshot 2023-11-08 at 11.40.31 AM.png\" style=\"width: 300px; height: 435px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2193,7 +2228,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> mbmnbmnbnm</p>\n\n<p>áé</p>\n\n<p>áé-.,.,.-.,-.,őúúőúőúőúő</p>\n\n<p><img src=\"media/Screenshot 2023-12-18 at 12.37.51 PM.png\" style=\"width: 300px; height: 158px;\"/></p>\n"
+        "question": "<p> mbmnbmnbnm</p>\n\n<p>áé</p>\n\n<p>áé-.,.,.-.,-.,őúúőúőúőúő</p>\n\n<p><img src=\"media/Screenshot 2023-12-18 at 12.37.51 PM.png\" style=\"width: 300px; height: 158px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2249,7 +2285,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>67687687687<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>67687687687<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2305,7 +2342,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>klklklklklk<img src=\"media/382998916_999574441295416_6250709088322616869_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>klklklklklk<img src=\"media/382998916_999574441295416_6250709088322616869_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2361,7 +2399,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>nbmbmnbmnbmnbmb<img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n"
+        "question": "<p>nbmbmnbmnbmnbmb<img src=\"media/Screenshot 2023-10-16 at 8.41.53 AM.png\" style=\"width: 300px; height: 271px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2433,7 +2472,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>h n m m mmm<img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>h n m m mmm<img src=\"media/363080807_7065059173506622_1547015239694856398_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -2489,7 +2529,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p><img src=\"media/Screenshot 2023-10-03 at 11.22.15 AM.png\" style=\"width: 300px; height: 74px;\"/>mnbmnbnbnmbmnbmnbm</p>\n"
+        "question": "<p><img src=\"media/Screenshot 2023-10-03 at 11.22.15 AM.png\" style=\"width: 300px; height: 74px;\"/>mnbmnbnbnmbmnbmnbm</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2545,7 +2586,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éáéáéá<img src=\"media/Screenshot 2023-10-26 at 11.36.04 AM.png\" style=\"width: 300px; height: 1800px;\"/></p>\n"
+        "question": "<p>éáéáéá<img src=\"media/Screenshot 2023-10-26 at 11.36.04 AM.png\" style=\"width: 300px; height: 1800px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2601,7 +2643,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>íííííí<img src=\"media/Screen Shot 2023-01-11 at 9.09.32 AM.png\" style=\"width: 300px; height: 185px;\"/></p>\n"
+        "question": "<p>íííííí<img src=\"media/Screen Shot 2023-01-11 at 9.09.32 AM.png\" style=\"width: 300px; height: 185px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2657,7 +2700,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éáéáéáé<img src=\"media/Screen Shot 2022-08-01 at 12.22.52 PM.png\" style=\"width: 300px; height: 183px;\"/></p>\n"
+        "question": "<p>éáéáéáé<img src=\"media/Screen Shot 2022-08-01 at 12.22.52 PM.png\" style=\"width: 300px; height: 183px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2729,7 +2773,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éááéáéúű</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td>dsfs</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td>1313</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td>vvcxb</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p>éááéáéúű</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td>dsfs</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td>1313</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td>vvcxb</td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -2785,7 +2830,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>s sdf sfsf sf sdfsdf s<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n"
+        "question": "<p>s sdf sfsf sf sdfsdf s<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2841,7 +2887,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>űőűőűőűőűőűő<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n"
+        "question": "<p>űőűőűőűőűőűő<img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2897,7 +2944,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>xv vf fd dfg dfg dfg dg d<img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n"
+        "question": "<p>xv vf fd dfg dfg dfg dg d<img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -2953,7 +3001,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p><img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/>sd sdf sdf sdf sd sd sg sg g d</p>\n\n<table border=\"6\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>sf fsg sfg sg sfg sfg sgs g sg</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p><img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/>sd sdf sdf sdf sd sd sg sg g d</p>\n\n<table border=\"6\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<caption>sf fsg sfg sg sfg sfg sgs g sg</caption>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3025,7 +3074,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>12123 12 3123 14 141 4 1</p>\n\n<p>fgg hdhfhfh dh d</p>\n"
+        "question": "<p>12123 12 3123 14 141 4 1</p>\n\n<p>fgg hdhfhfh dh d</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -3081,7 +3131,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>dfg fdg dfgdfg dfgdfg<img src=\"media/Screenshot 2023-04-21 at 2.18.27 PM.png\" style=\"width: 300px; height: 6px;\"/></p>\n\n<p> </p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n"
+        "question": "<p>dfg fdg dfgdfg dfgdfg<img src=\"media/Screenshot 2023-04-21 at 2.18.27 PM.png\" style=\"width: 300px; height: 6px;\"/></p>\n\n<p> </p>\n\n<p><img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3137,7 +3188,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>g gg g dfgd fgdf gd f d <img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n"
+        "question": "<p>g gg g dfgd fgdf gd f d <img src=\"media/Screenshot 2023-11-17 at 1.50.22 PM (2).png\" style=\"width: 300px; height: 169px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3193,7 +3245,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>45 2rv324 f3q4t q3f53 z<img src=\"media/Screenshot 2023-11-08 at 9.46.49 AM.png\" style=\"width: 300px; height: 149px;\"/></p>\n"
+        "question": "<p>45 2rv324 f3q4t q3f53 z<img src=\"media/Screenshot 2023-11-08 at 9.46.49 AM.png\" style=\"width: 300px; height: 149px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3265,7 +3318,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>gfd dfg dgh df<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>gfd dfg dgh df<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -3321,7 +3375,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>f sfsgsg dsg dh dshd fghdgh dfhdfh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh fgdh dfgh dfgh dfgh</p>\n"
+        "question": "<p>f sfsgsg dsg dh dshd fghdgh dfhdfh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh dfgh fgdh dfgh dfgh dfgh</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3377,7 +3432,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> dsf df <img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n"
+        "question": "<p> dsf df <img src=\"media/Screenshot 2023-04-20 at 2.50.05 PM.png\" style=\"width: 300px; height: 173px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3433,7 +3489,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>sf s fsg sg shg dfh dfgj</p>\n\n<p> fddfgjdfh dhjdfg jdfj dfj dfj df</p>\n"
+        "question": "<p>sf s fsg sg shg dfh dfgj</p>\n\n<p> fddfgjdfh dhjdfg jdfj dfj dfj df</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3489,7 +3546,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>sf s<img src=\"media/Screen Shot 2022-08-10 at 4.33.44 PM.png\" style=\"width: 300px; height: 170px;\"/></p>\n"
+        "question": "<p>sf s<img src=\"media/Screen Shot 2022-08-10 at 4.33.44 PM.png\" style=\"width: 300px; height: 170px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3561,7 +3619,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>őúűőűőűőúű éáéáé<img src=\"media/Screen Shot 2022-10-14 at 2.06.42 PM.png\" style=\"width: 300px; height: 114px;\"/></p>\n"
+        "question": "<p>őúűőűőűőúű éáéáé<img src=\"media/Screen Shot 2022-10-14 at 2.06.42 PM.png\" style=\"width: 300px; height: 114px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -3617,7 +3676,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> gjhg hghj gjhg gjhg jhg jhg jh<img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n"
+        "question": "<p> gjhg hghj gjhg gjhg jhg jhg jh<img src=\"media/Screen Shot 2022-04-20 at 10.23.06 AM.png\" style=\"width: 300px; height: 300px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3673,7 +3733,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>ííőőőőűűűű<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n"
+        "question": "<p>ííőőőőűűűű<img src=\"media/Image 10-16-23 at 11.59 AM.jpg\" style=\"width: 300px; height: 157px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3745,7 +3806,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éáéáéűúűúűúűúűú</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p>éáéáéűúűúűúűúűú</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -3801,7 +3863,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éááúűűúűúűúű úűúűóóüóü<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n"
+        "question": "<p>éááúűűúűúűúű úűúűóóüóü<img src=\"media/362904114_659199262775349_3754034295457994345_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3857,7 +3920,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>nbhb<img src=\"media/Screen Shot 2022-11-29 at 5.37.09 PM.png\" style=\"width: 300px; height: 690px;\"/></p>\n"
+        "question": "<p>nbhb<img src=\"media/Screen Shot 2022-11-29 at 5.37.09 PM.png\" style=\"width: 300px; height: 690px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -3929,7 +3993,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>j jgjgjhg. jgjgjgj</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p>j jgjgjhg. jgjgjgj</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -3985,7 +4050,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>m jhk hkjhkjhk jh kjhkjh kjhkjh </p>\n\n<p>őúúáéáéáéá</p>\n"
+        "question": "<p>m jhk hkjhkjhk jh kjhkjh kjhkjh </p>\n\n<p>őúúáéáéáéá</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4043,7 +4109,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>dadadadasd<img src=\"media/Image 2-20-24 at 12.26 PM.jpeg\" style=\"width: 300px; height: 108px;\"/></p>\n"
+        "question": "<p>dadadadasd<img src=\"media/Image 2-20-24 at 12.26 PM.jpeg\" style=\"width: 300px; height: 108px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4115,7 +4182,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>sfsdfsdfd<img src=\"media/Image 2-20-24 at 11.42 AM.jpeg\" style=\"width: 300px; height: 271px;\"/></p>\n"
+        "question": "<p>sfsdfsdfd<img src=\"media/Image 2-20-24 at 11.42 AM.jpeg\" style=\"width: 300px; height: 271px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -4171,7 +4239,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>éáőűú9őűóúő9űőü-</p>\n\n<p><img src=\"media/Image 4-1-24 at 11.15 AM.jpeg\" style=\"width: 300px; height: 171px;\"/></p>\n"
+        "question": "<p>éáőűú9őűóúő9űőü-</p>\n\n<p><img src=\"media/Image 4-1-24 at 11.15 AM.jpeg\" style=\"width: 300px; height: 171px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4227,7 +4296,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>áééáláéléál űő űú őűúőű őűúő. </p>\n\n<p> űú űúő űú őűú őűúő űő űúő </p>\n\n<p> ű úűú őűú őűú őű</p>\n\n<p><img src=\"media/Image 3-25-24 at 2.12 PM.jpeg\" style=\"width: 300px; height: 145px;\"/><img src=\"media/Image 3-25-24 at 2.08 PM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n"
+        "question": "<p>áééáláéléál űő űú őűúőű őűúő. </p>\n\n<p> űú űúő űú őűú őűúő űő űúő </p>\n\n<p> ű úűú őűú őűú őű</p>\n\n<p><img src=\"media/Image 3-25-24 at 2.12 PM.jpeg\" style=\"width: 300px; height: 145px;\"/><img src=\"media/Image 3-25-24 at 2.08 PM.jpeg\" style=\"width: 300px; height: 150px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4283,7 +4353,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>űúőűúőűúőűúőűúőűú</p>\n"
+        "question": "<p>űúőűúőűúőűúőűúőűú</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4352,7 +4423,8 @@
           "body": "Are you sure you wish to retry ?",
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
-        }
+        },
+        "isSolutionPublic": false
       },
       "library": "H5P.Blanks 1.14",
       "metadata": {
@@ -4408,7 +4480,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>gg jhgj hgj</p>\n"
+        "question": "<p>gg jhgj hgj</p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4480,7 +4553,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>tű</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><munder><mi>lim</mi><mrow><maction actiontype=\"argument\"><mrow></mrow></maction><mo>→</mo><mo>∞</mo></mrow></munder><mn>1</mn><mo>/</mo><mi>x</mi><mo> </mo><mo>=</mo><mo> </mo><mi>y</mi></math></td>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></mfenced><mo> </mo><mo>=</mo><mo> </mo><msqrt><msup><mi>x</mi><mn>3</mn></msup></msqrt></math></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mi>x</mi></mfenced><mo> </mo><mo>=</mo><mo> </mo><mn>1</mn></math></td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+        "question": "<p>tű</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><munder><mi>lim</mi><mrow><maction actiontype=\"argument\"><mrow></mrow></maction><mo>→</mo><mo>∞</mo></mrow></munder><mn>1</mn><mo>/</mo><mi>x</mi><mo> </mo><mo>=</mo><mo> </mo><mi>y</mi></math></td>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></mfenced><mo> </mo><mo>=</mo><mo> </mo><msqrt><msup><mi>x</mi><mn>3</mn></msup></msqrt></math></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>sin</mi><mfenced><mi>x</mi></mfenced><mo> </mo><mo>=</mo><mo> </mo><mn>1</mn></math></td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {
@@ -4561,7 +4635,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p> dfgdfgd</p>\n\n<p>g dfg df546 456 gfb hfg</p>\n\n<p>h fg</p>\n\n<p>h gf</p>\n\n<p>h </p>\n"
+        "question": "<p> dfgdfgd</p>\n\n<p>g dfg df546 456 gfb hfg</p>\n\n<p>h fg</p>\n\n<p>h gf</p>\n\n<p>h </p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {
@@ -4633,7 +4708,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>m110</p>\n\n<p><img src=\"media/Image 11-20-23 at 12.40 PM.jpeg\" style=\"width: 300px; height: 300px;\"/></p>\n"
+        "question": "<p>m110</p>\n\n<p><img src=\"media/Image 11-20-23 at 12.40 PM.jpeg\" style=\"width: 300px; height: 300px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.MultiChoice 1.16",
       "metadata": {

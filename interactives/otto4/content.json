@@ -50,7 +50,8 @@
           "cancelLabel": "Cancel",
           "confirmLabel": "Confirm"
         },
-        "question": "<p>asasas<img src=\"media/Image 2-20-24 at 11.42 AM.jpeg\" style=\"width: 300px; height: 271px;\"/></p>\n\n<p><img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n"
+        "question": "<p>asasas<img src=\"media/Image 2-20-24 at 11.42 AM.jpeg\" style=\"width: 300px; height: 271px;\"/></p>\n\n<p><img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n",
+        "isSolutionPublic": false
       },
       "library": "H5P.TrueFalse 1.8",
       "metadata": {

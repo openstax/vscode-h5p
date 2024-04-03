@@ -56,5 +56,6 @@
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
   },
-  "question": "<p>addasda<img src=\"media/ottooooooo.jpeg\"/></p>\n"
+  "question": "<p>addasda<img src=\"media/ottooooooo.jpeg\"/></p>\n",
+  "isSolutionPublic": false
 }

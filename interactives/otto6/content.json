@@ -53,5 +53,6 @@
     "body": "Are you sure you wish to retry ?",
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
-  }
+  },
+  "isSolutionPublic": false
 }

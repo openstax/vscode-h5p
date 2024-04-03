@@ -56,5 +56,6 @@
   },
   "questions": [
     "<p>first number</p>\n"
-  ]
+  ],
+  "isSolutionPublic": true
 }

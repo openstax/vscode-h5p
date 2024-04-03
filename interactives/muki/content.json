@@ -76,5 +76,6 @@
     "cancelLabel": "Cancel",
     "confirmLabel": "Confirm"
   },
-  "question": "<p> </p>\n\n<p>333</p>\n"
+  "question": "<p> </p>\n\n<p>333</p>\n",
+  "isSolutionPublic": true
 }
