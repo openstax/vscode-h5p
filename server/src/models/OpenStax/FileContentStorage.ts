@@ -10,7 +10,7 @@ import {
 import { walkJSON, iterHTML } from './ContentMutators';
 import { Readable } from 'stream';
 import { H5pError } from '@lumieducation/h5p-server';
-import { recursiveMerge } from '../../utils';
+import { recursiveMerge, setNamespaces } from '../../utils';
 
 const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
@@ -65,6 +65,22 @@ function updateAttachments(content: unknown, pathPrefix: string) {
     attachments.push(...getImageAttachments(images));
   });
   return { replaced, attachments };
+}
+
+export function fixNamespaces(content: unknown) {
+  iterHTML(content, ({ document }) => {
+    // Get all math tags in xhtml namespace (i.e. math without xmlns set)
+    const xhtmlMath = document.xpath<Element>('//h:math');
+    xhtmlMath.forEach((m) => {
+      // Re-parse the math element with new namespaces
+      const newMath = setNamespaces(m, {
+        '': 'http://www.w3.org/1998/Math/MathML',
+      });
+      const parent = assertValue(m.parentNode, 'Expected parent node');
+      // Replace original with new one
+      parent.replaceChild(newMath, m);
+    });
+  });
 }
 
 function validateContent(content: unknown) {
@@ -212,6 +228,7 @@ export default class OSStorage extends H5P.fsImplementations
     const privateAttachments: string[] = [];
     const publicAttachments: string[] = [];
     const library = assertLibrary(metadata.mainLibrary);
+    fixNamespaces(content);
     if (!library.isSolutionPublic(content)) {
       const [sanitized, privateData] = library.yankAnswers(content);
       // Replace images in private content

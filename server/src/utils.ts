@@ -2,7 +2,7 @@ import * as os from 'os';
 import decompress from 'decompress';
 import fs from 'fs';
 import express from 'express';
-import { DOMParser } from '@xmldom/xmldom';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import * as xpath from 'xpath-ts';
 import {
   assertTrue,
@@ -116,6 +116,46 @@ export function parseToDOM(xmlString: string, mimeType = 'application/xml') {
   });
   const doc = p.parseFromString(xmlString, mimeType);
   return doc;
+}
+
+function escapeXml(unsafe: string): string {
+  const map: Record<string, string> = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '&': '&amp;',
+    "'": '&apos;',
+    '"': '&quot;',
+  };
+  return unsafe.replace(/[<>&'"]/g, (c: string) => assertValue(map[c]));
+}
+
+export function setNamespaces(
+  el: Element,
+  nsMap: Record<string, string>,
+  mimeType = 'application/xml',
+) {
+  // Once xmldom decides which namespace is default, there appears to be
+  // only two ways to change it:
+  // 1. Manually recreate the entire tree
+  // 2. Re-parse the tree inside a new root element with new default namespace
+  // While option 1 is probably more efficient, it seemed more prone to error
+  const serializer = new XMLSerializer();
+  // Remove the default namespace the serializer adds if we are to set it
+  const src =
+    '' in nsMap
+      ? serializer.serializeToString(el).replace(/xmlns="[^"]+"/, '')
+      : serializer.serializeToString(el);
+  const namespaces = Object.entries(nsMap)
+    .map(([k, v]) => {
+      return k === ''
+        ? `xmlns="${escapeXml(v)}"`
+        : `xmlns:${escapeXml(k)}="${escapeXml(v)}"`;
+    })
+    .join(' ');
+  const newRoot = parseToDOM(`<root ${namespaces}>${src}</root>`, mimeType);
+  const newEl = assertValue(newRoot.documentElement.firstChild) as Element;
+  // From this point on, namespace declarations are correctly added as needed
+  return newEl;
 }
 
 export function parseBooksXML(booksXmlPath: string): {
