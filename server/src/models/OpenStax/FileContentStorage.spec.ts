@@ -1,5 +1,5 @@
 import * as fsExtra from 'fs-extra';
-import OSStorage from './FileContentStorage';
+import OSStorage, { fixNamespaces } from './FileContentStorage';
 import mockfs from 'mock-fs';
 import path from 'path';
 import Config from './config';
@@ -568,5 +568,34 @@ describe('File Content Storage', () => {
         {} as unknown as IUser,
       ),
     ).toBe('1');
+  });
+
+  describe('fixNamespaces', () => {
+    it('adds mathml namespace', () => {
+      const content = {
+        x: [
+          '<math t="1"><mi a="test">x</mi></math>',
+          '<div>something</div>',
+          '<math><mrow xmlns:t="http://example.com" t:b="x"><mi>y</mi></mrow>' +
+            '</math>',
+          '<math><mi>z</mi></math>',
+          '<math xmlns="not-xhtml-namespace"><mi>w</mi></math>',
+        ].join('\n'),
+      };
+      fixNamespaces(content);
+      expect(content.x).toBe(
+        [
+          '<math t="1" xmlns="http://www.w3.org/1998/Math/MathML">' +
+            '<mi a="test">x</mi></math>',
+          '<div>something</div>',
+          '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
+            '<mrow xmlns:t="http://example.com" t:b="x">' +
+            '<mi>y</mi>' +
+            '</mrow></math>',
+          '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>z</mi></math>',
+          '<math xmlns="not-xhtml-namespace"><mi>w</mi></math>',
+        ].join('\n'),
+      );
+    });
   });
 });

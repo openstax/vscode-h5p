@@ -1,9 +1,18 @@
 import mockfs from 'mock-fs';
-import { extractArchive, getIps, parseBooksXML, recursiveMerge } from './utils';
+import {
+  extractArchive,
+  getIps,
+  parseBooksXML,
+  parseToDOM,
+  recursiveMerge,
+  setNamespaces,
+} from './utils';
 import fsExtra from 'fs-extra';
 import path from 'path';
 import decompress from 'decompress';
 import { networkInterfaces } from 'os';
+import * as xpath from 'xpath-ts';
+import { XMLSerializer } from '@xmldom/xmldom';
 
 jest.mock('decompress', () => jest.fn());
 jest.mock('node-fetch', () => jest.fn());
@@ -141,6 +150,54 @@ describe('Utility functions', () => {
       expect(() => recursiveMerge([1], 'test')).toThrow(/Cannot merge/);
       result = recursiveMerge([1], undefined);
       expect(result).toStrictEqual([1]);
+    });
+  });
+  describe('setNamespaces', () => {
+    it('causes namespaces to be handled as expected', () => {
+      const serializer = new XMLSerializer();
+      const htmlDoc = parseToDOM(
+        `\
+        <html>
+        <body>
+          <my-element>
+            <x:my-div>I should get a namespace declaration</x:my-div>
+          </my-element>
+          <math><mrow><mn>2</mn></mrow></math>
+        </body>
+        </html>
+      `.replace(/\s*([<>])\s*/g, (_, group1) => group1),
+        'text/html',
+      );
+      const select = (query: string) =>
+        xpath.useNamespaces({
+          h: 'http://www.w3.org/1999/xhtml',
+        })(query, htmlDoc) as Element[];
+
+      const myEl = select('//h:my-element')[0] as Element;
+      const newMyEl = setNamespaces(myEl, {
+        x: 'http://example.com/',
+      });
+      myEl.parentNode?.replaceChild(newMyEl, myEl);
+      const myMath = select('//h:math')[0] as Element;
+      const newMyMath = setNamespaces(myMath, {
+        '': 'http://www.w3.org/1998/Math/MathML',
+      });
+      myMath.parentNode?.replaceChild(newMyMath, myMath);
+      expect(serializer.serializeToString(htmlDoc)).toBe(
+        `\
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <body>
+          <my-element xmlns="http://www.w3.org/1999/xhtml">
+            <x:my-div xmlns:x="http://example.com/">
+              I should get a namespace declaration
+            </x:my-div>
+          </my-element>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <mrow><mn>2</mn></mrow>
+          </math>
+        </body>
+        </html>`.replace(/\s*([<>])\s*/g, (_, group1) => group1),
+      );
     });
   });
 });
