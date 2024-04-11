@@ -71,13 +71,29 @@ describe('questionSetYanker', () => {
         },
         {
           params: {
-            media: {
-              disableImageZooming: false,
+            taskDescription: 'Something',
+            solution: {
+              introduction: '',
+              sample: '',
             },
-            questions: ['<p>What is *true*?</p>\n'],
+            keywords: [
+              {
+                options: {
+                  points: 1,
+                  occurrences: 1,
+                  caseSensitive: false,
+                  forgiveMistakes: false,
+                  feedbackIncludedWord: 'keyword',
+                  feedbackMissedWord: 'none',
+                },
+                keyword: '*',
+              },
+            ],
+            summarySolution: '',
+            detailedSolution: '',
             isSolutionPublic: false,
           },
-          library: 'H5P.Blanks 1.14',
+          library: 'H5P.Essay',
         },
       ],
     };
@@ -165,7 +181,7 @@ describe('questionSet Is Solution Public', () => {
           params: {
             isSolutionPublic: true,
           },
-          library: 'H5P.Blanks 1.14',
+          library: 'H5P.Essay',
         },
       ],
     };

@@ -60,12 +60,10 @@ exports[`questionSetYanker yanks private data by subtype 1`] = `
       },
     },
     {
-      "library": "H5P.Blanks 1.14",
+      "library": "H5P.Essay",
       "params": {
         "isSolutionPublic": false,
-        "media": {
-          "disableImageZooming": false,
-        },
+        "taskDescription": "Something",
       },
     },
   ],
@@ -108,10 +106,25 @@ exports[`questionSetYanker yanks private data by subtype 2`] = `
     },
     {
       "params": {
-        "questions": [
-          "<p>What is *true*?</p>
-",
+        "detailedSolution": "",
+        "keywords": [
+          {
+            "keyword": "*",
+            "options": {
+              "caseSensitive": false,
+              "feedbackIncludedWord": "keyword",
+              "feedbackMissedWord": "none",
+              "forgiveMistakes": false,
+              "occurrences": 1,
+              "points": 1,
+            },
+          },
         ],
+        "solution": {
+          "introduction": "",
+          "sample": "",
+        },
+        "summarySolution": "",
       },
     },
   ],
