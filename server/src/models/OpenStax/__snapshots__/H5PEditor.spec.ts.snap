@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters the correct values (H5P.Blanks) 1`] = `
+exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters the correct values (H5P.Essay) 1`] = `
 [
   {
     "default": "default",
@@ -8,7 +8,6 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "type": "group",
   },
   {
-    "description": "These options will let you control how the task behaves.",
     "fields": [
       {
         "default": false,
@@ -16,11 +15,8 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
         "type": "boolean",
       },
     ],
-    "importance": "low",
-    "label": "Behavioural settings",
-    "name": "behaviour",
-    "optional": true,
-    "type": "group",
+    "name": "options",
+    "type": "text",
   },
   {
     "importance": "medium",
@@ -30,7 +26,7 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "tags": [
       "REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST",
     ],
-    "tagsHash": "a95edb5e3e02ceb1119cd424e8ae4dbe01633480",
+    "tagsHash": "f083f58f413d705db00477ac77e2eab543b21d35",
     "type": "text",
     "widget": "html",
   },
@@ -42,7 +38,7 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "tags": [
       "REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST",
     ],
-    "tagsHash": "a95edb5e3e02ceb1119cd424e8ae4dbe01633480",
+    "tagsHash": "f083f58f413d705db00477ac77e2eab543b21d35",
     "type": "text",
     "widget": "html",
   },
@@ -86,7 +82,7 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "tags": [
       "REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST",
     ],
-    "tagsHash": "f083f58f413d705db00477ac77e2eab543b21d35",
+    "tagsHash": "a95edb5e3e02ceb1119cd424e8ae4dbe01633480",
     "type": "text",
     "widget": "html",
   },
@@ -98,7 +94,7 @@ exports[`H5PEditor alterLibrarySemantics does not mutate semantics and alters th
     "tags": [
       "REMOVED FOR BREVITY. SEE _supportedTags FOR FULL LIST",
     ],
-    "tagsHash": "f083f58f413d705db00477ac77e2eab543b21d35",
+    "tagsHash": "a95edb5e3e02ceb1119cd424e8ae4dbe01633480",
     "type": "text",
     "widget": "html",
   },

@@ -38,13 +38,6 @@ describe('H5PEditor', () => {
       ]);
     };
 
-    const blanksSemantics = semanticsWithBehavior([
-      {
-        type: 'boolean',
-        name: 'caseSensitive',
-        default: 'default',
-      },
-    ]);
     const multiChoiceSemantics = semanticsWithBehavior([
       {
         type: 'text',
@@ -68,10 +61,23 @@ describe('H5PEditor', () => {
         default: 'default',
       },
     ]);
+    const essaySemantics = fakeSemantics.concat([
+      {
+        type: 'text',
+        name: 'options',
+        fields: [
+          {
+            name: 'caseSensitive',
+            default: true as unknown as string,
+            type: 'boolean',
+          },
+        ],
+      },
+    ]);
     const pairs: Array<[H5P.LibraryName, ISemanticsEntry[]]> = [
-      [{ ...fakeLib, machineName: 'H5P.Blanks' }, blanksSemantics],
       [{ ...fakeLib, machineName: 'H5P.MultiChoice' }, multiChoiceSemantics],
       [{ ...fakeLib, machineName: 'H5P.QuestionSet' }, questionSetSemantics],
+      [{ ...fakeLib, machineName: 'H5P.Essay' }, essaySemantics],
     ];
     // https://docs.lumi.education/advanced-usage/customization#changing-the-semantics-of-individual-libraries
     // (Note: This function should be immutable...)
@@ -106,7 +112,7 @@ describe('H5PEditor', () => {
     )[0];
     if (libWithHTML !== undefined) {
       it('adds tags', () => {
-        const semanticsWithTags = blanksSemantics.concat([
+        const semanticsWithTags = multiChoiceSemantics.concat([
           {
             name: 'tagParent',
             type: 'group',

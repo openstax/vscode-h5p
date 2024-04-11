@@ -129,6 +129,7 @@ function _addTags(entry: ISemanticsEntry) {
   }
 }
 
+// TODO: Ideally this could not be as closely tied to Config
 export const alterLibrarySemantics = (
   library: H5P.LibraryName,
   semantics: ISemanticsEntry[],
