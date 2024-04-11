@@ -22,7 +22,7 @@ interface SemanticsOverride {
   additionalFields?: AdditionalField[];
 }
 
-interface SupportedLibrary {
+export interface SupportedLibrary {
   yankAnswers: Yanker;
   isSolutionPublic: GetSolutionIsPublic;
   // Semantic overrides are utilized in the H5PEditor's alterLibrarySemantics
@@ -185,12 +185,12 @@ export default class Config {
 
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {
-      'H5P.Blanks': newSupportedLibrary({
-        yankAnswers: yankByKeysFactory('questions'),
+      'H5P.Essay': newSupportedLibrary({
+        yankAnswers: yankByKeysFactory('solution', 'keywords'),
         semantics: {
           additionalFields: [...collaboratorSolutions, publicSolution],
           override(entry) {
-            if (entry.name === 'behaviour') {
+            if (entry.name === 'options') {
               const fields = entry.fields ?? (entry.fields = []);
               const caseSensitive = assertValue(
                 fields.find(
