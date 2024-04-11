@@ -42,6 +42,24 @@ exports[`questionSetYanker yanks private data by subtype 1`] = `
       },
     },
     {
+      "library": "H5P.MultiChoice 1.16",
+      "params": {
+        "answers": [
+          {
+            "text": "<div>3</div>
+",
+          },
+          {
+            "text": "<div>4</div>
+",
+          },
+        ],
+        "isSolutionPublic": false,
+        "question": "<p>Given point a and point b, what is 2+2?</p>
+",
+      },
+    },
+    {
       "library": "H5P.Blanks 1.14",
       "params": {
         "isSolutionPublic": false,
@@ -64,6 +82,29 @@ exports[`questionSetYanker yanks private data by subtype 2`] = `
     },
     {
       "params": null,
+    },
+    {
+      "params": {
+        "answers": [
+          {
+            "correct": false,
+            "tipsAndFeedback": {
+              "chosenFeedback": "",
+              "notChosenFeedback": "",
+              "tip": "",
+            },
+          },
+          {
+            "correct": true,
+            "tipsAndFeedback": {
+              "chosenFeedback": "",
+              "notChosenFeedback": "",
+              "tip": "",
+            },
+          },
+        ],
+        "detailedSolution": "Something",
+      },
     },
     {
       "params": {

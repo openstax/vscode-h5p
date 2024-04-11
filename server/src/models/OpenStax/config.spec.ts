@@ -43,6 +43,34 @@ describe('questionSetYanker', () => {
         },
         {
           params: {
+            question: '<p>Given point a and point b, what is 2+2?</p>\n',
+            answers: [
+              {
+                correct: false,
+                tipsAndFeedback: {
+                  tip: '',
+                  chosenFeedback: '',
+                  notChosenFeedback: '',
+                },
+                text: '<div>3</div>\n',
+              },
+              {
+                correct: true,
+                tipsAndFeedback: {
+                  tip: '',
+                  chosenFeedback: '',
+                  notChosenFeedback: '',
+                },
+                text: '<div>4</div>\n',
+              },
+            ],
+            detailedSolution: 'Something',
+            isSolutionPublic: false,
+          },
+          library: 'H5P.MultiChoice 1.16',
+        },
+        {
+          params: {
             media: {
               disableImageZooming: false,
             },

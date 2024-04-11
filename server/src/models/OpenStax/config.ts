@@ -1,8 +1,8 @@
 import * as H5P from '@lumieducation/h5p-server';
-import { Yanker, chain, yankByKeysFactory } from './AnswerYankers';
+import { Yanker, chain, yankByKeys, yankByKeysFactory } from './AnswerYankers';
 import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
 import { assertTrue, assertValue } from '../../../../common/src/utils';
-import { QuestionSetQuestion, toQuestionSet } from './helpers';
+import { QuestionSetQuestion, toMultiChoice, toQuestionSet } from './helpers';
 
 type GetSolutionIsPublic = (content: Partial<unknown>) => boolean;
 
@@ -204,7 +204,21 @@ export default class Config {
         },
       }),
       'H5P.MultiChoice': newSupportedLibrary({
-        yankAnswers: yankByKeysFactory('answers'),
+        yankAnswers: (content) => {
+          const publicData = toMultiChoice(JSON.parse(JSON.stringify(content)));
+          const privateData = {};
+          const publicAnswers: Partial<unknown>[] = [];
+          const privateAnswers: Partial<unknown>[] = [];
+          publicData.answers
+            .map((a) => yankByKeys(a, ['correct', 'tipsAndFeedback']))
+            .forEach(([pub, priv]) => {
+              publicAnswers.push(pub);
+              privateAnswers.push(priv);
+            });
+          Reflect.set(privateData, 'answers', privateAnswers);
+          Reflect.set(publicData, 'answers', publicAnswers);
+          return [publicData, privateData];
+        },
         semantics: {
           additionalFields: [
             ...collaboratorSolutions,
