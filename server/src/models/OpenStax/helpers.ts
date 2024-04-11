@@ -10,6 +10,17 @@ export interface QuestionSet {
   questions: QuestionSetQuestion[];
 }
 
+export interface MultiChoiceAnswer {
+  correct: boolean;
+  text: string;
+  tipsAndFeedback: Partial<unknown>;
+}
+
+export interface MultiChoice {
+  question: string;
+  answers: MultiChoiceAnswer[];
+}
+
 export function isQuestionSet(
   content: Partial<unknown>,
 ): content is QuestionSet {
@@ -27,5 +38,25 @@ export function toQuestionSet(content: Partial<unknown>): QuestionSet {
   return assertValue(
     isQuestionSet(content) ? content : undefined,
     'BUG: tried to interpret a non-QuestionSet as a QuestionSet',
+  );
+}
+
+export function isMultiChoice(
+  content: Partial<unknown>,
+): content is MultiChoice {
+  return (
+    'question' in content &&
+    'answers' in content &&
+    Array.isArray(content['answers']) &&
+    content['answers'].every(
+      (a) => 'correct' in a && 'text' in a && 'tipsAndFeedback' in a,
+    )
+  );
+}
+
+export function toMultiChoice(content: Partial<unknown>): MultiChoice {
+  return assertValue(
+    isMultiChoice(content) ? content : undefined,
+    'BUG: tried to interpret a non-MultiChoice as a MultiChoice',
   );
 }
