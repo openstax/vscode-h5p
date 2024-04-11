@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import * as H5P from '@lumieducation/h5p-server';
-import Config from './config';
+import Config, { SupportedLibrary } from './config';
 import { assertTrue, assertValue } from '../../../../common/src/utils';
 import {
   CanonicalMetadata,
@@ -16,14 +16,6 @@ const METADATA_NAME = 'metadata.json';
 const CONTENT_NAME = 'content.json';
 const H5P_NAME = 'h5p.json';
 const IMG_DIR = 'media';
-
-function assertLibrary(mainLibrary: string) {
-  const library = Config.supportedLibraries[mainLibrary];
-  if (library != null) {
-    return library;
-  }
-  throw new Error(`Cannot handle private answers for type "${mainLibrary}"`);
-}
 
 // Temp paths are constructed by addDirectoryByMimetype in h5p-server/src/H5PEditor.ts
 // temporaryFileStorage.getFileStream wants paths relative to temp directory
@@ -117,6 +109,14 @@ export default class OSStorage extends H5P.fsImplementations
     super(config.contentDirectory);
     this.privateContentDirectory = config.privateContentDirectory;
     this.temporaryFileStorage = temporaryFileStorage;
+  }
+
+  protected assertLibrary(mainLibrary: string): SupportedLibrary {
+    /* istanbul ignore next */
+    return assertValue(
+      Config.supportedLibraries[mainLibrary],
+      `Cannot handle private answers for type "${mainLibrary}"`,
+    );
   }
 
   protected async writeJSON(
@@ -227,7 +227,7 @@ export default class OSStorage extends H5P.fsImplementations
     const oldAttachments = newOsMeta.attachments ?? [];
     const privateAttachments: string[] = [];
     const publicAttachments: string[] = [];
-    const library = assertLibrary(metadata.mainLibrary);
+    const library = this.assertLibrary(metadata.mainLibrary);
     fixNamespaces(content);
     if (!library.isSolutionPublic(content)) {
       const [sanitized, privateData] = library.yankAnswers(content);

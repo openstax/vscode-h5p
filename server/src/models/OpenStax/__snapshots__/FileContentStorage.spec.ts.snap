@@ -5,7 +5,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
   "interactives": {
     "1": {
       "content.json": "{}",
-      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"H5P.Blanks","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
+      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"Test.Library","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
       "metadata.json": "{"extra":"Something extra"}",
     },
     "1234": {
@@ -15,7 +15,7 @@ exports[`File Content Storage 1234: removes private solutions 1`] = `
 }",
       "h5p.json": "{
   "title": "this should be stored in folder 1234",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -56,7 +56,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
   "interactives": {
     "1": {
       "content.json": "{}",
-      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"H5P.Blanks","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
+      "h5p.json": "{"title":"this should be stored in folder 1","mainLibrary":"Test.Library","language":"U","license":"","embedTypes":["iframe"],"preloadedDependencies":[],"defaultLanguage":""}",
       "metadata.json": "{"extra":"Something extra"}",
     },
     "12345": {
@@ -69,7 +69,7 @@ exports[`File Content Storage 12345: leaves public solutions 1`] = `
 }",
       "h5p.json": "{
   "title": "this should be stored in folder 12345",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -103,7 +103,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "h5p.json": "{
   "title": "this should be stored in folder 1",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -131,7 +131,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "h5p.json": "{
   "title": "this should be stored in folder 1234",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -150,7 +150,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "h5p.json": "{
   "title": "this should be stored in folder 2",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [
@@ -170,7 +170,7 @@ exports[`File Content Storage saves content as expected 1`] = `
 }",
       "h5p.json": "{
   "title": "default title",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "Test.Library",
   "language": "U",
   "license": "",
   "embedTypes": [

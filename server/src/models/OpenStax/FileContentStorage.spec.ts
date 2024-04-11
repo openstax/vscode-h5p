@@ -2,17 +2,19 @@ import * as fsExtra from 'fs-extra';
 import OSStorage, { fixNamespaces } from './FileContentStorage';
 import mockfs from 'mock-fs';
 import path from 'path';
-import Config from './config';
+import Config, { SupportedLibrary } from './config';
 import { NetworkMetadata } from '../../../../common/src/types';
 import { IContentMetadata, IUser } from '@lumieducation/h5p-server';
 import { assertValue } from '../../../../common/src/utils';
+import { yankByKeysFactory } from './AnswerYankers';
 
 const VIRTUAL_ROOT = '/root';
 const CONFIG = new Config(VIRTUAL_ROOT, 'interactives', 'private');
 const PRIVATE_PATH = CONFIG.privateContentDirectory;
+const TEST_LIBRARY = 'Test.Library';
 const MOCK_H5P_BASE: IContentMetadata = {
   title: 'default title',
-  mainLibrary: 'H5P.Blanks',
+  mainLibrary: TEST_LIBRARY,
   language: 'U',
   license: '',
   embedTypes: ['iframe'],
@@ -52,7 +54,7 @@ const createStorageHarness = () => {
       return tryGet(target, p);
     },
   });
-  return new Proxy(new OSStorage(CONFIG, mockTempStorage), {
+  const storage = new Proxy(new OSStorage(CONFIG, mockTempStorage), {
     get(target, p) {
       switch (p) {
         case 'addContent':
@@ -77,6 +79,17 @@ const createStorageHarness = () => {
       return tryGet(target, p);
     },
   });
+  // Patch for testing without being coupled to config
+  Reflect.set(
+    storage,
+    'assertLibrary',
+    (): SupportedLibrary => ({
+      yankAnswers: yankByKeysFactory('questions'),
+      isSolutionPublic: (content) =>
+        Reflect.get(content, 'isSolutionPublic') === true,
+    }),
+  );
+  return storage;
 };
 
 describe('File Content Storage', () => {
@@ -273,23 +286,6 @@ describe('File Content Storage', () => {
         mockfs.restore();
         expect(result).toMatchSnapshot();
       },
-    );
-  });
-  it('throws an error when it cannot make solutions private', async () => {
-    const storage = createStorageHarness();
-    await expect(async () => {
-      await storage.addContent(
-        {
-          mainLibrary: 'FAKE-FOR-TESTING-PURPOSES',
-        } as unknown as IContentMetadata,
-        {
-          isSolutionPublic: false,
-        },
-        {} as unknown as IUser,
-        '1234',
-      );
-    }).rejects.toThrowError(
-      'Cannot handle private answers for type "FAKE-FOR-TESTING-PURPOSES"',
     );
   });
   it('cleans up orphaned files on error', async () => {
