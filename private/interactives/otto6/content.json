@@ -1,6 +1,21 @@
 {
-  "questions": [
-    "<p>121212<img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n",
-    "<p>313123123<img src=\"media/Image 2-12-24 at 10.29 AM.jpeg\" style=\"width: 300px; height: 90px;\"/></p>\n"
-  ]
+  "solution": {
+    "introduction": "",
+    "sample": ""
+  },
+  "keywords": [
+    {
+      "options": {
+        "points": 1,
+        "occurrences": 1,
+        "caseSensitive": false,
+        "forgiveMistakes": false,
+        "feedbackIncludedWord": "keyword",
+        "feedbackMissedWord": "none"
+      },
+      "keyword": "*"
+    }
+  ],
+  "summarySolution": "<p>121212<img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n\n<p>313123123<img src=\"media/Image 2-12-24 at 10.29 AM.jpeg\" style=\"width: 300px; height: 90px;\"/></p>\n",
+  "detailedSolution": ""
 }

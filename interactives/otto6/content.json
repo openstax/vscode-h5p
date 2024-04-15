@@ -5,54 +5,33 @@
     },
     "disableImageZooming": false
   },
-  "text": "<p>111<img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n",
   "overallFeedback": [
     {
       "from": 0,
       "to": 100
     }
   ],
-  "showSolutions": "Show solution",
-  "tryAgain": "Retry",
+  "behaviour": {
+    "inputFieldSize": "10",
+    "enableRetry": true,
+    "ignoreScoring": false,
+    "pointsHost": 1,
+    "linebreakReplacement": " "
+  },
   "checkAnswer": "Check",
   "submitAnswer": "Submit",
-  "notFilledOut": "Please fill in all blanks to view solution",
-  "answerIsCorrect": "':ans' is correct",
-  "answerIsWrong": "':ans' is wrong",
-  "answeredCorrectly": "Answered correctly",
-  "answeredIncorrectly": "Answered incorrectly",
-  "solutionLabel": "Correct answer:",
-  "inputLabel": "Blank input @num of @total",
-  "inputHasTipLabel": "Tip available",
-  "tipLabel": "Tip",
-  "behaviour": {
-    "enableRetry": true,
-    "enableSolutionsButton": true,
-    "enableCheckButton": true,
-    "autoCheck": false,
-    "caseSensitive": false,
-    "showSolutionsRequiresInput": true,
-    "separateLines": false,
-    "confirmCheckDialog": false,
-    "confirmRetryDialog": false,
-    "acceptSpellingErrors": false
-  },
-  "scoreBarLabel": "You got :num out of :total points",
-  "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
-  "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
-  "a11yRetry": "Retry the task. Reset all responses and start the task over again.",
-  "a11yCheckingModeHeader": "Checking mode",
-  "confirmCheck": {
-    "header": "Finish ?",
-    "body": "Are you sure you wish to finish ?",
-    "cancelLabel": "Cancel",
-    "confirmLabel": "Finish"
-  },
-  "confirmRetry": {
-    "header": "Retry ?",
-    "body": "Are you sure you wish to retry ?",
-    "cancelLabel": "Cancel",
-    "confirmLabel": "Confirm"
-  },
-  "isSolutionPublic": false
+  "tryAgain": "Retry",
+  "showSolution": "Show solution",
+  "feedbackHeader": "Feedback",
+  "solutionTitle": "Sample solution",
+  "remainingChars": "Remaining characters: @chars",
+  "notEnoughChars": "You must enter at least @chars characters!",
+  "messageSave": "saved",
+  "ariaYourResult": "You got @score out of @total points",
+  "ariaNavigatedToSolution": "Navigated to newly included sample solution after textarea.",
+  "ariaCheck": "Check the answers.",
+  "ariaShowSolution": "Show the solution. You will be provided with a sample solution.",
+  "ariaRetry": "Retry the task. You can improve your previous answer if the author allowed that.",
+  "isSolutionPublic": false,
+  "taskDescription": "<p>111<img src=\"media/Image 2-13-24 at 9.16 AM.jpeg\" style=\"width: 300px; height: 227px;\"/></p>\n"
 }

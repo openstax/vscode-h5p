@@ -44,9 +44,9 @@
       "minorVersion": 8
     },
     {
-      "machineName": "H5P.Blanks",
+      "machineName": "H5P.Essay",
       "majorVersion": 1,
-      "minorVersion": 14
+      "minorVersion": 5
     },
     {
       "machineName": "H5P.TextUtilities",

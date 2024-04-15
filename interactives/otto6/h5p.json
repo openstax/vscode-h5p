@@ -6,16 +6,16 @@
   "license": "U",
   "extraTitle": "fill innnnnn",
   "title": "fill innnnnn",
-  "mainLibrary": "H5P.Blanks",
+  "mainLibrary": "H5P.Essay",
   "preloadedDependencies": [
-    {
-      "machineName": "FontAwesome",
-      "majorVersion": 4,
-      "minorVersion": 5
-    },
     {
       "machineName": "H5P.Question",
       "majorVersion": 1,
+      "minorVersion": 5
+    },
+    {
+      "machineName": "FontAwesome",
+      "majorVersion": 4,
       "minorVersion": 5
     },
     {
@@ -39,9 +39,9 @@
       "minorVersion": 3
     },
     {
-      "machineName": "H5P.Blanks",
+      "machineName": "H5P.Essay",
       "majorVersion": 1,
-      "minorVersion": 14
+      "minorVersion": 5
     }
   ]
 }
