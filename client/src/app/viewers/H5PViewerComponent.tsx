@@ -20,6 +20,38 @@ export default class H5PViewerComponent extends React.Component<{
   private contentService: ContentService;
   private h5pUrl: string;
 
+  private createViewportUpdateEvent(elem: Element, viewport: VisualViewport) {
+    return new CustomEvent('viewportUpdate', {
+      detail: {
+        parentViewport: viewport,
+        boundingClientRect: elem.getBoundingClientRect(),
+      },
+    });
+  }
+
+  private notifyIframes() {
+    const viewport = window.visualViewport;
+    if (viewport != null) {
+      // Forward viewport events (scroll/resize) to all iframes
+      // These iframes contain the h5p editor instances
+      Array.from(document.querySelectorAll('iframe')).forEach((frame) => {
+        frame.contentDocument?.dispatchEvent(
+          this.createViewportUpdateEvent(frame, viewport),
+        );
+      });
+    }
+  }
+
+  private installViewportUpdateEvent() {
+    const notifyIframes = this.notifyIframes.bind(this);
+    addEventListener('scroll', notifyIframes);
+    addEventListener('resize', notifyIframes);
+  }
+
+  public override componentDidMount() {
+    this.installViewportUpdateEvent();
+  }
+
   override render() {
     return (
       <div className="App">

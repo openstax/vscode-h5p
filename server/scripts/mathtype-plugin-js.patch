@@ -24,15 +24,15 @@
 >   const height = featureDef.height?.concat("px") || "400px";
 > 
 >   [htmlWin, html, body].forEach((el) => {
->     el.style.minWidth = width;
->     el.style.minHeight = height;
+>     el.style.width = width;
+>     el.style.height = height;
 >   });
 >   
 >   htmlWin.id = name;
->   htmlWin.style.padding = "10px";
+>   htmlWin.style.padding = "10px 25px 30px 10px";
 >   htmlWin.style.backgroundColor = "white";
 >   htmlWin.style.border = "1px solid gray";
->   htmlWin.style.position = "absolute";
+>   htmlWin.style.position = "fixed";
 >   
 >   titleBar.style.display = "flex";
 >   titleEl.style.boxSizing = "border-box";
