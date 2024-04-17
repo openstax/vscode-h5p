@@ -13,13 +13,9 @@ import {
 } from './OpenstaxMetadataForm';
 import { BookInputState, InputState } from './types';
 
-function isDefined<T>(optional: T | undefined): optional is T {
-  return optional !== undefined;
-}
-
 function getBookMetadata(formData: FormState): BookMetadata[] {
   const bookInputEntries = Object.entries(formData).filter(isBookInputEntry);
-  const tryGetMetadataForBook = (book: string): BookMetadata | undefined => {
+  const tryGetMetadataForBook = (book: string): BookMetadata => {
     const collectValuesForBook = ([key, inputStates]: [
       keyof BookInputs,
       BookInputState[],
@@ -33,15 +29,12 @@ function getBookMetadata(formData: FormState): BookMetadata[] {
       .map(collectValuesForBook)
       .filter(([_, value]) => value.length > 0)
       .map(([key, value]) => [key, isInputSet(key) ? value : value[0]]);
-    return entriesForBook.length === 0
-      ? undefined
-      : { name: book, ...Object.fromEntries(entriesForBook) };
+    return { name: book, ...Object.fromEntries(entriesForBook) };
   };
   return formData.books
     .map((b) => b.value)
     .filter((book) => book !== '')
-    .map(tryGetMetadataForBook)
-    .filter(isDefined);
+    .map(tryGetMetadataForBook);
 }
 
 export function adaptToNetworkModel(formData: FormState): NetworkMetadata {
