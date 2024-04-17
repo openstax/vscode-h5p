@@ -4,7 +4,11 @@ exports[`Metadata Adaptor Adapts form data to network model 1`] = `
 {
   "assignment_type": null,
   "blooms": null,
-  "books": [],
+  "books": [
+    {
+      "name": "stax-should-now-be-saved",
+    },
+  ],
   "dok": null,
   "errata_id": "fffffff",
   "feature_id": null,

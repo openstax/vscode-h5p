@@ -46,6 +46,9 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
       ],
       "name": "stax-anything",
     },
+    {
+      "name": "stax-amfg",
+    },
   ],
   "dok": null,
   "errata_id": "test",

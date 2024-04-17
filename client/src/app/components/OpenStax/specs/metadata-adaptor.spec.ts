@@ -45,7 +45,7 @@ describe('Metadata Adaptor', () => {
     expect(
       adaptToNetworkModel({
         ...BASE_FORM_STATE,
-        books: [{ ...defaultInputState, value: 'stax-should-not-be-saved' }],
+        books: [{ ...defaultInputState, value: 'stax-should-now-be-saved' }],
       }),
     ).toMatchSnapshot();
   });
