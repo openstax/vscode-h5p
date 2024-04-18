@@ -1,0 +1,43 @@
+{
+  "solution": {
+    "introduction": "<p>kj kjg jkh k hkjh h kjh </p>\n\n<p>jh jhkj</p>\n\n<p><img alt=\"Gubás Gabi\" src=\"https://polczest.hu/wp-content/uploads/2018/11/gg_3.webp\" style=\"width: 620px; height: 428px;\"/></p>\n\n<p>Gubás Gabi</p>\n\n<p> </p>\n",
+    "sample": "<p>iuz i8768b 86 uig8 77 687t</p>\n\n<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac><mn>12</mn><mn>23</mn></mfrac></math></p>\n"
+  },
+  "keywords": [
+    {
+      "options": {
+        "points": 1,
+        "occurrences": 1,
+        "caseSensitive": false,
+        "forgiveMistakes": false,
+        "feedbackIncludedWord": "keyword",
+        "feedbackMissedWord": "none"
+      },
+      "keyword": "szabó"
+    },
+    {
+      "options": {
+        "points": 1,
+        "occurrences": 1,
+        "caseSensitive": false,
+        "forgiveMistakes": false,
+        "feedbackIncludedWord": "keyword",
+        "feedbackMissedWord": "none"
+      },
+      "keyword": "Erika"
+    },
+    {
+      "options": {
+        "points": 1,
+        "occurrences": 1,
+        "caseSensitive": false,
+        "forgiveMistakes": false,
+        "feedbackIncludedWord": "keyword",
+        "feedbackMissedWord": "none"
+      },
+      "keyword": "$$\\frac{12}{23}$$"
+    }
+  ],
+  "summarySolution": "<p>színésznő</p>\n\n<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac><mn>12</mn><mn>23</mn></mfrac></math></p>\n",
+  "detailedSolution": "<p>magyar színésznő</p>\n"
+}

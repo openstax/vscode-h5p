@@ -1,0 +1,38 @@
+{
+  "media": {
+    "type": {
+      "params": {}
+    },
+    "disableImageZooming": false
+  },
+  "overallFeedback": [
+    {
+      "from": 0,
+      "to": 100
+    }
+  ],
+  "behaviour": {
+    "inputFieldSize": "10",
+    "enableRetry": true,
+    "ignoreScoring": false,
+    "pointsHost": 1,
+    "linebreakReplacement": " "
+  },
+  "checkAnswer": "Check",
+  "submitAnswer": "Submit",
+  "tryAgain": "Retry",
+  "showSolution": "Show solution",
+  "feedbackHeader": "Feedback",
+  "solutionTitle": "Sample solution",
+  "remainingChars": "Remaining characters: @chars",
+  "notEnoughChars": "You must enter at least @chars characters!",
+  "messageSave": "saved",
+  "ariaYourResult": "You got @score out of @total points",
+  "ariaNavigatedToSolution": "Navigated to newly included sample solution after textarea.",
+  "ariaCheck": "Check the answers.",
+  "ariaShowSolution": "Show the solution. You will be provided with a sample solution.",
+  "ariaRetry": "Retry the task. You can improve your previous answer if the author allowed that.",
+  "isSolutionPublic": false,
+  "taskDescription": "<p>https://femina.hu/hazai_sztar/fiatal_magyar_szinesznok_lapozgato/</p>\n\n<p>image: <img alt=\"színésznő\" src=\"https://static.femina.hu/hazai_sztar/fiatal_magyar_szinesznok/szabo_erika1.jpg\" style=\"width: 468px; height: 532px;\"/>https://static.femina.hu/hazai_sztar/fiatal_magyar_szinesznok/szabo_erika1.jpg</p>\n",
+  "placeholderText": "Szabó Erika"
+}
