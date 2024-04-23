@@ -1,92 +1,138 @@
 // https://h5p.org/adding-text-editor-buttons
 
-function getFixMathTypeDialog() {
-  let offsetTop = 0;
-  let viewportHeight = 0;
-  let parentOffsetTop = 0;
-  let parentWidth = 0;
-  let parentHeight = 0;
-  let mathTypeInstances = [];
-  let waitingForUpdate = false;
+class ViewportUpdateHandler {
+  constructor(getVisibleElements) {
+    this.offsetTop = 0;
+    this.viewportHeight = 0;
+    this.parentOffsetTop = 0;
+    this.parentWidth = 0;
+    this.parentHeight = 0;
+    this.isUpdatePending = false;
+    this.getVisibleElements = getVisibleElements;
+  }
 
-  const setMathTypePosition = () => {
-    const visibleInstances = mathTypeInstances.filter(
-      (editor) => !editor.classList.contains('wrs_closed')
+  update() {
+    if (this.isUpdatePending) return;
+    const visibleElms = this.getVisibleElements();
+    if (visibleElms.length === 0) return;
+    
+    this.isUpdatePending = true;
+    // TODO: Maybe tile dialogs horizontally too if needed
+    const boundingRects = visibleElms.map((elm) => elm.getBoundingClientRect());
+    const instanceHeights = boundingRects.map((rect) => rect.height);
+    const totalHeight = instanceHeights.reduce((ax, x) => ax + x);
+    const startingOffsetTop = (
+      this.offsetTop -
+      this.parentOffsetTop +
+      this.viewportHeight / 2 -
+      totalHeight / 2
     );
-    if (waitingForUpdate || visibleInstances.length === 0) return;
-    waitingForUpdate = true;
     requestAnimationFrame(() => {
       try {
-        const boundingRects = visibleInstances
-          .map((dialog) => dialog.getBoundingClientRect())
-        const instanceHeights = boundingRects.map((rect) => rect.height)
-        const totalHeight = instanceHeights
-          .reduce((ax, x) => ax + x);
-        const startingOffsetTop =
-          offsetTop - parentOffsetTop + viewportHeight / 2 - totalHeight / 2;
         let relOffsetTop = 0;
-        visibleInstances.forEach((dialog, idx) => {
-          const dialogWidth = boundingRects[idx].width;
+        visibleElms.forEach((dialog, idx) => {
+          const rect = boundingRects[idx];
+          const dialogWidth = rect.width;
           const top = Math.min(
-            Math.max(startingOffsetTop, 0), parentHeight - totalHeight
+            Math.max(startingOffsetTop, 0), this.parentHeight - totalHeight
           ) + relOffsetTop;
-          const left = Math.max((parentWidth / 2 - dialogWidth / 2), 0);
-          relOffsetTop += instanceHeights[idx];
+          const left = Math.max((this.parentWidth / 2 - dialogWidth / 2), 0);
+          relOffsetTop += rect.height;
           dialog.style.inset = `${top}px ${left}px 0px`;
         });
       } catch (e) {
         console.error(e);
       } finally {
-        waitingForUpdate = false;
+        this.isUpdatePending = false;
       }
     });
   }
 
-  const isMathTypeNode = (node) =>
-    node.id === 'wrs_code' ||
-    node.classList?.contains('wrs_modal_dialogContainer') === true
-  const observe = new MutationObserver(function (mutations) {
-    const addedOrRemovedDialog = mutations.some(
-      (mutation) =>
-        Array.from(mutation.addedNodes).some(isMathTypeNode) ||
-        Array.from(mutation.removedNodes).some(isMathTypeNode)
-    );
-    const shouldUpdate = addedOrRemovedDialog || (
-      mathTypeInstances.length > 0 &&
-      // Look for cases where a dialog was resized or hidden
-      mutations
-        .some((mutation) =>
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'class' &&
-          mathTypeInstances.some((instance) => mutation.target === instance)
-        )
-    );
-    if (addedOrRemovedDialog) {
-      mathTypeInstances = Array.from(
-        document.querySelectorAll('#wrs_code, .wrs_modal_dialogContainer')
-      );
-    }
-    // Move the dialogs when they are added, hidden/removed, or resized
-    if (shouldUpdate) {
-      setMathTypePosition();
-    }
-  });
-
-  observe.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-  });
-
-  return function(e) {
-    offsetTop = e.detail.parentViewport.pageTop;
-    viewportHeight = e.detail.parentViewport.height;
-    parentOffsetTop =
+  _update(e) {
+    this.offsetTop = e.detail.parentViewport.pageTop;
+    this.viewportHeight = e.detail.parentViewport.height;
+    this.parentOffsetTop =
       e.detail.boundingClientRect.top + e.detail.parentViewport.pageTop;
-    parentWidth = e.detail.boundingClientRect.width;
-    parentHeight = e.detail.boundingClientRect.height;
-    setMathTypePosition();
+    this.parentWidth = e.detail.boundingClientRect.width;
+    this.parentHeight = e.detail.boundingClientRect.height;
+    this.update();
   }
+
+  installListener() {
+    document.addEventListener('viewportUpdate', this._update.bind(this));
+    return this;
+  }
+}
+
+class MathTypeInstanceHandler {
+  constructor() {
+    this._instances = [];
+    this._observer = undefined;
+  }
+
+  get instances() {
+    return this._instances;
+  }
+  
+  get visibleInstances() {
+    return this._instances.filter(
+      (editor) => !editor.classList.contains('wrs_closed')
+    );
+  }
+
+  installObserver(root, onUpdate) {
+    if (this._observer !== undefined) {
+      throw new Error('Observer already installed')
+    }
+    const isMathTypeNode = (node) =>
+      node.id === 'wrs_code' ||
+      node.classList?.contains('wrs_modal_dialogContainer') === true
+    const observer = new MutationObserver((mutations) => {
+      const addedOrRemovedDialog = mutations.some(
+        (mutation) =>
+          Array.from(mutation.addedNodes).some(isMathTypeNode) ||
+          Array.from(mutation.removedNodes).some(isMathTypeNode)
+      );
+      if (addedOrRemovedDialog) {
+        this._instances = Array.from(
+          root.querySelectorAll('#wrs_code, .wrs_modal_dialogContainer')
+        );
+      }
+      // Call onUpdate when dialogs are added, hidden/removed, or resized
+      if (
+        addedOrRemovedDialog || (
+          this._instances.length > 0 &&
+          // Look for cases where a dialog was resized or hidden
+          mutations.some((mutation) =>
+            mutation.type === 'attributes' &&
+            mutation.attributeName === 'class' &&
+            this._instances.some(
+              (instance) => mutation.target === instance
+            )
+          )
+        )
+      ) {
+        onUpdate();
+      }
+    });
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+    this._observer = observer;
+  }
+}
+
+function handleViewportUpdates() {
+  const mathTypeInstanceHandler = new MathTypeInstanceHandler();
+  const viewportUpdateHandler = new ViewportUpdateHandler(
+    // Add more elements as needed (concat arrays together)
+    () => mathTypeInstanceHandler.visibleInstances
+  );
+  const update = viewportUpdateHandler.update.bind(viewportUpdateHandler);
+  viewportUpdateHandler.installListener();
+  mathTypeInstanceHandler.installObserver(document.body, update);
 }
 
 (function ($) {
@@ -94,7 +140,7 @@ function getFixMathTypeDialog() {
     if (!window.CKEDITOR) {
       return;
     }
-    document.addEventListener('viewportUpdate', getFixMathTypeDialog())
+    handleViewportUpdates();
 
     // Register our plugin
     H5PEditor.HtmlAddons = H5PEditor.HtmlAddons || {};
