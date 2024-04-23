@@ -5,8 +5,7 @@ export interface NetworkMetadata {
   assignment_type: string | null;
   dok: string | null;
   time: string | null;
-  feature_page: string | null;
-  feature_id: string | null;
+  context: string[];
   books: BookMetadata[];
 }
 
@@ -27,8 +26,7 @@ export interface CanonicalMetadata {
   assignment_type?: string;
   dok?: string;
   time?: string;
-  feature_page?: string;
-  feature_id?: string;
+  context: string[];
   books: BookMetadata[];
   attachments: string[];
 }

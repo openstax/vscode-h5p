@@ -38,8 +38,6 @@ function getBookMetadata(formData: FormState): BookMetadata[] {
 }
 
 export function adaptToNetworkModel(formData: FormState): NetworkMetadata {
-  const noContext = formData['context'].value === '';
-  const splitContext = formData['context'].value.split('#');
   return {
     nickname: formData.nickname.value,
     errata_id: formData.errata_id.value,
@@ -53,8 +51,9 @@ export function adaptToNetworkModel(formData: FormState): NetworkMetadata {
         ? null
         : formData.assignment_type.value,
     time: formData.time.value === '' ? null : formData.time.value,
-    feature_page: noContext ? null : assertValue(splitContext[0]),
-    feature_id: noContext ? null : assertValue(splitContext[1]),
+    context: formData.context
+      .map((state) => state.value)
+      .filter((v) => v !== ''),
   };
 }
 
@@ -104,11 +103,6 @@ export function adaptToFormModel(
   const formState: Partial<FormState> = canonicalBooksToFormState(
     canonicalMetadata.books,
   );
-  if (!isFalsy(canonicalMetadata.feature_page)) {
-    formState.context = toInputState(
-      `${canonicalMetadata.feature_page}#${canonicalMetadata.feature_id}`,
-    );
-  }
   if (!isFalsy(canonicalMetadata.blooms)) {
     formState.blooms = toInputState(canonicalMetadata.blooms);
   }
@@ -122,5 +116,6 @@ export function adaptToFormModel(
     formState.time = toInputState(canonicalMetadata.time);
   }
   formState.errata_id = toInputState(canonicalMetadata.errata_id);
+  formState.context = (canonicalMetadata.context ?? []).map(toInputState);
   return formState;
 }

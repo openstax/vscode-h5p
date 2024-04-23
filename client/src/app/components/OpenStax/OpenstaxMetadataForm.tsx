@@ -41,11 +41,11 @@ type SingleInputs = {
   dok: InputState;
   time: InputState;
   errata_id: InputState;
-  context: InputState;
 };
 
 type InputSets = {
   books: InputState[];
+  context: InputState[];
 };
 
 export type BookInputs = {
@@ -208,10 +208,10 @@ const exerciseInputs: Array<
   },
   {
     key: 'context',
-    make(inputHandlerFactory) {
+    make(_, inputSetHandlerFactory) {
       return (
         <Context
-          {...inputHandlerFactory(this.key)}
+          {...inputSetHandlerFactory(this.key)}
           required={this.isRequired}
         />
       );
@@ -297,11 +297,11 @@ export default class OpenstaxMetadataForm extends React.Component<FormProps> {
   public override state: FormState = {
     errata_id: { ...defaultInputState },
     nickname: { ...defaultInputState },
-    context: { ...defaultInputState },
     blooms: { ...defaultInputState },
     assignment_type: { ...defaultInputState },
     dok: { ...defaultInputState },
     time: { ...defaultInputState },
+    context: [],
     books: [],
     aplo: [],
     lo: [],
