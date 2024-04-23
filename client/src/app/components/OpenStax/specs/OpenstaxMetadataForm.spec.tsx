@@ -155,8 +155,7 @@ describe('OpenstaxMetadataForm', () => {
     //   it(`can ${isAdd ? 'add' : 'remove'} inputs in a set`, async () => {
     //     const { container } = await initFormWithMinData({
     //       formDataOverride: {
-    //         feature_page: 'a/b/c',
-    //         feature_id: 'fs-123',
+    //         context: ['a/b/c#fs-123']
     //       },
     //     });
     //     const inputCountBefore = container.querySelectorAll('input').length;
@@ -350,8 +349,7 @@ describe('OpenstaxMetadataForm', () => {
   });
   describe('encode/decode form state', () => {
     const formDataEncoded = {
-      feature_page: 'm00003',
-      feature_id: 'term-03',
+      context: ['m00003#term-03'],
       books: [
         { name: 'stax-psy', lo: ['00-00-01'] },
         {
@@ -383,8 +381,7 @@ describe('OpenstaxMetadataForm', () => {
       const errorValue = contextInitialValue + '+';
       const { openstaxForm, getByDisplayValue } = await initFormWithMinData({
         formDataOverride: {
-          feature_page: moduleNumber,
-          feature_id: elementId,
+          context: [`${moduleNumber}#${elementId}`],
         },
       });
       const moduleIdInput = await getByDisplayValue(contextInitialValue);

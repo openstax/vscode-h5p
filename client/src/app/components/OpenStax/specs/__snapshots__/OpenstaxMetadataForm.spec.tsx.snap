@@ -18,10 +18,9 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs 1`] = `
       "name": "stax-pophealth",
     },
   ],
+  "context": [],
   "dok": null,
   "errata_id": "test",
-  "feature_id": null,
-  "feature_page": null,
   "nickname": "new",
   "time": null,
 }
@@ -50,10 +49,9 @@ exports[`OpenstaxMetadataForm Book inputs correctly modifies inputs in a set 1`]
       "name": "stax-amfg",
     },
   ],
+  "context": [],
   "dok": null,
   "errata_id": "test",
-  "feature_id": null,
-  "feature_page": null,
   "nickname": "new",
   "time": null,
 }
@@ -77,10 +75,9 @@ exports[`OpenstaxMetadataForm Book inputs handleBookChange keeps input values wh
       "name": "stax-psy",
     },
   ],
+  "context": [],
   "dok": null,
   "errata_id": "test",
-  "feature_id": null,
-  "feature_page": null,
   "nickname": "new",
   "time": null,
 }
@@ -101,6 +98,7 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
   "aacn": [],
   "aplo": [],
   "books": [],
+  "context": [],
   "errata_id": {
     "isValid": true,
     "value": "test",
@@ -132,10 +130,11 @@ exports[`OpenstaxMetadataForm encode/decode form state decodes form state when l
       "science_practice": "concept-explanation",
     },
   ],
+  "context": [
+    "m00003#term-03",
+  ],
   "dok": null,
   "errata_id": "test",
-  "feature_id": "term-03",
-  "feature_page": "m00003",
   "nickname": "new",
   "time": null,
 }

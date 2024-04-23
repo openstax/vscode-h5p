@@ -9,10 +9,9 @@ exports[`Metadata Adaptor Adapts form data to network model 1`] = `
       "name": "stax-should-now-be-saved",
     },
   ],
+  "context": [],
   "dok": null,
   "errata_id": "fffffff",
-  "feature_id": null,
-  "feature_page": null,
   "nickname": "test",
   "time": null,
 }
@@ -35,6 +34,7 @@ exports[`Metadata Adaptor Saves and loads values for books 1`] = `
       "name": "stax-apsomething",
     },
   ],
+  "context": [],
   "errata_id": "fffffff",
 }
 `;
@@ -45,10 +45,11 @@ exports[`Metadata Adaptor saves and loads optional values 1`] = `
   "attachments": [],
   "blooms": "1",
   "books": [],
+  "context": [
+    "m12345#fs-12345",
+  ],
   "dok": "1",
   "errata_id": "fffffff",
-  "feature_id": "fs-12345",
-  "feature_page": "m12345",
   "time": "Short",
 }
 `;
