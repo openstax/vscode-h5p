@@ -10,7 +10,7 @@ const defaultInputState: InputState = { value: '', isValid: true };
 const BASE_FORM_STATE: FormState = {
   errata_id: { ...defaultInputState, value: 'fffffff' },
   nickname: { ...defaultInputState, value: 'test' },
-  context: { ...defaultInputState },
+  context: [],
   blooms: { ...defaultInputState },
   assignment_type: { ...defaultInputState },
   dok: { ...defaultInputState },
@@ -97,7 +97,7 @@ describe('Metadata Adaptor', () => {
     // GIVEN: Optional input values
     const state: FormState = {
       ...BASE_FORM_STATE,
-      context: { ...defaultInputState, value: 'm12345#fs-12345' },
+      context: [{ ...defaultInputState, value: 'm12345#fs-12345' }],
       blooms: { ...defaultInputState, value: '1' },
       assignment_type: { ...defaultInputState, value: 'something' },
       dok: { ...defaultInputState, value: '1' },

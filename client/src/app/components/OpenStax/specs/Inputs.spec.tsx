@@ -16,7 +16,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 
 function testSingleInputValidation(
   factory: (state: SingleInputProps) => React.ReactElement<SingleInputProps>,
-  valuesToTest: [string, boolean][],
+  valuesToTest: [value: string, isValid: boolean][],
 ) {
   let value = '';
   let isValid = true;
@@ -41,7 +41,7 @@ function testSingleInputValidation(
 
 function testInputSetValidation(
   factory: (state: InputSetProps) => React.ReactElement<InputSetProps>,
-  valuesToTest: [string, boolean][][],
+  valuesToTest: [value: string, isValid: boolean][][],
 ) {
   const inputStates = range(valuesToTest[0].length).map(() => ({
     value: '',
@@ -323,15 +323,19 @@ describe('Inputs', () => {
 
   describe('context', () => {
     it('validates values', () => {
-      testSingleInputValidation(
+      testInputSetValidation(
         (state) => <Context {...state} />,
         [
-          ['m00123', false],
-          ['invalid', false],
-          ['m00123#fs-12345', true],
-          ['m00123#', false],
-          ['m00123#a', true],
-          ['m00123#12-asd', false],
+          [
+            ['m00123', true],
+            ['invalid', false],
+            ['m00123#fs-12345', true],
+          ],
+          [
+            ['m00123#', false],
+            ['m00123#a', true],
+            ['m00123#12-asd', false],
+          ],
         ],
       );
     });
