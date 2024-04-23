@@ -43,7 +43,8 @@ function getFixMathTypeDialog() {
   }
 
   const isMathTypeNode = (node) =>
-    node.id === 'wrs_code' || node.id?.startsWith('wrs_modal_dialogContainer')
+    node.id === 'wrs_code' ||
+    node.classList?.contains('wrs_modal_dialogContainer') === true
   const observe = new MutationObserver(function (mutations) {
     const addedOrRemovedDialog = mutations.some(
       (mutation) =>
