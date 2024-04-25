@@ -1,0 +1,32 @@
+{
+  "errata_id": "1e23540b6eec5cea967605a9623c8c7504deebb2",
+  "collaborator_solutions": [
+    {
+      "content": "a",
+      "solution_type": "detailed"
+    },
+    {
+      "content": "b",
+      "solution_type": "summary"
+    }
+  ],
+  "books": [
+    {
+      "name": "stax-matnewborn",
+      "lo": [
+        "1-2-3"
+      ],
+      "aacn": "12.1a",
+      "nclex": "yes"
+    }
+  ],
+  "blooms": "3",
+  "dok": "2",
+  "assignment_type": "homework",
+  "time": "medium",
+  "feature_page": "m00123",
+  "feature_id": "fs-something23",
+  "attachments": [
+    "media/Screen Shot 2023-04-14 at 8.55.21 AM.png"
+  ]
+}
