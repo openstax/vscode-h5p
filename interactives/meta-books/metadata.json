@@ -1,0 +1,23 @@
+{
+  "errata_id": "061fa83",
+  "books": [
+    {
+      "name": "stax-algtrig",
+      "lo": [
+        "11-22-33",
+        "66-55-33",
+        "00-11-22"
+      ]
+    },
+    {
+      "name": "stax-astro"
+    },
+    {
+      "name": "stax-bio"
+    },
+    {
+      "name": "stax-anp"
+    }
+  ],
+  "attachments": []
+}

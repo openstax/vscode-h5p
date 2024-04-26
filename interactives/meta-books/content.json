@@ -1,0 +1,48 @@
+{
+  "media": {
+    "type": {
+      "params": {}
+    },
+    "disableImageZooming": false
+  },
+  "behaviour": {
+    "enableRetry": true,
+    "enableSolutionsButton": true,
+    "enableCheckButton": true,
+    "confirmCheckDialog": false,
+    "confirmRetryDialog": false,
+    "autoCheck": false
+  },
+  "isSolutionPublic": true,
+  "l10n": {
+    "trueText": "True",
+    "falseText": "False",
+    "score": "You got @score of @total points",
+    "checkAnswer": "Check",
+    "submitAnswer": "Submit",
+    "showSolutionButton": "Show solution",
+    "tryAgain": "Retry",
+    "wrongAnswerMessage": "Wrong answer",
+    "correctAnswerMessage": "Correct answer",
+    "scoreBarLabel": "You got :num out of :total points",
+    "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+    "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+    "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+  },
+  "confirmCheck": {
+    "header": "Finish ?",
+    "body": "Are you sure you wish to finish ?",
+    "cancelLabel": "Cancel",
+    "confirmLabel": "Finish"
+  },
+  "confirmRetry": {
+    "header": "Retry ?",
+    "body": "Are you sure you wish to retry ?",
+    "cancelLabel": "Cancel",
+    "confirmLabel": "Confirm"
+  },
+  "question": "<p>d1o</p>\n",
+  "correct": "true",
+  "summarySolution": "<p>1111</p>\n\n<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mroot><mrow><mi>x</mi><mo> </mo><mo>=</mo><mo> </mo><mi>z</mi></mrow><mi>y</mi></mroot></math></p>\n",
+  "detailedSolution": "<p>f s fsdf</p>\n\n<p> sf ffsf</p>\n"
+}

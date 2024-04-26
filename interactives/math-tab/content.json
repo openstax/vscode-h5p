@@ -1,0 +1,84 @@
+{
+  "media": {
+    "type": {
+      "params": {}
+    },
+    "disableImageZooming": false
+  },
+  "answers": [
+    {
+      "text": "<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mroot><mi>y</mi><mi>x</mi></mroot><mo> </mo><mo>-</mo><mo> </mo><msup><mi>x</mi><mn>2</mn></msup></math></td>\n\t\t\t<td>x-z</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td> </td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>11</td>\n\t\t\t<td> </td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p style=\"margin-bottom:13px\"> </p>\n\n<p style=\"margin-bottom:13px\"><span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">Egy Széchenyi idézettel kezdem, amely igencsak találó és így szól: „Alaszkában három szó körül forog a világ: Arany, Hal, Prém. A lakosság kilencvenkilenc és fél százaléka ezekért tartózkodik Alaszkában”. Ezt a bejegyzést 1935. aug. 4-én a New yorki The Savoy Plaza hotelban írta és ma ezekhez még nyugodtan hozzá lehet írni a turizmust, amely Alaszka egyik fontos bevételi forrásává vált és amely szerény része már jó pár éve vagyok én is. Ennek bizonyítéka a következő utam, amely térképe a másik oldalon látszik és amely részben érinti Széchenyi vadászútvonalát, aki a társaival együtt a keleti partról, New Yorkból Chicagón át a nyugati part Seattle városába vonatozott át kb. 4 nap alatt, miközben egy gramofonnal próbálták csillapítani a hosszú út fáradalmait. Onnan hajón folytatták tovább egyenesen fel északra az ún. Belső átjáró vizein át (az első részben erről a csodás hajóútvonalról már szóltam), majd mentek vonaton, autóval, csónakban, gyalog, sőt egy egyszerű sínkocsival is és az alábbi helyeken fordultak meg. Csillaggal (</span></span><span style=\"font-size:12.0pt\"><span style=\"line-height:115%\">*</span></span><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">) jelölöm azokat a helyeket, ahol útjaink keresztezték egymást:</span></span></span></span></span></p>\n",
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      }
+    },
+    {
+      "text": "<p><img src=\"media/Texas-2-GeorgeCsillagda-91cm.jpeg\" style=\"width: 300px; height: 400px;\"/></p>\n\n<p>telescope</p>\n\n<p><img alt=\"wintery\" src=\"https://learnandsupport.getolympus.com/sites/default/files/styles/hero_large/public/2023-07/astro_1.jpg?itok=yLjgPS_2\" style=\"width: 1600px; height: 1526px;\"/></p>\n",
+      "correct": true,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      }
+    }
+  ],
+  "overallFeedback": [
+    {
+      "from": 0,
+      "to": 100
+    }
+  ],
+  "behaviour": {
+    "enableRetry": true,
+    "enableSolutionsButton": true,
+    "enableCheckButton": true,
+    "type": "auto",
+    "singlePoint": false,
+    "randomAnswers": false,
+    "showSolutionsRequiresInput": true,
+    "confirmCheckDialog": false,
+    "confirmRetryDialog": false,
+    "autoCheck": false,
+    "passPercentage": 100,
+    "showScorePoints": true
+  },
+  "isFreeResponseSupported": false,
+  "isSolutionPublic": true,
+  "UI": {
+    "checkAnswerButton": "Check",
+    "submitAnswerButton": "Submit",
+    "showSolutionButton": "Show solution",
+    "tryAgainButton": "Retry",
+    "tipsLabel": "Show tip",
+    "scoreBarLabel": "You got :num out of :total points",
+    "tipAvailable": "Tip available",
+    "feedbackAvailable": "Feedback available",
+    "readFeedback": "Read feedback",
+    "wrongAnswer": "Wrong answer",
+    "correctAnswer": "Correct answer",
+    "shouldCheck": "Should have been checked",
+    "shouldNotCheck": "Should not have been checked",
+    "noInput": "Please answer before viewing the solution",
+    "a11yCheck": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+    "a11yShowSolution": "Show the solution. The task will be marked with its correct solution.",
+    "a11yRetry": "Retry the task. Reset all responses and start the task over again."
+  },
+  "confirmCheck": {
+    "header": "Finish ?",
+    "body": "Are you sure you wish to finish ?",
+    "cancelLabel": "Cancel",
+    "confirmLabel": "Finish"
+  },
+  "confirmRetry": {
+    "header": "Retry ?",
+    "body": "Are you sure you wish to retry ?",
+    "cancelLabel": "Cancel",
+    "confirmLabel": "Confirm"
+  },
+  "question": "<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>$</mo><mo>$</mo><mo>\\</mo><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mo>{</mo><mn>12</mn><mo>}</mo><mo>{</mo><mn>23</mn><mo>}</mo><mo>$</mo><mo>$</mo><mo>)</mo></math></p>\n\n<p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>y</mi><mo> </mo><mo>≥</mo><mo> </mo><mi>x</mi><mo> </mo><mo>+</mo><mo> </mo><mfenced close=\"|\" open=\"|\"><mrow><mi>x</mi><msqrt><msup><mi>x</mi><mi>n</mi></msup></msqrt></mrow></mfenced></math></p>\n\n<p>j gjhgj gj jgh</p>\n\n<p>jhg j gjhg jh</p>\n\n<p style=\"margin-bottom:13px\"><span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">Egy Széchenyi idézettel kezdem, amely igencsak találó és így szól: „Alaszkában három szó körül forog a világ: Arany, Hal, Prém. A lakosság kilencvenkilenc és fél százaléka ezekért tartózkodik Alaszkában”. Ezt a bejegyzést 1935. aug. 4-én a New yorki The Savoy Plaza hotelban írta és ma ezekhez még nyugodtan hozzá lehet írni a turizmust, amely Alaszka egyik fontos bevételi forrásává vált és amely szerény része már jó pár éve vagyok én is. Ennek bizonyítéka a következő utam, amely térképe a másik oldalon látszik és amely részben érinti Széchenyi vadászútvonalát, aki a társaival együtt a keleti partról, New Yorkból Chicagón át a nyugati part Seattle városába vonatozott át kb. 4 nap alatt, miközben egy gramofonnal próbálták csillapítani a hosszú út fáradalmait. Onnan hajón folytatták tovább egyenesen fel északra az ún. Belső átjáró vizein át (az első részben erről a csodás hajóútvonalról már szóltam), majd mentek vonaton, autóval, csónakban, gyalog, sőt egy egyszerű sínkocsival is és az alábbi helyeken fordultak meg. Csillaggal (</span></span><span style=\"font-size:12.0pt\"><span style=\"line-height:115%\">*</span></span><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">) jelölöm azokat a helyeket, ahol útjaink keresztezték egymást:</span></span></span></span></span></p>\n",
+  "summarySolution": "<p>&gt;<img src=\"media/Image 4-4-24 at 2.01 PM.jpeg\" style=\"width: 300px; height: 232px;\"/></p>\n\n<p> </p>\n",
+  "detailedSolution": "<p>https://learnandsupport.getolympus.com/sites/default/files/styles/hero_large/public/2023-07/astro_1.jpg?itok=yLjgPS_2</p>\n\n<p style=\"margin-bottom:13px\"><span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">Egy Széchenyi idézettel kezdem, amely igencsak találó és így szól: „Alaszkában három szó körül forog a világ: Arany, Hal, Prém. A lakosság kilencvenkilenc és fél százaléka ezekért tartózkodik Alaszkában”. Ezt a bejegyzést 1935. aug. 4-én a New yorki The Savoy Plaza hotelban írta és ma ezekhez még nyugodtan hozzá lehet írni a turizmust, amely Alaszka egyik fontos bevételi forrásává vált és amely szerény része már jó pár éve vagyok én is. Ennek bizonyítéka a következő utam, amely térképe a másik oldalon látszik és amely részben érinti Széchenyi vadászútvonalát, aki a társaival együtt a keleti partról, New Yorkból Chicagón át a nyugati part Seattle városába vonatozott át kb. 4 nap alatt, miközben egy gramofonnal próbálták csillapítani a hosszú út fáradalmait. Onnan hajón folytatták tovább egyenesen fel északra az ún. Belső átjáró vizein át (az első részben erről a csodás hajóútvonalról már szóltam), majd mentek vonaton, autóval, csónakban, gyalog, sőt egy egyszerű sínkocsival is és az alábbi helyeken fordultak meg. Csillaggal (</span></span><span style=\"font-size:12.0pt\"><span style=\"line-height:115%\">*</span></span><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">) jelölöm azokat a helyeket, ahol útjaink keresztezték egymást:</span></span></span></span></span></p>\n\n<p style=\"margin-bottom:13px\"><span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">Egy Széchenyi idézettel kezdem, amely igencsak találó és így szól: „Alaszkában három szó körül forog a világ: Arany, Hal, Prém. A lakosság kilencvenkilenc és fél százaléka ezekért tartózkodik Alaszkában”. Ezt a bejegyzést 1935. aug. 4-én a New yorki The Savoy Plaza hotelban írta és ma ezekhez még nyugodtan hozzá lehet írni a turizmust, amely Alaszka egyik fontos bevételi forrásává vált és amely szerény része már jó pár éve vagyok én is. Ennek bizonyítéka a következő utam, amely térképe a másik oldalon látszik és amely részben érinti Széchenyi vadászútvonalát, aki a társaival együtt a keleti partról, New Yorkból Chicagón át a nyugati part Seattle városába vonatozott át kb. 4 nap alatt, miközben egy gramofonnal próbálták csillapítani a hosszú út fáradalmait. Onnan hajón folytatták tovább egyenesen fel északra az ún. Belső átjáró vizein át (az első részben erről a csodás hajóútvonalról már szóltam), majd mentek vonaton, autóval, csónakban, gyalog, sőt egy egyszerű sínkocsival is és az alábbi helyeken fordultak meg. Csillaggal (</span></span><span style=\"font-size:12.0pt\"><span style=\"line-height:115%\">*</span></span><span lang=\"HU\" style=\"font-size:12.0pt\"><span style=\"line-height:115%\">) jelölöm azokat a helyeket, ahol útjaink keresztezték egymást:</span></span></span></span></span></p>\n"
+}

@@ -1,0 +1,22 @@
+{
+  "answers": [
+    {
+      "correct": true,
+      "tipsAndFeedback": {
+        "tip": "",
+        "chosenFeedback": "",
+        "notChosenFeedback": ""
+      }
+    },
+    {
+      "correct": false,
+      "tipsAndFeedback": {
+        "tip": "<p>jh khkjhkh kj hk hkjhk hkh</p>\n\n<p>d gdfg </p>\n\n<p>dfg dfg dfg df gdfg dfg df</p>\n",
+        "chosenFeedback": "<p><img src=\"media/340622512_139918098912310_996744197658404618_n.jpg\" style=\"width: 300px; height: 225px;\"/></p>\n",
+        "notChosenFeedback": "<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>12</td>\n\t\t\t<td>212</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>121212312312</td>\n\t\t\t<td>123213123123</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>3213</td>\n\t\t\t<td>675758</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p> </p>\n"
+      }
+    }
+  ],
+  "summarySolution": "<p>j jgj zgjhg g</p>\n\n<p><img src=\"media/340087049_244928037922759_3136152616081847692_n.jpg\" style=\"width: 300px; height: 400px;\"/></p>\n",
+  "detailedSolution": "<p>kj hkjhk hkjh</p>\n\n<p>jkh kj hkjhkjh kjhk j hkjh hkjh </p>\n"
+}
