@@ -334,6 +334,8 @@ const ARCHIVE_PATHS = [
   ...(IS_CI_TEST ? [] : [Config.librariesName]),
 ];
 
+const H5P_INSTALL_TRIES = parseInt(process.env['H5P_INSTALL_TRIES'] ?? '') || 3;
+
 function preFlight(context: Context) {
   const directories = new Set<string>();
   const handlePath = (src: string, dst: string) => {
@@ -480,26 +482,35 @@ async function tryInstallLibrary(
   user: H5P.IUser,
   tries: number,
 ) {
-  try {
-    console.log(`Installing ${libraryName}`);
-    await h5pEditor.installLibraryFromHub(libraryName, user);
-  } catch (e) {
-    if (tries === 0) {
-      console.error(e);
-      throw new Error(`Could not install "${libraryName}".`);
-    } else {
-      const hi = 5000;
-      const lo = 1000;
-      const waitTime = Math.round(Math.random() * (hi - lo) + lo);
-      console.error(
-        `Could not install "${libraryName}". Retrying in ${
-          waitTime / 1000
-        }s...`,
-      );
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
-      await tryInstallLibrary(libraryName, h5pEditor, user, tries - 1);
+  const totalTries = tries;
+  const recurse = async (
+    libraryName: string,
+    h5pEditor: H5P.H5PEditor,
+    user: H5P.IUser,
+    tries: number,
+  ) => {
+    try {
+      console.log(`Installing ${libraryName}`);
+      await h5pEditor.installLibraryFromHub(libraryName, user);
+    } catch (e) {
+      if (tries === 0) {
+        console.error(e);
+        throw new Error(`Could not install "${libraryName}".`);
+      } else {
+        const hi = 5000 * (totalTries + 1 - tries);
+        const lo = 1000 * (totalTries + 1 - tries);
+        const waitTime = Math.round(Math.random() * (hi - lo) + lo);
+        console.error(
+          `Could not install "${libraryName}". Retrying in ${
+            waitTime / 1000
+          }s...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, waitTime));
+        await recurse(libraryName, h5pEditor, user, tries - 1);
+      }
     }
-  }
+  };
+  await recurse(libraryName, h5pEditor, user, tries);
 }
 
 async function downloadH5PLibs() {
@@ -572,7 +583,7 @@ async function downloadH5PLibs() {
     return;
   }
   for (const libraryName of toInstall) {
-    await tryInstallLibrary(libraryName, h5pEditor, user, 3);
+    await tryInstallLibrary(libraryName, h5pEditor, user, H5P_INSTALL_TRIES);
   }
 }
 
