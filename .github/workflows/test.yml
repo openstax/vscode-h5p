@@ -33,10 +33,16 @@ jobs:
 
       - name: Build and package extension
         run: |
-          set -e
+          set -ex
           VERSION_VALUE=$(date +'%y%m%d.%H%M%S' | tee /dev/stderr)
           sed -Ei 's/("version": ")(.+)(",)$/\1\2-'$VERSION_VALUE'\3/' package.json
-          H5P_INSTALL_TRIES=6 npm run package
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            export H5P_INSTALL_TRIES=6
+          else
+            # Skip installing h5p libraries
+            export CI_TEST=1
+          fi
+          npm run package
 
       - name: Upload Extension
         if: ${{ github.event_name == 'pull_request' }}
