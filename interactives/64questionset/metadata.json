@@ -95,5 +95,10 @@
   "blooms": "3",
   "dok": "4",
   "assignment_type": "homework",
-  "time": "long"
+  "time": "long",
+  "context": [
+    "m12345",
+    "m12559#fs88990-1",
+    "m00091#asdr109"
+  ]
 }
