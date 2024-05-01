@@ -35,7 +35,7 @@ jobs:
           set -e
           VERSION_VALUE=$(date +'%y%m%d.%H%M%S' | tee /dev/stderr)
           sed -Ei 's/("version": ")(.+)(",)$/\1\2-'$VERSION_VALUE'\3/' package.json
-          CI_TEST=1 npm run package
+          npm run package
 
       - name: Upload Extension
         if: ${{ github.event_name == 'pull_request' }}
