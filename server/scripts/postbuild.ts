@@ -487,18 +487,18 @@ async function tryInstallLibrary(
     libraryName: string,
     h5pEditor: H5P.H5PEditor,
     user: H5P.IUser,
-    tries: number,
+    triesRemaining: number,
   ) => {
     try {
       console.log(`Installing ${libraryName}`);
       await h5pEditor.installLibraryFromHub(libraryName, user);
     } catch (e) {
-      if (tries === 0) {
+      if (triesRemaining === 0) {
         console.error(e);
         throw new Error(`Could not install "${libraryName}".`);
       } else {
-        const hi = 5000 * (totalTries + 1 - tries);
-        const lo = 1000 * (totalTries + 1 - tries);
+        const hi = Math.min(5000 * (totalTries + 1 - triesRemaining), 120000);
+        const lo = Math.min(1000 * (totalTries + 1 - triesRemaining), 60000);
         const waitTime = Math.round(Math.random() * (hi - lo) + lo);
         console.error(
           `Could not install "${libraryName}". Retrying in ${
@@ -506,7 +506,7 @@ async function tryInstallLibrary(
           }s...`,
         );
         await new Promise((resolve) => setTimeout(resolve, waitTime));
-        await recurse(libraryName, h5pEditor, user, tries - 1);
+        await recurse(libraryName, h5pEditor, user, triesRemaining - 1);
       }
     }
   };
