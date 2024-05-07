@@ -32,11 +32,14 @@ jobs:
           npm run lint
 
       - name: Build and package extension
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -ex
-          VERSION_VALUE=$(date +'%y%m%d.%H%M%S' | tee /dev/stderr)
-          sed -Ei 's/("version": ")(.+)(",)$/\1\2-'$VERSION_VALUE'\3/' package.json
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            VERSION_VALUE=$(date --utc +"$PR_NUMBER-%y%m%d.%H%M%S" | tee /dev/stderr)
+            sed -Ei 's/("version": ")(.+)(",)$/\1'$VERSION_VALUE'\3/' package.json
             export H5P_INSTALL_TRIES=6
           else
             # Skip installing h5p libraries
