@@ -41,6 +41,15 @@ The editor can be launched in two ways
 While the editor is loading, there will be a spinning status indicator in your
 vscode status bar (H5P Editor: Loading).
 
+## PR Extension Upload
+
+When you make a PR, a new version of the extension is packaged and uploaded as
+an action artifact.
+
+The version number is constructed thusly: `<pr-number>.%y%m%d.%H%M%S-dev`.
+
+This packaged version can be downloaded and installed for easy testing.
+
 ## Debugging the extension in VSCode
 
 In the VSCode editor, open the debug panel and select `Launch Extension`. This
