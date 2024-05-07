@@ -38,12 +38,14 @@ jobs:
         run: |
           set -ex
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            VERSION_VALUE=$(date --utc +"$PR_NUMBER-%y%m%d.%H%M%S" | tee /dev/stderr)
-            sed -Ei 's/("version": ")(.+)(",)$/\1'$VERSION_VALUE'\3/' package.json
-            export H5P_INSTALL_TRIES=6
+            VERSION_VALUE="$(date --utc +"$PR_NUMBER.%y%m%d.%H%M%S-dev" | tee /dev/stderr)"
           else
             # Skip installing h5p libraries
             export CI_TEST=1
+          fi
+          if [[ -n "${VERSION_VALUE:-}" ]]; then
+            sed -Ei 's/("version": ")(.+)(",)$/\1'$VERSION_VALUE'\3/' package.json
+            export H5P_INSTALL_TRIES=6
           fi
           npm run package
 
