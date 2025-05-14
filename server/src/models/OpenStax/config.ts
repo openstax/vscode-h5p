@@ -4,6 +4,13 @@ import { ISemanticsEntry } from '@lumieducation/h5p-server/build/src/types';
 import { assertTrue, assertValue } from '../../../../common/src/utils';
 import { QuestionSetQuestion, toMultiChoice, toQuestionSet } from './helpers';
 
+const {
+  CODESPACE_NAME: codespaceName,
+  GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: codespaceDomain,
+  GITPOD_WORKSPACE_ID: gitpodWorkspaceId,
+  GITPOD_WORKSPACE_CLUSTER_HOST: gipodWorkspaceClusterHost,
+} = process.env;
+
 type GetSolutionIsPublic = (content: Partial<unknown>) => boolean;
 
 interface SemanticsOverride {
@@ -179,9 +186,11 @@ export default class Config {
   public static readonly port: number = Number(process.env.PORT) || 27149;
   /* istanbul ignore next */
   public static readonly serverUrl: string =
-    process.env['GITPOD_WORKSPACE_ID'] !== undefined
-      ? `https://${Config.port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`
-      : `http://localhost:${Config.port}`;
+    codespaceName != null
+      ? `https://${codespaceName}-${Config.port}.${codespaceDomain}`
+      : gitpodWorkspaceId != null
+        ? `https://${Config.port}-${gitpodWorkspaceId}.${gipodWorkspaceClusterHost}`
+        : `http://localhost:${Config.port}`;
 
   public static readonly supportedLibraries: Record<string, SupportedLibrary> =
     {

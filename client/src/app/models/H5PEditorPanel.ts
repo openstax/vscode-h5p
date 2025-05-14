@@ -38,8 +38,16 @@ export class H5PEditorPanel extends Panel {
 
 function buildGitpodURL() {
   const port = 27149;
-  if (process.env['GITPOD_WORKSPACE_ID'] != null) {
-    return `https://${port}-${process.env['GITPOD_WORKSPACE_ID']}.${process.env['GITPOD_WORKSPACE_CLUSTER_HOST']}`;
+  const {
+    CODESPACE_NAME: codespaceName,
+    GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: codespaceDomain,
+    GITPOD_WORKSPACE_ID: gitpodWorkspaceId,
+    GITPOD_WORKSPACE_CLUSTER_HOST: gipodWorkspaceClusterHost,
+  } = process.env;
+  if (codespaceName != null) {
+    return `https://${codespaceName}-${port}.${codespaceDomain}`;
+  } else if (gitpodWorkspaceId != null) {
+    return `https://${port}-${gitpodWorkspaceId}.${gipodWorkspaceClusterHost}`;
   } else {
     return `http://localhost:${port}`;
   }
